@@ -2,25 +2,59 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #2d1810;
+  --primary: #800000; /* Deep Maroon */
+  --primary-foreground: #ffffff;
+  --secondary: #d4af37; /* Gold */
+  --accent: #ff9933; /* Saffron */
+  --muted: #f5f5f5;
+  --card: #ffffff;
+  --card-foreground: #2d1810;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.mandir-gradient {
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
 }
+
+.maroon-bg {
+  background-color: #4a0404;
+}
+
+.gold-text {
+  color: #d4af37;
+}
+
+.spiritual-button-gold {
+  @apply bg-[#d4af37] hover:bg-[#b8962d] text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center gap-2;
+}
+
+.spiritual-button-outline {
+  @apply border-2 border-white text-white hover:bg-white hover:text-[#4a0404] font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center justify-center gap-2;
+}
+
+.section-title {
+  @apply text-4xl font-bold text-[#4a0404] mb-4 text-center;
+}
+
+.section-subtitle {
+  @apply text-[#4a3728]/60 mb-12 text-center uppercase tracking-widest text-sm font-bold;
+}
+
+
