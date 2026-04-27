@@ -1,0 +1,179 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "Introduction",
+    "darshan": "Darshan",
+    "gallery": "Gallery",
+    "contact": "Contact",
+    "donate": "Donate",
+    "book_pooja": "Book Pooja"
+  },
+  "hero": {
+    "mantra": "|| Om Shri Mahalakshmyai Namah ||",
+    "title_1": "Shri Mahalakshmi",
+    "title_2": "Temple Trust",
+    "subtitle": "One of Mumbai's most revered Hindu temples. Experience wealth, good fortune, and prosperity with the blessings of Goddess Mahalakshmi.",
+    "cta_donate": "Donate Online",
+    "cta_darshan": "View Darshan Timings",
+    "info": {
+      "darshan": "Darshan Timings",
+      "next_aarti": "Next Aarti",
+      "contact": "Contact",
+      "location": "Location",
+      "darshan_time": "6:00 AM - 10:00 PM",
+      "next_aarti_time": "Dhoop Aarti @ 6:15 PM",
+      "phone": "022-2351 4732",
+      "place": "Mahalakshmi, Mumbai"
+    }
+  },
+  "aarti": {
+    "title": "Aarti Schedule",
+    "subtitle": "Join us in the divine Aarti ceremonies and receive the Goddess's blessings.",
+    "morning": "Morning Aarti",
+    "naivedya": "Naivedya Ceremony",
+    "dhoop": "Dhoop Aarti",
+    "shej": "Shej Aarti",
+    "view_full": "View Full Schedule",
+    "location": "Main Sanctum"
+  },
+  "welcome": {
+    "main_title": "Welcome to the Abode of Goddess Mahalakshmi",
+    "main_subtitle": "A sacred pilgrimage site in the heart of Mumbai",
+    "section_title": "Temple of Divine Grace and Rich Spiritual Tradition",
+    "desc": "Shri Mahalakshmi Temple is majestically situated on Bhulabhai Desai Road in Mahalakshmi, Mumbai. This revered temple is dedicated to Goddess Mahalakshmi, who resides as the main deity along with Goddess Mahakali and Goddess Mahasaraswati.",
+    "badge_title": "Divine Grace",
+    "badge_subtitle": "Continuous for many years",
+    "features": {
+      "heritage": "Ancient Heritage",
+      "heritage_desc": "A pillar of Mumbai's spiritual life since 1831.",
+      "devotion": "Path of Devotion",
+      "devotion_desc": "Prosperity in life with the blessings of Goddess Mahalakshmi.",
+      "trust": "Trust Initiatives",
+      "trust_desc": "Working for the convenience of devotees and charitable work."
+    },
+    "cta": "Read Full History"
+  },
+  "donation": {
+    "title": "Online Donation / Dan",
+    "subtitle": "Your contribution supports our spiritual & social initiatives.",
+    "badge": "Holy Offering",
+    "amount": "Select Amount",
+    "custom": "Enter Other Amount",
+    "reason": "Reason for Donation",
+    "reasons": {
+      "birthday": "Birthday",
+      "navratri": "Navratri",
+      "munji": "Javal (Munji)",
+      "other": "Other"
+    },
+    "donor_details": "Donor Details",
+    "name": "Full Name",
+    "mobile": "Mobile Number",
+    "address": "Address (Optional)",
+    "payment_title": "Complete Payment",
+    "total": "Total Amount",
+    "confirm": "Confirm Payment",
+    "thank_you": "Thank You!",
+    "receipt_desc": "Your divine contribution has been recorded.",
+    "download": "Download Receipt",
+    "print": "Print",
+    "another": "Make Another Donation"
+  },
+  "footer": {
+    "location": "Mumbai | Mahalakshmi",
+    "desc": "Dedicated to preserving our rich spiritual heritage and supporting the welfare of society. Our work is based on the trio of transparency, technology, and devotion.",
+    "links": "Links",
+    "contact": "Contact",
+    "cert": "Certification",
+    "80g": "80G Certified",
+    "80g_desc": "All donations are eligible for income tax exemption.",
+    "rights": "ALL RIGHTS RESERVED.",
+    "dev_by": "DEVELOPED BY"
+  },
+  "contact": {
+    "title_1": "Get in",
+    "title_2": "Touch with Us",
+    "subtitle": "If you have any difficulty or questions, you can contact us based on the information below. We are ready to serve you.",
+    "address": "Address",
+    "email": "Email",
+    "hours": "Office Hours",
+    "phone": "Phone No.",
+    "feedback": "Feedback / Suggestions",
+    "feedback_desc": "You can reach out to us with your valuable feedback or suggestions. This will help us improve our service to devotees.",
+    "other_info": "Other Information",
+    "other_info_desc": "For more information regarding various religious rituals, pooja bookings and online donations, please contact our office.",
+    "actions": {
+      "map": "View on Google Map",
+      "email": "Write to Us",
+      "hours": "View Timings",
+      "call": "Call Us",
+      "feedback": "Submit Feedback"
+    }
+  },
+  "gallery": {
+    "title": "Temple Gallery",
+    "view_all": "View All Photos",
+    "main_sanctum": "Main Sanctum",
+    "entrance": "Temple Entrance",
+    "deepotsav": "Deepotsav",
+    "festival": "Festival Ceremony"
+  },
+  "admin": {
+    "login": {
+      "title": "Trust Admin",
+      "subtitle": "Secure Access Gateway",
+      "role": "Select Role",
+      "chairman": "Chairman",
+      "collector": "Collector",
+      "password": "Access Password",
+      "enter": "Enter Dashboard",
+      "disclaimer": "Unauthorized access is strictly prohibited. Login attempts and IP addresses are recorded."
+    },
+    "dashboard": {
+      "title": "Dashboard Overview",
+      "welcome": "Welcome Back",
+      "subtitle": "Here is what's happening with the trust today.",
+      "export": "Export Report",
+      "stats": {
+        "total": "Total Donations",
+        "today": "Donations Today",
+        "collectors": "Collectors",
+        "growth": "Monthly Growth"
+      },
+      "recent": "Recent Donations",
+      "search": "Search donor...",
+      "table": {
+        "receipt": "Receipt",
+        "donor": "Donor Name",
+        "amount": "Amount",
+        "reason": "Reason",
+        "date": "Date",
+        "actions": "Actions",
+        "empty": "No donations found matching your search.",
+        "view_all": "View All Donations"
+      },
+      "birthdays": {
+        "title": "Upcoming Birthdays",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "calendar": "View Birthday Calendar"
+      },
+      "corner": {
+        "title": "Chairman's Corner",
+        "desc": "Review and approve trust actions.",
+        "bank": "Approve Bank Changes",
+        "collector": "Add New Collector"
+      },
+      "sidebar": {
+        "dashboard": "Dashboard",
+        "donations": "Donations",
+        "collectors": "Collectors",
+        "birthdays": "Birthdays",
+        "logout": "Logout"
+      }
+    }
+  },
+  "impact": {
+    "quote": "“Every donation given with faith is a strong foundation for the preservation of our culture.”"
+  }
+}
