@@ -17,14 +17,19 @@ export default function Hero() {
 
   return (
     <div className="relative h-[75vh] min-h-[600px] flex flex-col justify-center overflow-hidden bg-background">
-      {/* Background with Professional Overlay */}
-      <div className="absolute inset-0 z-0">
+      {/* Devi Image with Shaded Effect on Right */}
+      <div className="absolute inset-0 z-0 md:left-auto md:right-0 md:w-[65%] lg:w-[55%] h-full bg-white">
         <img
           src="/devi.png"
           alt="Temple Hero"
-          className="w-full h-full object-cover opacity-20 scale-105"
+          className="w-full h-full object-cover object-right opacity-30 md:opacity-100"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+        {/* Mobile-only shaded background effect so text remains readable */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent md:hidden" />
+        
+        {/* Shaded fade strictly confined to the left edge so the rest of the Devi image is completely dark and clear */}
+        <div className="absolute inset-y-0 left-0 w-full md:w-[35%] bg-gradient-to-r from-background via-background/50 to-transparent hidden md:block" />
+        
       </div>
 
       {/* Hero Content - Aligned Left for Professional Look */}

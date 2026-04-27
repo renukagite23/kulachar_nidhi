@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Star, MapPin, ChevronRight } from 'lucide-react';
+import { Clock, MapPin } from 'lucide-react';
 
 export default function AartiSchedule() {
   const schedule = [
@@ -13,65 +13,79 @@ export default function AartiSchedule() {
   ];
 
   return (
-    <section id="darshan" className="py-16 bg-[#FDFBF7] relative overflow-hidden border-y border-border/50">
-      <div className="max-w-6xl mx-auto px-4 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
-          <div className="text-left">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <span className="text-primary font-bold text-[10px] uppercase tracking-[0.2em]">पवित्र सेवा</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-black text-secondary tracking-tight">आरती वेळापत्रक</h2>
+    <section className="py-16 bg-gradient-to-br from-[#FFF7ED] via-[#FEF3C7] to-[#FFF] border-y border-orange-100">
+      <div className="max-w-6xl mx-auto px-4">
+
+        {/* Header */}
+        <div className="flex justify-between items-end mb-10 flex-wrap gap-4">
+          <div>
+            <p className="text-orange-600 text-[11px] font-bold tracking-[0.2em] uppercase">
+              पवित्र सेवा
+            </p>
+            <h2 className="text-3xl font-black text-gray-800 mt-1">
+              आरती वेळापत्रक
+            </h2>
           </div>
-          <p className="text-muted-foreground text-xs font-medium max-w-xs md:text-right">
-            दिव्य आरती सोहळ्यांत आमच्यासोबत सामील व्हा आणि देवीची कृपा प्राप्त करा.
-          </p>
+
+          <button className="text-xs font-bold text-gray-500 hover:text-orange-600 transition">
+            विस्तृत वेळापत्रक →
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* Horizontal Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
           {schedule.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="group relative bg-white border border-border p-4 rounded-2xl hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
+              viewport={{ once: true }}
+              className="group"
             >
-              <div className="flex justify-between items-start mb-3">
-                <div className="text-2xl">{item.icon}</div>
-                <div className="bg-primary/5 text-primary text-[11px] font-black px-2.5 py-1 rounded-lg">
-                  {item.time}
-                </div>
-              </div>
-              
-              <div className="space-y-1">
-                <h3 className="font-bold text-secondary text-sm group-hover:text-primary transition-colors">
-                  {item.name}
-                </h3>
-                <p className="text-[10px] text-muted-foreground leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
+              <div className="relative h-full bg-white/80 backdrop-blur-md border border-orange-100 rounded-3xl p-5 shadow-md hover:shadow-xl hover:border-orange-300 transition-all duration-300">
 
-              <div className="mt-4 pt-3 border-t border-border/50 flex justify-between items-center">
-                <span className="text-[9px] font-bold text-secondary/40 flex items-center gap-1">
-                  <MapPin className="w-2.5 h-2.5" /> मुख्य गाभारा
-                </span>
-                <ChevronRight className="w-3 h-3 text-border group-hover:text-primary transition-all translate-x-0 group-hover:translate-x-1" />
+                {/* Top Icon + Time */}
+                <div className="flex justify-between items-start">
+                  <div className="text-3xl">{item.icon}</div>
+
+                  <span className="bg-orange-100 text-orange-700 text-[11px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                    <Clock className="w-3 h-3" />
+                    {item.time}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <div className="mt-4">
+                  <h3 className="font-bold text-gray-800 text-sm group-hover:text-orange-600 transition">
+                    {item.name}
+                  </h3>
+                  <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+
+                {/* Bottom */}
+                <div className="mt-5 pt-3 border-t border-orange-100 flex justify-between items-center">
+                  <span className="text-[10px] text-gray-400 flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    मुख्य गाभारा
+                  </span>
+
+                  <div className="w-7 h-7 rounded-full bg-orange-50 flex items-center justify-center group-hover:bg-orange-100 transition">
+                    →
+                  </div>
+                </div>
+
+                {/* Glow Effect */}
+                <div className="absolute inset-0 rounded-3xl bg-orange-200/0 group-hover:bg-orange-200/10 transition-all duration-300 pointer-events-none" />
               </div>
             </motion.div>
           ))}
+
         </div>
 
-        <div className="mt-8 flex justify-center">
-          <button className="flex items-center gap-2 text-[10px] font-bold text-secondary/60 hover:text-primary transition-all group">
-            <div className="w-6 h-6 rounded-full border border-border flex items-center justify-center group-hover:border-primary transition-all">
-              <Clock className="w-3 h-3" />
-            </div>
-            विस्तृत वेळापत्रक पहा
-          </button>
-        </div>
       </div>
     </section>
   );
