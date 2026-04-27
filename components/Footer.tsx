@@ -2,66 +2,94 @@
 
 import React from 'react';
 import { useLanguage } from '@/lib/LanguageContext';
-import { Mail, Phone, MapPin, Globe, MessageCircle, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe, MessageCircle, Send, ShieldCheck } from 'lucide-react';
 
 export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-[#4a3728] text-[#fffdf5] py-12">
+    <footer className="bg-secondary text-white/80 py-16 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-[#ff9933]">Kuldaivat Trust</h3>
-            <p className="text-[#fffdf5]/80 leading-relaxed">
-              Dedicated to preserving our spiritual heritage and supporting our community through transparency and devotion.
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+          {/* Brand Column */}
+          <div className="md:col-span-1 space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-2 shadow-lg shadow-primary/10">
+                <img src="/devi.png" alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
+              </div>
+              <h3 className="text-xl font-black text-white tracking-tight">Kuldaivat Trust</h3>
+            </div>
+            <p className="text-sm leading-relaxed text-white/60">
+              Dedicated to preserving our spiritual heritage and supporting our community through transparency, technology, and devotion.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="p-2 bg-[#fffdf5]/10 rounded-full hover:bg-[#ff9933] transition-colors">
-                <Globe className="w-5 h-5" />
-              </a>
-              <a href="#" className="p-2 bg-[#fffdf5]/10 rounded-full hover:bg-[#ff9933] transition-colors">
-                <MessageCircle className="w-5 h-5" />
-              </a>
-              <a href="#" className="p-2 bg-[#fffdf5]/10 rounded-full hover:bg-[#ff9933] transition-colors">
-                <Send className="w-5 h-5" />
-              </a>
+            <div className="flex space-x-3">
+              {[Globe, MessageCircle, Send].map((Icon, i) => (
+                <a key={i} href="#" className="w-8 h-8 flex items-center justify-center bg-white/5 rounded-lg hover:bg-primary hover:text-white transition-all">
+                  <Icon className="w-4 h-4" />
+                </a>
+              ))}
             </div>
           </div>
 
+          {/* Quick Links */}
+          <div className="space-y-6">
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">महत्त्वाच्या लिंक्स</h4>
+            <ul className="space-y-3 text-sm font-medium">
+              <li><a href="#" className="hover:text-primary transition-colors">मुख्यपृष्ठ</a></li>
+              <li><a href="#about" className="hover:text-primary transition-colors">ट्रस्ट बद्दल</a></li>
+              <li><a href="#donations" className="hover:text-primary transition-colors">ऑनलाइन देणगी</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">आरती वेळापत्रक</a></li>
+            </ul>
+          </div>
 
-          <div className="space-y-4">
-            <h4 className="text-lg font-bold text-[#d4af37]">{t.nav.contact}</h4>
-            <ul className="space-y-3">
+          {/* Contact Information */}
+          <div className="space-y-6">
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t.nav.contact}</h4>
+            <ul className="space-y-4 text-sm font-medium">
               <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-[#ff9933]" />
-                <span>+91 98765 43210</span>
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary">
+                  <Phone className="w-3.5 h-3.5" />
+                </div>
+                <span>022-2351 4732</span>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-[#ff9933]" />
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary">
+                  <Mail className="w-3.5 h-3.5" />
+                </div>
                 <span>info@kuldaivattrust.org</span>
               </li>
               <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-[#ff9933] mt-1" />
-                <span>Main Mandir Road, Village Kulapur,<br />Maharashtra, India</span>
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary mt-0.5">
+                  <MapPin className="w-3.5 h-3.5" />
+                </div>
+                <span className="leading-relaxed">श्री महालक्ष्मी मंदिर ट्रस्ट,<br />महालक्ष्मी, मुंबई - ४०० ०२६</span>
               </li>
             </ul>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="text-lg font-bold text-[#d4af37]">Important Links</h4>
-            <ul className="space-y-2">
-              <li><a href="#" className="hover:text-[#ff9933] transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-[#ff9933] transition-colors">Terms & Conditions</a></li>
-              <li><a href="#" className="hover:text-[#ff9933] transition-colors">Donation Policy</a></li>
-              <li><a href="#" className="hover:text-[#ff9933] transition-colors">Annual Reports</a></li>
+          {/* Legal / Trust Verification */}
+          <div className="space-y-6">
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">विश्वासार्हता</h4>
+            <div className="p-4 bg-white/5 rounded-2xl border border-white/10 flex items-start gap-3">
+              <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0" />
+              <div>
+                <p className="text-xs font-bold text-white">नोंदणीकृत ट्रस्ट</p>
+                <p className="text-[10px] text-white/40 mt-1">सर्व देणग्या प्राप्तिकर कायद्यांतर्गत ८०जी सवलतीस पात्र आहेत.</p>
+              </div>
+            </div>
+            <ul className="space-y-2 text-xs font-medium text-white/40">
+              <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
+              <li><a href="#" className="hover:text-white">Terms of Service</a></li>
             </ul>
           </div>
         </div>
-        
-        <div className="mt-12 pt-8 border-t border-[#fffdf5]/10 text-center text-[#fffdf5]/60">
-          <p>© {new Date().getFullYear()} Kuldaivat Trust. All rights reserved.</p>
-          <p className="mt-1 text-xs">Developed with Devotion by Paarsh Projects</p>
+
+        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] font-bold uppercase tracking-wider text-white/30">
+          <p>© {new Date().getFullYear()} KULDAIVAT TRUST. ALL RIGHTS RESERVED.</p>
+          <div className="flex items-center gap-2">
+            <span>DEVELOPED BY</span>
+            <span className="text-white/60">PAARSH PROJECTS</span>
+          </div>
         </div>
       </div>
     </footer>

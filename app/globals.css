@@ -1,15 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #2d1810;
-  --primary: #800000; /* Deep Maroon */
-  --primary-foreground: #ffffff;
-  --secondary: #d4af37; /* Gold */
-  --accent: #ff9933; /* Saffron */
-  --muted: #f5f5f5;
-  --card: #ffffff;
-  --card-foreground: #2d1810;
+  /* Updated Palette: Warmer & More Traditional yet Premium */
+  --background: #FFFDF9;
+  /* Warm Cream */
+  --foreground: #2D241E;
+  /* Deep Earth Brown */
+
+  --primary: #E65100;
+  /* Vibrant yet Rich Saffron */
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #4E342E;
+  /* Warm Chocolate/Maroon */
+  --secondary-foreground: #FFFFFF;
+
+  --accent: #D4AF37;
+  /* Antique Gold */
+  --accent-foreground: #FFFFFF;
+
+  --muted: #F7F3EE;
+  --muted-foreground: #8B7361;
+
+  --card: #FFFFFF;
+  --card-foreground: #2D241E;
+
+  --border: #E8E2D9;
+  --input: #E8E2D9;
+  --ring: #E65100;
+
+  /* Fonts */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui;
+  --font-heading: var(--font-poppins), ui-sans-serif, system-ui;
 }
 
 @theme inline {
@@ -18,43 +40,110 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), sans-serif;
+  font-family: var(--font-sans);
+  @apply antialiased;
 }
 
-.mandir-gradient {
-  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  @apply font-semibold tracking-tight;
 }
 
-.maroon-bg {
-  background-color: #4a0404;
+/* Compact Utilities */
+.compact-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
 
-.gold-text {
-  color: #d4af37;
+/* Soft Card Design */
+.spiritual-card {
+  @apply bg-white rounded-2xl border border-border shadow-sm transition-all duration-300;
 }
 
-.spiritual-button-gold {
-  @apply bg-[#d4af37] hover:bg-[#b8962d] text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 shadow-lg flex items-center justify-center gap-2;
+.spiritual-card-hover {
+  @apply hover:shadow-md hover:border-primary/20;
+}
+
+/* Compact Buttons */
+.spiritual-button {
+  @apply inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 gap-2 disabled:opacity-50 disabled:pointer-events-none;
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/10 active:scale-[0.98];
 }
 
 .spiritual-button-outline {
-  @apply border-2 border-white text-white hover:bg-white hover:text-[#4a0404] font-bold py-3 px-8 rounded-lg transition-all duration-300 flex items-center justify-center gap-2;
+  @apply inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-200 gap-2 border border-border bg-transparent hover:bg-muted active:scale-[0.98];
+}
+
+.spiritual-button-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/90;
+}
+
+.spiritual-button-gold {
+  @apply bg-accent text-accent-foreground hover:bg-accent/90;
+}
+
+/* Compact Inputs */
+.spiritual-input {
+  @apply w-full px-4 py-2.5 rounded-xl border border-border bg-white text-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary placeholder:text-muted-foreground/50;
+}
+
+/* Gradients (Subtle) */
+.spiritual-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, #BF360C 100%);
+}
+
+.mandir-gradient {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(45, 36, 30, 0.8) 100%);
+}
+
+/* Layout Utilities */
+.section-padding {
+  @apply py-12 md:py-20;
 }
 
 .section-title {
-  @apply text-4xl font-bold text-[#4a0404] mb-4 text-center;
+  @apply text-3xl md:text-4xl font-black text-secondary mb-3 text-center tracking-tight;
 }
 
 .section-subtitle {
-  @apply text-[#4a3728]/60 mb-12 text-center uppercase tracking-widest text-sm font-bold;
+  @apply text-muted-foreground mb-10 text-center uppercase tracking-[0.2em] text-[10px] font-black;
 }
 
+/* Table Design */
+.dashboard-table {
+  @apply w-full border-collapse text-left text-sm;
+}
 
+.dashboard-table th {
+  @apply px-4 py-3 bg-muted/50 text-muted-foreground font-bold border-b border-border text-[11px] uppercase tracking-wider;
+}
+
+.dashboard-table td {
+  @apply px-4 py-3 border-b border-border/50 align-middle;
+}
+
+.dashboard-table tr:hover {
+  @apply bg-muted/20;
+}

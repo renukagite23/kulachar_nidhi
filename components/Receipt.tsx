@@ -16,71 +16,91 @@ interface ReceiptProps {
 
 export default function Receipt({ donation }: ReceiptProps) {
   return (
-    <div id="receipt-content" className="w-[800px] p-12 bg-white border-[12px] border-[#d4af37] relative overflow-hidden text-[#4a3728]">
-      {/* Background Ornament */}
-      <div className="absolute top-0 right-0 w-64 h-64 opacity-10 grayscale pointer-events-none -mr-10 -mt-10">
-        <img src="/devi.png" alt="Devi" />
+    <div id="receipt-content" className="w-[800px] p-16 bg-[#FFFDF9] border-[1px] border-secondary relative overflow-hidden text-secondary">
+      {/* Subtle Background Ornament */}
+      <div className="absolute top-0 right-0 w-80 h-80 opacity-[0.03] pointer-events-none -mr-20 -mt-20">
+        <img src="/devi.png" alt="Devi" className="w-full h-full object-contain" />
       </div>
 
-      <div className="text-center mb-10 border-b-4 border-[#ff9933] pb-8">
-        <img src="/devi.png" alt="Trust Logo" className="w-24 h-24 mx-auto mb-4 rounded-full border-4 border-[#d4af37]" />
-        <h1 className="text-4xl font-black text-[#800000] uppercase tracking-widest">Kuldaivat Trust</h1>
-        <p className="text-[#ff9933] font-bold mt-1 tracking-widest">Digital Donation Receipt</p>
-        <p className="text-sm mt-2 font-semibold">Reg. No: MAH/1234/TRUST | PAN: ABCDT1234E</p>
-      </div>
-
-      <div className="flex justify-between mb-10 text-lg">
-        <div>
-          <p className="font-bold text-[#800000]">Receipt No:</p>
-          <p className="font-mono">{donation.receiptNumber}</p>
+      {/* Header Section */}
+      <div className="flex justify-between items-start mb-16 border-b border-border pb-10">
+        <div className="flex gap-6 items-center">
+          <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center p-3 shadow-lg">
+            <img src="/devi.png" alt="Trust Logo" className="w-full h-full object-contain brightness-0 invert" />
+          </div>
+          <div className="text-left">
+            <h1 className="text-3xl font-black tracking-tight text-secondary">KULDAIVAT TRUST</h1>
+            <p className="text-primary font-bold text-sm tracking-[0.2em] uppercase mt-1">Digital Donation Receipt</p>
+            <p className="text-[10px] text-muted-foreground mt-2 font-black uppercase tracking-wider">Reg: MAH/1234/TRUST | PAN: ABCDT1234E</p>
+          </div>
         </div>
         <div className="text-right">
-          <p className="font-bold text-[#800000]">Date:</p>
-          <p>{formatDate(donation.donationDate)}</p>
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Receipt Number</p>
+          <p className="font-mono text-xl font-bold text-primary">{donation.receiptNumber}</p>
         </div>
       </div>
 
-      <div className="space-y-8 mb-12 py-8 px-6 bg-[#fffdf5] rounded-2xl border-2 border-[#d4af37]/20">
-        <div className="flex border-b border-[#d4af37]/10 pb-4">
-          <span className="w-1/3 font-bold text-[#800000]">Donor Name:</span>
-          <span className="flex-1 text-xl font-bold uppercase">{donation.donorName}</span>
+      {/* Info Section */}
+      <div className="grid grid-cols-2 gap-12 mb-16">
+        <div className="space-y-6">
+          <div>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Donor Name</p>
+            <p className="text-xl font-black text-secondary uppercase tracking-tight">{donation.donorName}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Mobile Number</p>
+            <p className="text-base font-bold text-secondary">{donation.mobileNumber}</p>
+          </div>
         </div>
-        <div className="flex border-b border-[#d4af37]/10 pb-4">
-          <span className="w-1/3 font-bold text-[#800000]">Mobile:</span>
-          <span className="flex-1 font-semibold">{donation.mobileNumber}</span>
-        </div>
-        <div className="flex border-b border-[#d4af37]/10 pb-4">
-          <span className="w-1/3 font-bold text-[#800000]">Purpose:</span>
-          <span className="flex-1 font-semibold">{donation.reason}</span>
-        </div>
-        <div className="flex pt-4">
-          <span className="w-1/3 font-bold text-[#800000]">Amount:</span>
-          <span className="flex-1 text-3xl font-black text-[#ff9933]">₹{donation.amount}/-</span>
+        <div className="space-y-6">
+          <div>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Donation Date</p>
+            <p className="text-base font-bold text-secondary">{formatDate(donation.donationDate)}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Purpose of Donation</p>
+            <p className="text-base font-bold text-secondary">{donation.reason}</p>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-20 mt-20 items-end">
+      {/* Amount Section */}
+      <div className="bg-primary/5 border border-primary/10 rounded-3xl p-10 mb-16 flex justify-between items-center">
+        <div>
+          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">Total Amount Received</p>
+          <p className="text-xs font-bold text-secondary/60 italic">Your contribution supports our spiritual & social initiatives.</p>
+        </div>
+        <div className="text-right">
+          <p className="text-5xl font-black text-primary">₹{donation.amount}.00</p>
+        </div>
+      </div>
+
+      {/* Signature Section */}
+      <div className="grid grid-cols-2 gap-24 mt-12 items-end">
         <div className="text-center">
-            <div className="h-20 flex items-center justify-center italic text-[#4a3728]/40">
-                [Signature Placeholder]
-            </div>
-            <div className="border-t-2 border-[#4a3728]/20 pt-2 font-bold uppercase text-xs">
-                Collector Signature
-            </div>
+          <div className="h-20 flex items-center justify-center italic text-muted-foreground/30 text-[10px] font-bold uppercase tracking-widest">
+            [Digitally Verified]
+          </div>
+          <div className="border-t border-border pt-3 text-[10px] font-black text-secondary uppercase tracking-widest">
+            Collector Signature
+          </div>
         </div>
         <div className="text-center">
-            <div className="h-20 flex items-center justify-center">
-                <img src="/devi.png" alt="Chairman Signature" className="h-16 opacity-70" />
-            </div>
-            <div className="border-t-2 border-[#4a3728]/20 pt-2 font-bold uppercase text-xs">
-                Chairman Signature
-            </div>
+          <div className="h-20 flex items-center justify-center">
+            <img src="/devi.png" alt="Chairman Signature" className="h-12 opacity-40 grayscale" />
+          </div>
+          <div className="border-t border-border pt-3 text-[10px] font-black text-secondary uppercase tracking-widest">
+            Chairman / Trustee
+          </div>
         </div>
       </div>
 
-      <div className="mt-12 text-center text-[10px] text-[#4a3728]/40 italic">
-        * This is a computer generated receipt and does not require a physical signature. 
-        Income tax benefits under section 80G may apply as per trust registration.
+      {/* Footer Disclaimer */}
+      <div className="mt-16 pt-8 border-t border-border text-center">
+        <p className="text-[10px] text-muted-foreground font-bold tracking-tight leading-relaxed max-w-lg mx-auto">
+          This is a computer-generated document and does not require a physical signature.
+          All donations to Kuldaivat Trust are eligible for tax benefits under section 80G of the Income Tax Act.
+        </p>
       </div>
     </div>
   );
