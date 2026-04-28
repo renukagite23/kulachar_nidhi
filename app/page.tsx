@@ -9,8 +9,10 @@ import DonationForm from '@/components/DonationForm';
 import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
 import { Sparkles, Heart } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Home() {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
@@ -36,10 +38,10 @@ export default function Home() {
             <div className="text-center mb-10">
               <div className="flex items-center justify-center gap-2 mb-3">
                 <Heart className="w-4 h-4 text-primary fill-primary" />
-                <span className="text-primary font-black text-[10px] uppercase tracking-[0.2em]">पवित्र दान</span>
+                <span className="text-primary font-black text-[10px] uppercase tracking-[0.2em]">{t('donation.badge')}</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-black text-secondary tracking-tight">ऑनलाइन देणगी / दान</h2>
-              <p className="text-muted-foreground text-xs font-medium mt-2">तुमचे योगदान आपल्या आध्यात्मिक वारशाचे रक्षण करते</p>
+              <h2 className="text-3xl md:text-4xl font-black text-secondary tracking-tight">{t('donation.title')}</h2>
+              <p className="text-muted-foreground text-xs font-medium mt-2">{t('hero.subtitle')}</p>
             </div>
 
             <DonationForm />
@@ -70,13 +72,13 @@ export default function Home() {
               </div>
 
               <h2 className="text-2xl md:text-4xl font-bold text-gray-800 leading-[1.3] tracking-tight">
-                “श्रद्धेने दिलेले प्रत्येक दान, आपल्या संस्कृतीच्या जतनासाठीचा एक भक्कम पाया आहे.”
+                {t('impact.quote')}
               </h2>
 
               <div className="flex flex-col items-center gap-3">
                 <div className="w-12 h-0.5 bg-gray-300 rounded-full" />
                 <p className="text-gray-500 font-semibold uppercase tracking-[0.2em] text-[11px]">
-                  श्री महालक्ष्मी मंदिर ट्रस्ट, मुंबई
+                  {t('hero.title_1')} {t('hero.title_2')}, {t('hero.info.place')}
                 </p>
               </div>
             </motion.div>

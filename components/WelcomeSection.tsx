@@ -3,20 +3,22 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, History, Heart, Shield } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function WelcomeSection() {
+  const { t } = useLanguage();
   const features = [
-    { icon: History, title: 'प्राचीन वारसा', desc: '1831 पासून मुंबईच्या आध्यात्मिक जीवनाचा आधारस्तंभ.' },
-    { icon: Heart, title: 'भक्ती मार्ग', desc: 'देवी महालक्ष्मीच्या आशीर्वादाने जीवनात समृद्धी.' },
-    { icon: Shield, title: 'ट्रस्ट उपक्रम', desc: 'भक्तांच्या सुविधेसाठी व धर्मादाय कार्यासाठी कार्यरत.' },
+    { icon: History, title: t('welcome.features.heritage'), desc: t('welcome.features.heritage_desc') },
+    { icon: Heart, title: t('welcome.features.devotion'), desc: t('welcome.features.devotion_desc') },
+    { icon: Shield, title: t('welcome.features.trust'), desc: t('welcome.features.trust_desc') },
   ];
 
   return (
     <section id="about" className="section-padding bg-white">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="section-title">देवी महालक्ष्मीच्या निवासस्थानात आपले स्वागत आहे</h2>
-          <p className="section-subtitle">मुंबईच्या हृदयातील एक पवित्र तीर्थस्थान</p>
+          <h2 className="section-title">{t('welcome.main_title')}</h2>
+          <p className="section-subtitle">{t('welcome.main_subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
@@ -36,8 +38,8 @@ export default function WelcomeSection() {
                   <Heart className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-secondary">दिव्य कृपा</p>
-                  <p className="text-[10px] text-muted-foreground">अनेक वर्षांपासून अखंडित</p>
+                  <p className="text-xs font-bold text-secondary">{t('welcome.badge_title')}</p>
+                  <p className="text-[10px] text-muted-foreground">{t('welcome.badge_subtitle')}</p>
                 </div>
               </div>
             </div>
@@ -50,9 +52,9 @@ export default function WelcomeSection() {
             className="space-y-8"
           >
             <div className="space-y-4">
-              <h3 className="text-3xl font-bold text-secondary leading-tight">दिव्य कृपेचे मंदिर व <br /> समृद्ध आध्यात्मिक परंपरा</h3>
+              <h3 className="text-3xl font-bold text-secondary leading-tight">{t('welcome.section_title')}</h3>
               <p className="text-muted-foreground text-base leading-relaxed">
-                श्री महालक्ष्मी मंदिर मुंबईतील महालक्ष्मी येथे भुलाभाई देसाई रोडवर भव्यतेने विराजमान आहे. हे आदरणीय मंदिर देवी महालक्ष्मी यांना समर्पित आहे, ज्या देवी महाकाली व देवी महासरस्वती यांच्यासह मुख्य देवता म्हणून विराजमान आहेत.
+                {t('welcome.desc')}
               </p>
             </div>
 
@@ -70,7 +72,7 @@ export default function WelcomeSection() {
 
             <div className="pt-4">
               <button className="spiritual-button-secondary !px-8 !py-4 shadow-lg shadow-secondary/10">
-                संपूर्ण इतिहास वाचा <ArrowRight className="w-4 h-4 ml-2" />
+                {t('welcome.cta')} <ArrowRight className="w-4 h-4 ml-2" />
               </button>
             </div>
           </motion.div>

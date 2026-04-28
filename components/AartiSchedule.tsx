@@ -2,13 +2,15 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function AartiSchedule() {
+  const { t } = useLanguage();
   const schedule = [
-    { name: 'सकाळची आरती', time: '6:45 AM', desc: 'सकाळची मंगल आरती' },
-    { name: 'नैवेद्य सोहळा', time: '11:45 AM', desc: 'पवित्र भोग अर्पण' },
-    { name: 'धूप आरती', time: '6:15 PM', desc: 'सायंकाळची धूप सेवा' },
-    { name: 'शेज आरती', time: '7:20 PM', desc: 'रात्रीची सांगता आरती' },
+    { name: t('aarti.morning'), time: '6:45 AM', desc: t('aarti.morning') },
+    { name: t('aarti.naivedya'), time: '11:45 AM', desc: t('aarti.naivedya') },
+    { name: t('aarti.dhoop'), time: '6:15 PM', desc: t('aarti.dhoop') },
+    { name: t('aarti.shej'), time: '7:20 PM', desc: t('aarti.shej') },
   ];
 
   return (
@@ -28,10 +30,10 @@ export default function AartiSchedule() {
           {/* Header */}
           <div className="mb-6 text-white">
             <p className="text-orange-300 text-[11px] font-bold tracking-[0.2em] uppercase">
-              पवित्र सेवा
+              {t('donation.badge')}
             </p>
             <h2 className="text-2xl md:text-3xl font-black mt-1">
-              आरती वेळापत्रक
+              {t('aarti.title')}
             </h2>
           </div>
 

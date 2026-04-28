@@ -9,10 +9,10 @@ export default function Hero() {
   const { t } = useLanguage();
 
   const infoItems = [
-    { icon: Clock, label: 'दर्शन वेळा', value: 'सकाळी 6:00 - रात्री 10:00' },
-    { icon: Calendar, label: 'पुढील आरती', value: 'धूप आरती @ 6:15 PM' },
-    { icon: Phone, label: 'संपर्क', value: '022-2351 4732' },
-    { icon: MapPin, label: 'स्थान', value: 'महालक्ष्मी, मुंबई' },
+    { icon: Clock, label: t('hero.info.darshan'), value: t('hero.info.darshan_time') },
+    { icon: Calendar, label: t('hero.info.next_aarti'), value: t('hero.info.next_aarti_time') },
+    { icon: Phone, label: t('hero.info.contact'), value: t('hero.info.phone') },
+    { icon: MapPin, label: t('hero.info.location'), value: t('hero.info.place') },
   ];
 
   return (
@@ -42,24 +42,24 @@ export default function Hero() {
         >
           <div className="flex items-center gap-2 mb-6">
             <div className="h-px w-8 bg-primary" />
-            <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase">|| ॐ श्री महालक्ष्म्यै नम: ||</span>
+            <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase">{t('hero.mantra')}</span>
           </div>
 
           <h1 className="text-5xl md:text-7xl font-black text-secondary tracking-tight leading-[1.1] mb-6">
-            श्री महालक्ष्मी <br />
-            <span className="text-primary">मंदिर ट्रस्ट</span>
+            {t('hero.title_1')} <br />
+            <span className="text-primary">{t('hero.title_2')}</span>
           </h1>
 
           <p className="text-secondary/70 text-lg md:text-xl font-medium mb-10 leading-relaxed">
-            मुंबईतील सर्वात आदरणीय हिंदू मंदिरांपैकी एक. देवी महालक्ष्मी यांच्या आशीर्वादाने धन, सौभाग्य व समृद्धीची प्रचिती घ्या.
+            {t('hero.subtitle')}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <a href="#donations" className="spiritual-button !px-8 !py-4 text-base w-full sm:w-auto shadow-lg shadow-primary/20">
-              ऑनलाइन दान करा <ArrowRight className="w-4 h-4 ml-1" />
+              {t('hero.cta_donate')} <ArrowRight className="w-4 h-4 ml-1" />
             </a>
             <button className="spiritual-button-outline !px-8 !py-4 text-base w-full sm:w-auto hover:bg-white">
-              दर्शन वेळ पहा
+              {t('hero.cta_darshan')}
             </button>
           </div>
         </motion.div>

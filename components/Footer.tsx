@@ -20,7 +20,7 @@ export default function Footer() {
               <h3 className="text-xl font-black text-white tracking-tight">Kuldaivat Trust</h3>
             </div>
             <p className="text-sm leading-relaxed text-white/60">
-              Dedicated to preserving our spiritual heritage and supporting our community through transparency, technology, and devotion.
+              {t('footer.desc')}
             </p>
             <div className="flex space-x-3">
               {[Globe, MessageCircle, Send].map((Icon, i) => (
@@ -33,18 +33,18 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-6">
-            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">महत्त्वाच्या लिंक्स</h4>
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('footer.links')}</h4>
             <ul className="space-y-3 text-sm font-medium">
-              <li><a href="#" className="hover:text-primary transition-colors">मुख्यपृष्ठ</a></li>
-              <li><a href="#about" className="hover:text-primary transition-colors">ट्रस्ट बद्दल</a></li>
-              <li><a href="#donations" className="hover:text-primary transition-colors">ऑनलाइन देणगी</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">आरती वेळापत्रक</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">{t('nav.home')}</a></li>
+              <li><a href="#about" className="hover:text-primary transition-colors">{t('nav.about')}</a></li>
+              <li><a href="#donations" className="hover:text-primary transition-colors">{t('nav.donate')}</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">{t('aarti.title')}</a></li>
             </ul>
           </div>
 
           {/* Contact Information */}
           <div className="space-y-6">
-            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t.nav.contact}</h4>
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('nav.contact')}</h4>
             <ul className="space-y-4 text-sm font-medium">
               <li className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary">
@@ -62,19 +62,19 @@ export default function Footer() {
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary mt-0.5">
                   <MapPin className="w-3.5 h-3.5" />
                 </div>
-                <span className="leading-relaxed">श्री महालक्ष्मी मंदिर ट्रस्ट,<br />महालक्ष्मी, मुंबई - ४०० ०२६</span>
+                <span className="leading-relaxed">{t('hero.title_1')} {t('hero.title_2')},<br />{t('hero.info.place')} - ४०० ०२६</span>
               </li>
             </ul>
           </div>
 
           {/* Legal / Trust Verification */}
           <div className="space-y-6">
-            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">विश्वासार्हता</h4>
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('footer.cert')}</h4>
             <div className="p-4 bg-white/5 rounded-2xl border border-white/10 flex items-start gap-3">
               <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0" />
               <div>
-                <p className="text-xs font-bold text-white">नोंदणीकृत ट्रस्ट</p>
-                <p className="text-[10px] text-white/40 mt-1">सर्व देणग्या प्राप्तिकर कायद्यांतर्गत ८०जी सवलतीस पात्र आहेत.</p>
+                <p className="text-xs font-bold text-white">{t('footer.80g')}</p>
+                <p className="text-[10px] text-white/40 mt-1">{t('footer.80g_desc')}</p>
               </div>
             </div>
             <ul className="space-y-2 text-xs font-medium text-white/40">
@@ -85,9 +85,9 @@ export default function Footer() {
         </div>
 
         <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] font-bold uppercase tracking-wider text-white/30">
-          <p>© {new Date().getFullYear()} KULDAIVAT TRUST. ALL RIGHTS RESERVED.</p>
+          <p>© {new Date().getFullYear()} {t('hero.title_1').toUpperCase()} {t('hero.title_2').toUpperCase()}. {t('footer.rights')}</p>
           <div className="flex items-center gap-2">
-            <span>DEVELOPED BY</span>
+            <span>{t('footer.dev_by')}</span>
             <span className="text-white/60">PAARSH PROJECTS</span>
           </div>
         </div>

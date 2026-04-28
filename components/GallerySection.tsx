@@ -3,13 +3,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Maximize2, Image as ImageIcon } from 'lucide-react';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function GallerySection() {
+  const { t } = useLanguage();
   const images = [
-    { src: '/devi.png', title: 'मुख्य गर्भगृह', size: 'large' },
-    { src: '/devi.png', title: 'मंदिर प्रवेशद्वार', size: 'small' },
-    { src: '/devi.png', title: 'दीपोत्सव', size: 'small' },
-    { src: '/devi.png', title: 'उत्सव सोहळा', size: 'medium' },
+    { src: '/devi.png', title: t('gallery.main_sanctum'), size: 'large' },
+    { src: '/devi.png', title: t('gallery.entrance'), size: 'small' },
+    { src: '/devi.png', title: t('gallery.deepotsav'), size: 'small' },
+    { src: '/devi.png', title: t('gallery.festival'), size: 'medium' },
   ];
 
   return (
@@ -19,12 +21,12 @@ export default function GallerySection() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <span className="text-primary font-bold text-[10px] uppercase tracking-[0.2em]">दर्शन</span>
+              <span className="text-primary font-bold text-[10px] uppercase tracking-[0.2em]">{t('nav.darshan')}</span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-black text-secondary tracking-tight">मंदिर गॅलरी</h2>
+            <h2 className="text-2xl md:text-3xl font-black text-secondary tracking-tight">{t('gallery.title')}</h2>
           </div>
           <button className="hidden md:flex items-center gap-2 text-[11px] font-bold text-muted-foreground hover:text-primary transition-colors">
-            सर्व फोटो पहा <Maximize2 className="w-3 h-3" />
+            {t('gallery.view_all')} <Maximize2 className="w-3 h-3" />
           </button>
         </div>
 
@@ -71,7 +73,7 @@ export default function GallerySection() {
 
         <div className="mt-8 md:hidden">
           <button className="w-full spiritual-button-outline !py-3 text-xs">
-            सर्व फोटो पहा
+            {t('gallery.view_all')}
           </button>
         </div>
       </div>

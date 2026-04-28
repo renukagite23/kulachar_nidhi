@@ -16,12 +16,12 @@ export default function Navbar() {
       <div className="hidden md:block bg-secondary text-white/70 py-1.5 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center text-[11px] font-medium tracking-tight">
           <div className="flex items-center gap-5">
-            <span className="flex items-center gap-1.5 italic text-accent font-semibold">|| ॐ श्री महालक्ष्म्यै नम: ||</span>
-            <span className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-accent" /> 022-2351 4732</span>
-            <span className="flex items-center gap-1.5"><Clock className="w-3 h-3 text-accent" /> दर्शन: सकाळी 6:00 - रात्री 10:00</span>
+            <span className="flex items-center gap-1.5 italic text-accent font-semibold">{t('hero.mantra')}</span>
+            <span className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-accent" /> {t('hero.info.phone')}</span>
+            <span className="flex items-center gap-1.5"><Clock className="w-3 h-3 text-accent" /> {t('hero.info.darshan')}: {t('hero.info.darshan_time')}</span>
           </div>
           <div className="flex items-center gap-5">
-            <span className="flex items-center gap-1.5"><MapPin className="w-3 h-3 text-accent" /> श्री महालक्ष्मी मंदिर ट्रस्ट, मुंबई</span>
+            <span className="flex items-center gap-1.5"><MapPin className="w-3 h-3 text-accent" /> {t('hero.title_1')} {t('hero.title_2')}, {t('hero.info.place')}</span>
             <button
               onClick={() => setLanguage(language === 'en' ? 'mr' : 'en')}
               className="flex items-center gap-1.5 hover:text-white transition-colors border-l border-white/10 pl-5 ml-2"
@@ -52,24 +52,27 @@ export default function Navbar() {
             {/* Desktop Menu - Compact & Minimal */}
             <div className="hidden md:flex items-center space-x-1">
               <Link href="/" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
-                {t.nav.home}
+                {t('nav.home')}
               </Link>
-              <Link href="#about" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
-                परिचय
-              </Link>
-              <Link href="#darshan" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
-                दर्शन
-              </Link>
-              <Link href="#gallery" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
-                गॅलरी
+              <a href="#about" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
+                {t('nav.about')}
+              </a>
+              <a href="#darshan" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
+                {t('nav.darshan')}
+              </a>
+              <a href="#gallery" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
+                {t('nav.gallery')}
+              </a>
+              <Link href="/contact" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
+                {t('nav.contact')}
               </Link>
 
               <div className="flex items-center gap-2 ml-4">
                 <button className="spiritual-button-outline !px-4 !py-2 text-xs">
-                  <Sparkles className="w-3.5 h-3.5 text-primary" /> पूजा बुक करा
+                  <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('nav.book_pooja')}
                 </button>
                 <a href="#donations" className="spiritual-button !px-4 !py-2 text-xs">
-                  <HandHeart className="w-3.5 h-3.5" /> दान करा
+                  <HandHeart className="w-3.5 h-3.5" /> {t('nav.donate')}
                 </a>
               </div>
             </div>
@@ -93,10 +96,11 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             className="md:hidden bg-white px-4 pt-2 pb-6 space-y-1 border-t border-border shadow-inner"
           >
-            <Link href="/" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t.nav.home}</Link>
-            <a href="#about" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">परिचय</a>
-            <a href="#darshan" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">दर्शन</a>
-            <a href="#donations" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg">दान करा</a>
+            <Link href="/" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.home')}</Link>
+            <a href="#about" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.about')}</a>
+            <a href="#darshan" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.darshan')}</a>
+            <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.contact')}</Link>
+            <a href="#donations" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg">{t('nav.donate')}</a>
             <button
               onClick={() => {
                 setLanguage(language === 'en' ? 'mr' : 'en');
