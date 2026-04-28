@@ -2,13 +2,30 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { logout } from '@/redux/slices/authSlice';
 import { useLanguage } from '@/lib/LanguageContext';
-import { Languages, Phone, Clock, MapPin, Menu, X, HandHeart, Sparkles } from 'lucide-react';
-import { motion } from 'framer-motion';
+import {
+  Languages, Phone, Clock, MapPin, Menu, X,
+  HandHeart, Sparkles, User, History, LogOut, LayoutDashboard
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
   const [isOpen, setIsOpen] = React.useState(false);
+  const [showProfileMenu, setShowProfileMenu] = React.useState(false);
+  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push('/');
+    setShowProfileMenu(false);
+  };
 
   return (
     <header className="w-full">
@@ -68,17 +85,91 @@ export default function Navbar() {
               </Link>
 
               <div className="flex items-center gap-2 ml-4">
-                <button className="spiritual-button-outline !px-4 !py-2 text-xs">
-                  <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('nav.book_pooja')}
-                </button>
                 <a href="#donations" className="spiritual-button !px-4 !py-2 text-xs">
                   <HandHeart className="w-3.5 h-3.5" /> {t('nav.donate')}
                 </a>
+
+                {isAuthenticated ? (
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowProfileMenu(!showProfileMenu)}
+                      className="w-10 h-10 rounded-full bg-muted flex items-center justify-center border border-border hover:border-primary/30 transition-all overflow-hidden"
+                    >
+                      <User className="w-5 h-5 text-secondary" />
+                    </button>
+
+                    <AnimatePresence>
+                      {showProfileMenu && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-40"
+                            onClick={() => setShowProfileMenu(false)}
+                          />
+                          <motion.div
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-border py-2 z-50 overflow-hidden"
+                          >
+                            <div className="px-4 py-3 border-b border-border/50 bg-muted/30">
+                              <p className="text-xs font-black text-secondary uppercase tracking-tight truncate">{user?.name}</p>
+                              <p className="text-[10px] text-muted-foreground truncate">{user?.email}</p>
+                            </div>
+
+                            {user?.role === 'admin' && (
+                              <Link
+                                href="/admin/dashboard"
+                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-secondary hover:bg-muted font-bold transition-colors"
+                                onClick={() => setShowProfileMenu(false)}
+                              >
+                                <LayoutDashboard className="w-4 h-4 text-primary" /> admin Dashboard
+                              </Link>
+                            )}
+
+                            <Link
+                              href="/profile"
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-secondary hover:bg-muted font-bold transition-colors"
+                              onClick={() => setShowProfileMenu(false)}
+                            >
+                              <User className="w-4 h-4 text-primary" /> My Profile
+                            </Link>
+
+                            <Link
+                              href="/donations"
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-secondary hover:bg-muted font-bold transition-colors"
+                              onClick={() => setShowProfileMenu(false)}
+                            >
+                              <History className="w-4 h-4 text-primary" /> Donation History
+                            </Link>
+
+                            <div className="border-t border-border/50 mt-1">
+                              <button
+                                onClick={handleLogout}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-bold transition-colors"
+                              >
+                                <LogOut className="w-4 h-4" /> Logout
+                              </button>
+                            </div>
+                          </motion.div>
+                        </>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <Link href="/login" className="spiritual-button-outline !px-4 !py-2 text-xs">
+                    <User className="w-3.5 h-3.5 text-primary" /> Login
+                  </Link>
+                )}
               </div>
             </div>
 
             {/* Mobile menu button */}
-            <div className="md:hidden flex items-center">
+            <div className="md:hidden flex items-center gap-3">
+              {!isAuthenticated && (
+                <Link href="/login" className="p-1.5 rounded-lg text-secondary">
+                  <User className="w-6 h-6" />
+                </Link>
+              )}
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="p-1.5 rounded-lg text-secondary"

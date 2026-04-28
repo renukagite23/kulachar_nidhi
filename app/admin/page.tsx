@@ -1,104 +1,131 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Lock, ShieldCheck, ArrowRight, UserCheck } from 'lucide-react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '@/redux/slices/authSlice';
+import { ShieldCheck, Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-export default function AdminLogin() {
+export default function AdminLoginPage() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('chairman');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'admin123') {
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      if (data.user.role !== 'admin') {
+        throw new Error('Access denied. Admin privileges required.');
+      }
+
+      dispatch(setCredentials({ user: data.user, token: data.token }));
       router.push('/admin/dashboard');
-    } else {
-      alert('Invalid Password');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#FFFDF9] px-4 py-12 relative overflow-hidden">
       {/* Background Subtle Pattern */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none grayscale">
         <img src="/devi.png" alt="Pattern" className="w-full h-full object-cover scale-150 rotate-12" />
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md z-10"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="max-w-md w-full spiritual-card p-8 bg-white/90 backdrop-blur-sm border-[#E8E2D9] shadow-2xl z-10"
       >
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-primary/20">
-            <ShieldCheck className="w-8 h-8 text-white" />
+          <div className="mx-auto h-16 w-16 bg-[#E65100]/10 rounded-2xl flex items-center justify-center mb-4 shadow-xl shadow-primary/10">
+            <ShieldCheck className="h-8 w-8 text-[#E65100]" />
           </div>
-          <h1 className="text-3xl font-black text-secondary tracking-tight">Trust Admin</h1>
-          <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-2">Secure Access Gateway</p>
+          <h2 className="text-3xl font-black text-[#4E342E]">Trust Admin</h2>
+          <p className="mt-2 text-[10px] text-[#8B7361] uppercase tracking-[0.2em] font-black">Authorized Personnel Only</p>
         </div>
 
-        <div className="spiritual-card p-8 bg-white/80 backdrop-blur-sm border-border shadow-2xl shadow-secondary/10">
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-3">
-              <label className="block text-xs font-bold text-secondary/60 uppercase tracking-wider">Select Role</label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setRole('chairman')}
-                  className={`p-3 rounded-xl border text-sm font-bold transition-all ${role === 'chairman'
-                      ? 'border-primary bg-primary/5 text-primary shadow-sm'
-                      : 'border-border text-secondary/40 hover:border-primary/20'
-                    }`}
-                >
-                  <UserCheck className="w-4 h-4 mx-auto mb-1" />
-                  Chairman
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRole('collector')}
-                  className={`p-3 rounded-xl border text-sm font-bold transition-all ${role === 'collector'
-                      ? 'border-primary bg-primary/5 text-primary shadow-sm'
-                      : 'border-border text-secondary/40 hover:border-primary/20'
-                    }`}
-                >
-                  <UserCheck className="w-4 h-4 mx-auto mb-1" />
-                  Collector
-                </button>
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 flex items-start gap-3 rounded-r-xl mb-6">
+            <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+            <p className="text-sm text-red-700 font-medium">{error}</p>
+          </div>
+        )}
+
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-[10px] font-black text-[#4E342E] uppercase tracking-wider mb-2">Admin Email</label>
+              <div className="relative group">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-[#8B7361]/50 group-focus-within:text-[#E65100] transition-colors" />
+                <input
+                  type="email"
+                  required
+                  className="spiritual-input !pl-12"
+                  placeholder="admin@temple.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-secondary/60 uppercase tracking-wider">Access Password</label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-primary w-4 h-4" />
+            <div>
+              <label className="block text-[10px] font-black text-[#4E342E] uppercase tracking-wider mb-2">Security Password</label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#8B7361]/50 group-focus-within:text-[#E65100] transition-colors" />
                 <input
                   type="password"
+                  required
+                  className="spiritual-input !pl-12"
                   placeholder="••••••••"
-                  className="spiritual-input pl-11"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
             </div>
+          </div>
 
-            <button type="submit" className="spiritual-button w-full h-12 text-sm shadow-lg shadow-primary/20">
-              Enter Dashboard <ArrowRight className="w-4 h-4 ml-1" />
-            </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="spiritual-button w-full h-14 text-base font-black uppercase tracking-widest shadow-2xl shadow-primary/20"
+          >
+            {loading ? (
+              <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            ) : (
+              <span className="flex items-center gap-2">
+                Secure Login <ArrowRight className="h-5 w-5" />
+              </span>
+            )}
+          </button>
+        </form>
 
-            <div className="pt-4 text-center">
-              <p className="text-[10px] text-muted-foreground font-medium leading-relaxed">
-                Unauthorized access is strictly prohibited. <br />
-                Login attempts and IP addresses are recorded.
-              </p>
-            </div>
-          </form>
+        <div className="mt-8 text-center">
+          <p className="text-[10px] text-[#8B7361] font-bold leading-relaxed px-4 opacity-60">
+            UNAUTHORIZED ACCESS IS STRICTLY MONITORED. IP ADDRESSES AND LOGIN ATTEMPTS ARE LOGGED.
+          </p>
         </div>
-
-        <p className="text-center mt-8 text-[11px] font-bold text-secondary/30 uppercase tracking-[0.2em]">
-          Powered by Paarsh Projects
-        </p>
       </motion.div>
     </div>
   );

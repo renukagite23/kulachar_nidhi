@@ -16,10 +16,14 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['chairman', 'collector'],
-    default: 'collector',
+    enum: ['admin', 'user', 'chairman', 'collector'],
+    default: 'user',
   },
   phone: String,
+  totalDonations: {
+    type: Number,
+    default: 0,
+  },
   isActive: {
     type: Boolean,
     default: true,

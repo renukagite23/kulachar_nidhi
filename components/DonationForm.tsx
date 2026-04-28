@@ -7,10 +7,18 @@ import { IndianRupee, User, Phone, MapPin, Gift, ChevronRight, CheckCircle2, QrC
 import confetti from 'canvas-confetti';
 import Receipt from './Receipt';
 import { downloadPDF } from '@/lib/pdf';
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { addDonation } from '@/redux/slices/donationSlice';
+import { updateUser } from '@/redux/slices/authSlice';
+import { useRouter } from 'next/navigation';
 
 export default function DonationForm() {
   const { t } = useLanguage();
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { user, isAuthenticated, token } = useSelector((state: RootState) => state.auth);
+  
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,10 +26,21 @@ export default function DonationForm() {
     customAmount: '',
     reason: 'वाढदिवस',
     customReason: '',
-    donorName: '',
-    mobileNumber: '',
+    donorName: user?.name || '',
+    mobileNumber: user?.phone || '',
     address: '',
   });
+
+  // Update form data if user logs in while form is open
+  React.useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        donorName: prev.donorName || user.name,
+        mobileNumber: prev.mobileNumber || user.phone || '',
+      }));
+    }
+  }, [user]);
 
   const amounts = ['501', '1001', '2100', '5001'];
   const reasons = [
@@ -31,24 +50,51 @@ export default function DonationForm() {
     { key: 'other', label: t('donation.reasons.other') },
   ];
 
-  const handleNext = () => setStep(step + 1);
+  const handleNext = () => {
+    if (step === 1 && !isAuthenticated) {
+      router.push('/login');
+      return;
+    }
+    setStep(step + 1);
+  };
   const handleBack = () => setStep(step - 1);
 
   const [lastDonation, setLastDonation] = useState<any>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
+    }
     setLoading(true);
 
     try {
       const finalAmount = formData.amount || formData.customAmount;
-      const res = await axios.post('/api/donations', {
-        ...formData,
-        amount: Number(finalAmount),
+      const res = await fetch('/api/donate', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...formData,
+          amount: Number(finalAmount),
+          donorName: formData.donorName, // Explicitly pass for schema
+        }),
       });
 
-      if (res.data.success) {
-        setLastDonation(res.data.data);
+      const data = await res.json();
+
+      if (data.success) {
+        setLastDonation(data.donation);
+        
+        // Update local state
+        dispatch(addDonation(data.donation));
+        dispatch(updateUser({ 
+          totalDonations: (user?.totalDonations || 0) + Number(finalAmount) 
+        }));
+
         setLoading(false);
         setStep(4);
         confetti({

@@ -1,291 +1,204 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import {
-  LayoutDashboard,
-  HandHeart,
-  Users,
-  Calendar,
-  Download,
-  Search,
-  TrendingUp,
-  Cake,
-  FileSpreadsheet,
-  MessageCircle,
-  Bell,
-  LogOut,
-  ChevronRight
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { RootState } from '@/redux/store';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import { 
+  LayoutDashboard, Users, IndianRupee, TrendingUp, 
+  ArrowUpRight, Clock, ShieldCheck, Download
 } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { formatDate } from '@/lib/utils';
-import axios from 'axios';
-import * as XLSX from 'xlsx';
-import Link from 'next/link';
+import { format } from 'date-fns';
 
 export default function AdminDashboard() {
-  const [donations, setDonations] = useState([]);
+  const { user, isAuthenticated, token } = useSelector((state: RootState) => state.auth);
+  const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
-    fetchDonations();
-  }, []);
-
-  const fetchDonations = async () => {
-    try {
-      const res = await axios.get('/api/donations');
-      if (res.data.success) {
-        setDonations(res.data.data);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+    if (!isAuthenticated || user?.role !== 'admin') {
+      router.push('/login');
+      return;
     }
-  };
 
-  const shareOnWhatsApp = (donor: any) => {
-    const message = `Happy Birthday to our dear donor ${donor.donorName}! 🎂\nThank you for your continuous support to Kuldaivat Trust. 🙏`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-  };
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/admin/stats', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setStats(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch admin stats', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(donations);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Donations");
-    XLSX.writeFile(workbook, "Trust_Donations_Report.xlsx");
-  };
+    fetchStats();
+  }, [isAuthenticated, user, router, token]);
 
-  const stats = [
-    { label: 'Total Donations', value: `₹${donations.reduce((acc, curr: any) => acc + curr.amount, 0)}`, icon: HandHeart, color: 'text-primary', bg: 'bg-primary/10' },
-    { label: 'Donations Today', value: donations.length, icon: Calendar, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Collectors', value: '5', icon: Users, color: 'text-purple-600', bg: 'bg-purple-50' },
-    { label: 'Monthly Growth', value: '+12%', icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50' },
-  ];
-
-  const filteredDonations = donations.filter((d: any) =>
-    d.donorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    d.receiptNumber.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FFFDF9]">
+        <div className="h-10 w-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Sidebar - Professional & Slim */}
-      <aside className="w-64 bg-secondary text-white hidden lg:flex flex-col border-r border-white/5">
-        <div className="p-6 border-b border-white/5">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center p-1.5">
-              <img src="/devi.png" alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
-            </div>
-            <div>
-              <h2 className="text-sm font-black tracking-tight">KULDAIVAT TRUST</h2>
-              <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Admin Portal</p>
-            </div>
-          </div>
-        </div>
-
-        <nav className="flex-1 p-4 space-y-1.5">
-          <a href="#" className="flex items-center gap-3 p-3 bg-white/5 text-primary rounded-xl text-sm font-bold border border-white/5">
-            <LayoutDashboard className="w-4 h-4" /> Dashboard
-          </a>
-          <a href="#" className="flex items-center gap-3 p-3 hover:bg-white/5 text-white/60 hover:text-white rounded-xl text-sm font-semibold transition-all">
-            <HandHeart className="w-4 h-4" /> Donations
-          </a>
-          <a href="#" className="flex items-center gap-3 p-3 hover:bg-white/5 text-white/60 hover:text-white rounded-xl text-sm font-semibold transition-all">
-            <Users className="w-4 h-4" /> Collectors
-          </a>
-          <a href="#" className="flex items-center gap-3 p-3 hover:bg-white/5 text-white/60 hover:text-white rounded-xl text-sm font-semibold transition-all">
-            <Cake className="w-4 h-4" /> Birthdays
-          </a>
-        </nav>
-
-        <div className="p-4 border-t border-white/5">
-          <Link href="/admin" className="flex items-center gap-3 p-3 text-white/40 hover:text-red-400 text-sm font-semibold transition-all">
-            <LogOut className="w-4 h-4" /> Logout
-          </Link>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Header - Minimal */}
-        <header className="h-16 bg-white border-b border-border px-8 flex justify-between items-center shrink-0">
+    <div className="min-h-screen flex flex-col bg-[#FFFDF9]">
+      <Navbar />
+      
+      <main className="flex-grow container mx-auto px-4 py-12 max-w-7xl">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
-            <h1 className="text-lg font-bold text-secondary">Dashboard Overview</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="p-2 text-muted-foreground hover:text-primary transition-all relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
-            </button>
-            <div className="h-8 w-px bg-border mx-2" />
-            <div className="flex items-center gap-3">
-              <div className="text-right hidden sm:block">
-                <p className="text-xs font-bold text-secondary leading-none">Chairman</p>
-                <p className="text-[10px] text-muted-foreground mt-1">Trust Board</p>
-              </div>
-              <div className="w-8 h-8 rounded-full bg-muted border border-border flex items-center justify-center text-xs font-bold text-secondary">
-                CH
-              </div>
+            <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-[10px] mb-2">
+              <ShieldCheck className="w-4 h-4" /> Administrative Terminal
             </div>
+            <h1 className="text-4xl font-black text-secondary tracking-tight">Trust Dashboard</h1>
           </div>
-        </header>
+          <div className="flex gap-3">
+            <button className="spiritual-button-outline !px-4 !py-2.5 text-xs">
+              <Download className="w-4 h-4" /> Export Data
+            </button>
+            <button className="spiritual-button !px-6 !py-2.5 text-xs">
+              Generate Report
+            </button>
+          </div>
+        </div>
 
-        <div className="flex-1 overflow-y-auto p-8 space-y-8">
-          {/* Action Bar */}
-          <div className="flex flex-col sm:flex-row justify-between items-end sm:items-center gap-4">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="spiritual-card p-6 bg-white flex items-start justify-between">
             <div>
-              <h2 className="text-2xl font-black text-secondary tracking-tight">Welcome Back</h2>
-              <p className="text-xs text-muted-foreground font-medium mt-1">Here is what's happening with the trust today.</p>
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Total Registered Users</p>
+              <h3 className="text-3xl font-black text-secondary">{stats?.totalUsers || 0}</h3>
+              <div className="mt-2 flex items-center gap-1 text-green-600 font-bold text-[10px]">
+                <TrendingUp className="w-3 h-3" /> +12% from last month
+              </div>
             </div>
-            <button
-              onClick={exportToExcel}
-              className="spiritual-button-outline !py-2.5 !px-5 text-xs shadow-sm bg-white"
-            >
-              <FileSpreadsheet className="w-4 h-4 text-green-600" /> Export Report
-            </button>
+            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+              <Users className="w-6 h-6 text-blue-600" />
+            </div>
           </div>
 
-          {/* Stats Grid - Compact Soft Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {stats.map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="spiritual-card p-5 flex items-center gap-4 border-none shadow-md shadow-secondary/5"
-              >
-                <div className={`${s.bg} p-3 rounded-xl`}>
-                  <s.icon className={`w-5 h-5 ${s.color}`} />
-                </div>
-                <div>
-                  <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-wider">{s.label}</p>
-                  <p className="text-xl font-black text-secondary mt-0.5">{s.value}</p>
-                </div>
-              </motion.div>
-            ))}
+          <div className="spiritual-card p-6 bg-white flex items-start justify-between">
+            <div>
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Total Collection</p>
+              <div className="text-3xl font-black text-secondary flex items-baseline gap-1">
+                <IndianRupee className="w-5 h-5 text-accent" />
+                {stats?.totalDonationAmount?.toLocaleString() || 0}
+              </div>
+              <div className="mt-2 flex items-center gap-1 text-green-600 font-bold text-[10px]">
+                <TrendingUp className="w-3 h-3" /> +18% from last month
+              </div>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <IndianRupee className="w-6 h-6 text-primary" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Recent Donations Table - Compact */}
-            <div className="lg:col-span-2 space-y-4">
-              <div className="spiritual-card overflow-hidden border-none shadow-lg shadow-secondary/5">
-                <div className="p-5 border-b border-border/50 flex justify-between items-center bg-white">
-                  <h3 className="font-bold text-secondary text-sm">Recent Donations</h3>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-3.5 h-3.5" />
-                    <input
-                      type="text"
-                      placeholder="Search donor..."
-                      className="bg-muted/50 border-none rounded-lg pl-9 pr-4 py-1.5 text-xs focus:ring-1 focus:ring-primary/20 w-48 md:w-64 transition-all"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+          <div className="spiritual-card p-6 bg-white flex items-start justify-between">
+            <div>
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Active Sessions</p>
+              <h3 className="text-3xl font-black text-secondary">24</h3>
+              <div className="mt-2 flex items-center gap-1 text-amber-600 font-bold text-[10px]">
+                <Clock className="w-3 h-3" /> Peak hours detected
+              </div>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+              <LayoutDashboard className="w-6 h-6 text-secondary" />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Recent Transactions */}
+          <div className="spiritual-card overflow-hidden">
+            <div className="p-6 border-b border-border flex items-center justify-between">
+              <h3 className="text-lg font-black text-secondary capitalize">Recent Spiritual Charity</h3>
+              <button className="text-primary font-bold text-xs flex items-center gap-1 hover:underline">
+                View All <ArrowUpRight className="w-3 h-3" />
+              </button>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>Devotee</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th className="text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats?.recentTransactions?.map((tx: any) => (
+                    <tr key={tx._id}>
+                      <td className="font-bold text-secondary">{tx.donorName}</td>
+                      <td className="text-muted-foreground">{format(new Date(tx.donationDate), 'dd MMM')}</td>
+                      <td>
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-black tracking-wider uppercase ${
+                           tx.paymentStatus === 'completed' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+                        }`}>
+                          {tx.paymentStatus}
+                        </span>
+                      </td>
+                      <td className="text-right font-black text-secondary">₹{tx.amount.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="space-y-6">
+            <div className="spiritual-card p-8 bg-secondary text-white relative overflow-hidden">
+              <div className="relative z-10">
+                <h3 className="text-2xl font-black mb-4 tracking-tight">Financial Overview</h3>
+                <p className="text-white/60 text-sm mb-6 max-w-sm">
+                  Review and analyze the trust's financial health, manage donor records, and generate compliance reports.
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white/10 rounded-2xl p-4 border border-white/10">
+                    <p className="text-white/40 text-[9px] font-black uppercase tracking-widest mb-1 text-center">Last Receipt</p>
+                    <p className="text-center font-bold text-accent">#MT-8942</p>
+                  </div>
+                  <div className="bg-white/10 rounded-2xl p-4 border border-white/10">
+                    <p className="text-white/40 text-[9px] font-black uppercase tracking-widest mb-1 text-center">Active Donors</p>
+                    <p className="text-center font-bold text-accent">1,204</p>
                   </div>
                 </div>
-                <div className="overflow-x-auto">
-                  <table className="dashboard-table">
-                    <thead>
-                      <tr>
-                        <th>Receipt</th>
-                        <th>Donor Name</th>
-                        <th>Amount</th>
-                        <th>Reason</th>
-                        <th>Date</th>
-                        <th className="text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredDonations.map((d: any) => (
-                        <tr key={d._id}>
-                          <td className="font-mono text-[11px] font-bold text-primary">{d.receiptNumber}</td>
-                          <td className="font-semibold text-secondary">{d.donorName}</td>
-                          <td>
-                            <span className="font-bold text-secondary">₹{d.amount}</span>
-                          </td>
-                          <td className="text-muted-foreground text-[12px]">{d.reason}</td>
-                          <td className="text-muted-foreground text-[12px]">{formatDate(d.donationDate)}</td>
-                          <td className="text-right">
-                            <button className="p-1.5 hover:bg-primary/5 text-primary rounded-lg transition-all">
-                              <Download className="w-4 h-4" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                      {filteredDonations.length === 0 && (
-                        <tr>
-                          <td colSpan={6} className="py-12 text-center text-muted-foreground text-xs italic">
-                            No donations found matching your search.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="p-3 bg-muted/20 border-t border-border/50 text-center">
-                  <button className="text-[11px] font-bold text-primary hover:underline">View All Donations</button>
-                </div>
               </div>
             </div>
 
-            {/* Sidebar Modules - Compact */}
-            <div className="space-y-6">
-              {/* Birthdays Module */}
-              <div className="spiritual-card p-5 border-none shadow-lg shadow-secondary/5 bg-white">
-                <div className="flex justify-between items-center mb-5">
-                  <h3 className="font-bold text-secondary text-sm flex items-center gap-2">
-                    <Cake className="w-4 h-4 text-primary" /> Upcoming Birthdays
-                  </h3>
-                  <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">3 Today</span>
+            <div className="grid grid-cols-2 gap-6">
+              <button className="spiritual-card p-6 flex flex-col items-center gap-3 hover:bg-muted/50 transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <Users className="w-5 h-5" />
                 </div>
-                <div className="space-y-3">
-                  {donations.slice(0, 3).map((d: any, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-muted/30 border border-border/50">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">
-                          {d.donorName[0]}
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-secondary truncate">{d.donorName}</p>
-                          <p className="text-[10px] text-muted-foreground">Tomorrow</p>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() => shareOnWhatsApp(d)}
-                        className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all shadow-sm"
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
+                <span className="text-xs font-black text-secondary uppercase tracking-wider">Manage Users</span>
+              </button>
+              <button className="spiritual-card p-6 flex flex-col items-center gap-3 hover:bg-muted/50 transition-colors">
+                <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
+                  <Download className="w-5 h-5" />
                 </div>
-                <button className="w-full mt-4 py-2.5 text-[11px] font-bold text-muted-foreground hover:text-primary transition-all flex items-center justify-center gap-1">
-                  View Birthday Calendar <ChevronRight className="w-3 h-3" />
-                </button>
-              </div>
-
-              {/* Admin Quick Actions */}
-              <div className="bg-secondary rounded-2xl p-5 text-white relative overflow-hidden shadow-lg shadow-secondary/20">
-                <div className="absolute top-0 right-0 w-24 h-24 opacity-5 pointer-events-none -mr-4 -mt-4 grayscale">
-                  <img src="/devi.png" alt="Devi" />
-                </div>
-                <h4 className="text-sm font-bold mb-1">Chairman's Corner</h4>
-                <p className="text-[10px] text-white/50 mb-6">Review and approve trust actions.</p>
-
-                <div className="space-y-2">
-                  <button className="w-full py-2.5 bg-white/5 hover:bg-white/10 rounded-xl transition-all text-[11px] font-bold border border-white/10">
-                    Approve Bank Changes
-                  </button>
-                  <button className="w-full py-2.5 bg-primary text-white rounded-xl transition-all text-[11px] font-bold shadow-lg shadow-primary/20">
-                    Add New Collector
-                  </button>
-                </div>
-              </div>
+                <span className="text-xs font-black text-secondary uppercase tracking-wider">Backup Data</span>
+              </button>
             </div>
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

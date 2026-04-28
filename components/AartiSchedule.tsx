@@ -17,7 +17,7 @@ export default function AartiSchedule() {
     <section
       className="relative w-full min-h-[550px] bg-cover bg-left flex items-center"
       style={{
-        backgroundImage: "url('/images/aarti_bg.png')" // 🔁 your generated image
+        backgroundImage: "url('/images/aarti_background.png')" // 🔁 your generated image
       }}
     >
       {/* Dark Overlay for readability */}

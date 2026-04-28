@@ -10,6 +10,7 @@ import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
 import { Sparkles, Heart } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
+import FestivalSpotLight from '@/components/FestivalSpotLight';
 
 export default function Home() {
   const { t } = useLanguage();
@@ -50,24 +51,32 @@ export default function Home() {
 
         {/* Gallery Section */}
         <GallerySection />
+        <FestivalSpotLight />
 
-        {/* Impact Section / Quote - Now in Saffron for High Contrast */}
-        <section className="py-16 md:py-24 bg-primary relative overflow-hidden">
+        <section className="relative py-8 md:py-10 bg-gradient-to-br from-orange-200 via-orange-100 to-amber-100 overflow-hidden">
+
           {/* Decorative Pattern */}
-          <div className="absolute inset-0 opacity-[0.05] pointer-events-none grayscale invert">
-            <img src="/devi.png" alt="Pattern" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 opacity-[0.04] pointer-events-none grayscale">
+            <img src="/devi.png" alt="Pattern" className="w-full h-full object-cover scale-110" />
           </div>
 
-          <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
+          {/* Soft Glow */}
+          <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-[300px] h-[300px] bg-white/30 blur-3xl rounded-full" />
+
+          <div className="max-w-3xl mx-auto px-4 relative z-10 text-center">
+
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
               viewport={{ once: true }}
-              className="space-y-6 bg-[#FFF7ED] p-8 rounded-2xl border border-gray-200 shadow-md"
+              className="space-y-5"
             >
+
+              {/* Icon */}
               <div className="flex justify-center">
-                <div className="w-12 h-12 rounded-full bg-[#C2410C]/10 flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-[#C2410C]" />
+                <div className="w-12 h-12 rounded-full bg-white/50 backdrop-blur-sm flex items-center justify-center shadow">
+                  <Sparkles className="w-5 h-5 text-orange-600" />
                 </div>
               </div>
 
@@ -81,6 +90,12 @@ export default function Home() {
                   {t('hero.title_1')} {t('hero.title_2')}, {t('hero.info.place')}
                 </p>
               </div>
+
+              {/* Trust Name */}
+              <p className="text-orange-700 font-semibold uppercase tracking-[0.2em] text-[10px]">
+                श्री महालक्ष्मी मंदिर ट्रस्ट, मुंबई
+              </p>
+
             </motion.div>
           </div>
         </section>
