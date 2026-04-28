@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 import { Mail, Phone, MapPin, Globe, MessageCircle, Send, ShieldCheck } from 'lucide-react';
 
@@ -14,9 +15,9 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="md:col-span-1 space-y-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-2 shadow-lg shadow-primary/10">
+              <Link href="/" className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-2 shadow-lg shadow-primary/10">
                 <img src="/devi.png" alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
-              </div>
+              </Link>
               <h3 className="text-xl font-black text-white tracking-tight">Kuldaivat Trust</h3>
             </div>
             <p className="text-sm leading-relaxed text-white/60">
@@ -37,7 +38,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm font-medium">
               <li><a href="#" className="hover:text-primary transition-colors">{t('nav.home')}</a></li>
               <li><a href="#about" className="hover:text-primary transition-colors">{t('nav.about')}</a></li>
-              <li><a href="#donations" className="hover:text-primary transition-colors">{t('nav.donate')}</a></li>
+              <li><Link href="/donation" className="hover:text-primary transition-colors">{t('nav.donate')}</Link></li>
               <li><a href="#" className="hover:text-primary transition-colors">{t('aarti.title')}</a></li>
             </ul>
           </div>

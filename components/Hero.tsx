@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 import { motion } from 'framer-motion';
 import { Clock, HandHeart, MapPin, Phone, Calendar, ArrowRight } from 'lucide-react';
@@ -55,9 +56,9 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <a href="#donations" className="spiritual-button !px-8 !py-4 text-base w-full sm:w-auto shadow-lg shadow-primary/20">
+            <Link href="/donation" className="spiritual-button !px-8 !py-4 text-base w-full sm:w-auto shadow-lg shadow-primary/20">
               {t('hero.cta_donate')} <ArrowRight className="w-4 h-4 ml-1" />
-            </a>
+            </Link>
             <button className="spiritual-button-outline !px-8 !py-4 text-base w-full sm:w-auto hover:bg-white">
               {t('hero.cta_darshan')}
             </button>

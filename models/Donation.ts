@@ -1,25 +1,32 @@
 import mongoose from 'mongoose';
 
 const DonationSchema = new mongoose.Schema({
+  donorType: {
+    type: String,
+    enum: ['individual', 'organization'],
+    default: 'individual',
+  },
   donorName: {
     type: String,
     required: [true, 'Please provide donor name'],
   },
+  email: String,
   mobileNumber: {
     type: String,
     required: [true, 'Please provide mobile number'],
   },
+  panNumber: String,
   address: String,
   amount: {
     type: Number,
     required: [true, 'Please provide amount'],
   },
+  purpose: String,
+  occasion: String,
   reason: {
     type: String,
     required: [true, 'Please provide reason'],
-    enum: ['Birthday', 'Navratri', 'Javal (Munji)', 'Custom'],
   },
-  customReason: String,
   paymentStatus: {
     type: String,
     enum: ['pending', 'completed', 'failed'],
@@ -46,17 +53,6 @@ const DonationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  isRecurring: {
-    type: Boolean,
-    default: false,
-  },
-  recurringInterval: {
-    type: String,
-    enum: ['monthly', 'yearly', 'none'],
-    default: 'none',
-  },
-  donorBirthday: Date,
-  donorPhoto: String,
 }, { timestamps: true });
 
 export default mongoose.models.Donation || mongoose.model('Donation', DonationSchema);

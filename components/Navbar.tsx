@@ -85,9 +85,12 @@ export default function Navbar() {
               </Link>
 
               <div className="flex items-center gap-2 ml-4">
-                <a href="#donations" className="spiritual-button !px-4 !py-2 text-xs">
+                <button className="spiritual-button-outline !px-4 !py-2 text-xs">
+                  <Sparkles className="w-3.5 h-3.5 text-primary" /> {t('nav.book_pooja')}
+                </button>
+                <Link href="/donation" className="spiritual-button !px-4 !py-2 text-xs">
                   <HandHeart className="w-3.5 h-3.5" /> {t('nav.donate')}
-                </a>
+                </Link>
 
                 {isAuthenticated ? (
                   <div className="relative">
@@ -122,7 +125,7 @@ export default function Navbar() {
                                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-secondary hover:bg-muted font-bold transition-colors"
                                 onClick={() => setShowProfileMenu(false)}
                               >
-                                <LayoutDashboard className="w-4 h-4 text-primary" /> admin Dashboard
+                                <LayoutDashboard className="w-4 h-4 text-primary" /> Admin Dashboard
                               </Link>
                             )}
 
@@ -181,28 +184,31 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu */}
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            className="md:hidden bg-white px-4 pt-2 pb-6 space-y-1 border-t border-border shadow-inner"
-          >
-            <Link href="/" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.home')}</Link>
-            <a href="#about" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.about')}</a>
-            <a href="#darshan" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.darshan')}</a>
-            <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.contact')}</Link>
-            <a href="#donations" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg">{t('nav.donate')}</a>
-            <button
-              onClick={() => {
-                setLanguage(language === 'en' ? 'mr' : 'en');
-                setIsOpen(false);
-              }}
-              className="flex items-center gap-2 py-4 px-2 text-sm font-semibold text-secondary"
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-white px-4 pt-2 pb-6 space-y-1 border-t border-border shadow-inner"
             >
-              <Languages className="w-4 h-4 text-accent" /> {language === 'en' ? 'मराठी' : 'English'}
-            </button>
-          </motion.div>
-        )}
+              <Link href="/" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.home')}</Link>
+              <a href="#about" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.about')}</a>
+              <a href="#darshan" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.darshan')}</a>
+              <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.contact')}</Link>
+              <Link href="/donation" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg">{t('nav.donate')}</Link>
+              <button
+                onClick={() => {
+                  setLanguage(language === 'en' ? 'mr' : 'en');
+                  setIsOpen(false);
+                }}
+                className="flex items-center gap-2 py-4 px-2 text-sm font-semibold text-secondary"
+              >
+                <Languages className="w-4 h-4 text-accent" /> {language === 'en' ? 'मराठी' : 'English'}
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </header>
   );

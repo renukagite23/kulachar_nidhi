@@ -1,21 +1,41 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Donation from '@/models/Donation';
+import User from '@/models/User';
 import { generateReceiptNumber } from '@/lib/utils';
+import { getDataFromToken } from '@/lib/auth';
 
 export async function POST(req: Request) {
   try {
     await dbConnect();
     const body = await req.json();
-    
+    console.log('Donation Request Body:', body);
+
+    // Get user details from token if authenticated
+    const decoded = await getDataFromToken();
+    let userId = null;
+
+    if (decoded && decoded.id) {
+      userId = decoded.id;
+    }
+
     const donation = await Donation.create({
       ...body,
       receiptNumber: generateReceiptNumber(),
-      paymentStatus: 'completed', // For demo purposes, we mark it completed immediately
+      paymentStatus: 'completed',
+      ...(userId && { userId }),
     });
+
+    // Increment user's totalDonations if authenticated
+    if (userId) {
+      await User.findByIdAndUpdate(userId, {
+        $inc: { totalDonations: donation.amount }
+      });
+    }
 
     return NextResponse.json({ success: true, data: donation }, { status: 201 });
   } catch (error: any) {
+    console.error('Donation API Error:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 400 });
   }
 }

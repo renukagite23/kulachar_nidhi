@@ -66,6 +66,21 @@
       "munji": "Javal (Munji)",
       "other": "Other"
     },
+    "purposes": {
+      "general": "General Donation",
+      "building": "Temple Building Fund",
+      "education": "Education Support",
+      "medical": "Medical Aid Fund",
+      "annakshetra": "Annakshetra (Food Fund)",
+      "other": "Other"
+    },
+    "occasions": {
+      "birthday": "Birthday",
+      "anniversary": "Wedding Anniversary",
+      "memorial": "In Memory Of",
+      "navratri": "Navratri Festival",
+      "other": "Other"
+    },
     "donor_details": "Donor Details",
     "name": "Full Name",
     "mobile": "Mobile Number",
@@ -77,7 +92,30 @@
     "receipt_desc": "Your divine contribution has been recorded.",
     "download": "Download Receipt",
     "print": "Print",
-    "another": "Make Another Donation"
+    "another": "Make Another Donation",
+    "instructions": {
+      "title": "Important Instructions",
+      "point1": "There will be no refunds once the amount is credited to Temple Trust account.",
+      "point2": "For Failed Transactions Devotees Should raise complaints from the payment originating bank.",
+      "point3": "All Rights reserved to Temple Trust.",
+      "point4": "For 80 G certificate PAN number is mandatory.",
+      "point5": "Temple is not responsible for any incorrect information and any failure transactions."
+    },
+    "donor_type": "Donor Type",
+    "individual": "Individual",
+    "organization": "Organization",
+    "purpose": "Purpose Of Donation",
+    "occasion": "Select Occasion",
+    "organization_name": "Full Name of Organization",
+    "organization_placeholder": "Enter Organization Name",
+    "gstn": "GSTN/TAN",
+    "gstn_placeholder": "Enter Donor GSTN/TAN Number",
+    "pan": "Donor PAN Number",
+    "email": "Email ID",
+    "pan_warning": "Pan Card Mandatory for 80G Certificate",
+    "purpose_placeholder": "Select Purpose of Donation",
+    "occasion_placeholder": "Select Occasion",
+    "clear": "Clear"
   },
   "footer": {
     "location": "Mumbai | Mahalakshmi",

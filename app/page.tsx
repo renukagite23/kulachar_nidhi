@@ -28,26 +28,7 @@ export default function Home() {
         {/* Aarti Schedule Section */}
         <AartiSchedule />
 
-        {/* Donation Gateway Section */}
-        <section id="donations" className="py-12 md:py-16 bg-background relative overflow-hidden">
-          {/* Background Decorative */}
-          <div className="absolute top-0 left-0 w-full h-full opacity-[0.02] pointer-events-none -z-0">
-            <img src="/devi.png" alt="Pattern" className="w-full h-full object-cover scale-150 rotate-12" />
-          </div>
 
-          <div className="max-w-7xl mx-auto px-4 relative z-10">
-            <div className="text-center mb-10">
-              <div className="flex items-center justify-center gap-2 mb-3">
-                <Heart className="w-4 h-4 text-primary fill-primary" />
-                <span className="text-primary font-black text-[10px] uppercase tracking-[0.2em]">{t('donation.badge')}</span>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-black text-secondary tracking-tight">{t('donation.title')}</h2>
-              <p className="text-muted-foreground text-xs font-medium mt-2">{t('hero.subtitle')}</p>
-            </div>
-
-            <DonationForm />
-          </div>
-        </section>
 
         {/* Gallery Section */}
         <GallerySection />
