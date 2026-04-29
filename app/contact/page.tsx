@@ -94,64 +94,81 @@ export default function ContactPage() {
               ))}
             </div>
 
-            {/* Support & Map Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mt-16 items-start">
-
+            {/* Support Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-16 items-stretch">
               {/* Form/Info Card */}
-              <div className="lg:col-span-5 space-y-6">
-                <div className="bg-secondary p-8 rounded-[2.5rem] text-white relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16" />
-
-                  <div className="relative z-10 space-y-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-primary">
-                        <MessageCircle className="w-5 h-5" />
-                      </div>
-                      <h4 className="text-lg font-black">{t('contact.feedback')}</h4>
+              <div className="bg-secondary p-8 rounded-[2.5rem] text-white relative overflow-hidden flex flex-col justify-center">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16" />
+                <div className="relative z-10 space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-primary">
+                      <MessageCircle className="w-5 h-5" />
                     </div>
-                    <p className="text-xs text-white/50 leading-relaxed font-bold">
-                      {t('contact.feedback_desc')}
+                    <h4 className="text-xl font-black">{t('contact.feedback')}</h4>
+                  </div>
+                  <p className="text-sm text-white/50 leading-relaxed font-bold">
+                    {t('contact.feedback_desc')}
+                  </p>
+                  <button className="spiritual-button w-full h-14 text-sm uppercase tracking-widest">
+                    {t('contact.actions.feedback')}
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white p-10 rounded-[2.5rem] border border-border shadow-lg flex items-center">
+                <div className="flex items-start gap-6">
+                  <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary shrink-0">
+                    <Sparkles className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-black text-secondary mb-2">{t('contact.other_info')}</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed font-bold">
+                      {t('contact.other_info_desc')}
                     </p>
-                    <button className="spiritual-button w-full h-12 text-xs uppercase tracking-widest">
-                      {t('contact.actions.feedback')}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="bg-white p-6 rounded-[2.5rem] border border-border shadow-lg">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0">
-                      <Sparkles className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-black text-secondary mb-1">{t('contact.other_info')}</h4>
-                      <p className="text-[10px] text-muted-foreground leading-relaxed font-bold">
-                        {t('contact.other_info_desc')}
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
-
-              {/* Interactive Map */}
-              <div className="lg:col-span-7 bg-white p-4 rounded-[2.5rem] border border-border shadow-2xl h-[450px] overflow-hidden group">
-                <div className="w-full h-full rounded-[2rem] overflow-hidden relative">
-                  {/* Google Map Embed */}
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m13!1m11!1m3!1d15094.0621370213!2d72.8016462!3d18.9760375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7ce7464003291%3A0x6b7ce7464003291!2sMahalakshmi%20Temple!5e0!3m2!1sen!2sin!4v1714152000000!5m2!1sen!2sin"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    className="grayscale group-hover:grayscale-0 transition-all duration-700"
-                  ></iframe>
-                </div>
-              </div>
-
             </div>
           </div>
+        </section>
+
+        {/* FULL WIDTH MAP SECTION */}
+        <section className="relative h-[600px] w-full bg-muted overflow-hidden border-t border-border">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3773.5133611849156!2d72.80209267520448!3d18.9750130827055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7ce7464003291%3A0x6b7ce7464003291!2sMahalakshmi%20Temple!5e0!3m2!1sen!2sin!4v1714392000000!5m2!1sen!2sin"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Mahalakshmi Temple Location"
+            ></iframe>
+            
+            {/* Map Overlay Card */}
+            <div className="absolute top-10 left-4 md:left-20 z-10 max-w-xs w-full pointer-events-none">
+                <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    className="bg-white p-6 rounded-3xl shadow-2xl border border-border pointer-events-auto"
+                >
+                    <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest mb-3">
+                        <MapPin className="w-3 h-3" /> Visit Us
+                    </div>
+                    <h4 className="text-lg font-black text-secondary mb-2">Shri Mahalakshmi Temple</h4>
+                    <p className="text-[10px] text-muted-foreground font-bold leading-relaxed mb-4 italic">
+                        Bhulabhai Desai Road, Mahalaxmi West, <br/>Mumbai - 400 026
+                    </p>
+                    <a 
+                        href="https://maps.app.goo.gl/MahalaxmiTemple" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-2 w-full py-3 bg-secondary text-white text-[10px] font-black uppercase rounded-xl hover:bg-primary transition-colors"
+                    >
+                        Open In Google Maps
+                    </a>
+                </motion.div>
+            </div>
         </section>
       </main>
 

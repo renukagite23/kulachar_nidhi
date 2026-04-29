@@ -40,6 +40,7 @@ export default function Footer() {
               <li><Link href="/about/history" className="hover:text-primary transition-colors">{t('nav.about_temple')}</Link></li>
               <li><Link href="/donation" className="hover:text-primary transition-colors">{t('nav.donate')}</Link></li>
               <li><Link href="/gallery" className="hover:text-primary transition-colors">{t('nav.gallery')}</Link></li>
+              <li><Link href="/about#presidential-message" className="hover:text-primary transition-colors">{t('nav.about_trust') || "About Trust"}</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">{t('nav.contact')}</Link></li>
             </ul>
           </div>
