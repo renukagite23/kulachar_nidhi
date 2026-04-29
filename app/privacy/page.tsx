@@ -19,7 +19,7 @@ export default function PrivacyPage() {
             Shri Mahalakshmi Temple Trust ("we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and disclose your personal information.
           </p>
 
-          <h2 className="text-2xl font-black text-secondary pt-4">1. Information Collection</h2>
+          <h2 className="text-2xl font-blaccondary pt-4">1. Information Collection</h2>
           <p>
             We collect information you provide directly to us, such as when you make a donation, register for a pooja, or contact us. This may include your name, email address, phone number, and pan card details for 80G tax exemptions.
           </p>
