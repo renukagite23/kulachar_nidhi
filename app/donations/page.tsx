@@ -22,7 +22,7 @@ export default function DonationHistoryPage() {
   const handleDownload = async (donation: any) => {
     setDownloading(donation._id);
     setSelectedDonation(donation);
-    
+
     // Give time for React to render the component for capture
     setTimeout(async () => {
       try {
@@ -73,7 +73,7 @@ export default function DonationHistoryPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#FFFDF9]">
       <Navbar />
-      
+
       <main className="flex-grow container mx-auto px-4 py-12 max-w-5xl">
         <div className="mb-10 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 mb-4">
@@ -89,13 +89,14 @@ export default function DonationHistoryPage() {
               <h2 className="text-lg font-black text-secondary">All Transactions</h2>
               <p className="text-xs text-muted-foreground font-bold uppercase tracking-tight">Total: {donations.length} donations</p>
             </div>
-            
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50" />
-              <input 
-                type="text" 
-                placeholder="Search..." 
-                className="spiritual-input pl-10 h-10 w-full md:w-64"
+
+            <div className="flex items-center border border-gray-300 rounded-md px-3 h-10 w-full md:w-64 focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition">
+              <Search className="w-4 h-4 text-muted-foreground mr-2" />
+
+              <input
+                type="text"
+                placeholder="Search..."
+                className="w-full outline-none bg-transparent text-sm placeholder:text-muted-foreground/60"
               />
             </div>
           </div>
@@ -136,11 +137,10 @@ export default function DonationHistoryPage() {
                         </div>
                       </td>
                       <td>
-                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${
-                          donation.paymentStatus === 'completed' 
-                          ? 'bg-green-100 text-green-700' 
+                        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider ${donation.paymentStatus === 'completed'
+                          ? 'bg-green-100 text-green-700'
                           : 'bg-amber-100 text-amber-700'
-                        }`}>
+                          }`}>
                           {donation.paymentStatus}
                         </span>
                       </td>

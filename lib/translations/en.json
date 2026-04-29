@@ -213,5 +213,56 @@
   },
   "impact": {
     "quote": "“Every donation given with faith is a strong foundation for the preservation of our culture.”"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "About the Trust",
+    "president_msg": "President's Message",
+    "msg_para1": "This pride of a virtuous and sattvic state of mind, with the grace and blessings of Shri Mahalakshmi Devi, the acclamations of the devotees, good thoughts, and good actions...",
+    "msg_para2": "On September 22, 1976, the first Board of Trustees of Shri Mahalakshmi Devi Trust started its magnificent journey. This is a journey of devotees' faith, the eternal presence of Shri Mahalakshmi Mata, and a scenic place of joy.",
+    "msg_para3": "Every year 45 to 50 lakh devotees come from all over the world. A holy confluence of pilgrimage and tourism. Our sincere wish is to provide excellent facilities for the devotees. The Trust believes in increasing facilities while maintaining the holiness and significance of the region.",
+    "major_works": "Major Developmental Works",
+    "works_desc": "Renovation of Shri Mahalakshmi Temple, construction of steps, magnificent entrance, meditation hall for devotees, Bhaktangan, Bhaktaniwas, Prasadalaya Annapurna, charitable dispensary, renovation of Shivalaya Lake, drinking water up to the temple area, concretization of internal roads on the hill, provision of three generators for power supply.",
+    "staff_quarters": "Staff Quarters",
+    "staff_desc": "Efforts to acquire land for expansion of Bhaktaniwas. Proposal to Yavana, positive action. Various action programs and expansion work for beautification of the temple for spiritual joy, creation of educational institutions, peace, nobility, and holiness of the region.",
+    "donor_remembrance": "The contribution of various generous donors of the Trust is remembered. The names of the donors are a mark of respect and manifestation of their generosity. Government cooperation, decisions, and the support of government agencies are remarkable. The staff is working promptly to keep the daily operations of the Trust smooth.",
+    "president_name": "Ma. Shri B.D. Chavan",
+    "president_role": "President,",
+    "trust_name": "Shri Mahalakshmi Devi Trust, Mumbai",
+    "badges": {
+      "legacy": "Preserving Legacy",
+      "mandate": "Trustees Mandate since 1976"
+    },
+    "stats": {
+      "devotees": "Annual Devotees",
+      "devotees_val": "50 Lakh+",
+      "established": "Foundation Year",
+      "established_val": "1976",
+      "staff": "Staff",
+      "staff_val": "250+",
+      "prasadalaya": "Annapurna Prasadalaya",
+      "free": "Free"
+    }
+  },
+  "trustees": {
+    "title": "President and Board of Trustees",
+    "names": {
+      "gokhale": "Ma. Shri Vinayak P. Gokhale",
+      "deshpande": "Ma. Smt. Sulabha Deshpande",
+      "kulkarni_r": "Ma. Shri Rajesh M. Kulkarni",
+      "joshi": "Ma. Shri Sanjay J. Joshi",
+      "patwardhan": "Ma. Shri Anil R. Patwardhan",
+      "kulkarni_s": "Ma. Sau. Seema S. Kulkarni",
+      "bhave": "Ma. Dr. Shri Prakash A. Bhave",
+      "ranade": "Ma. Shri Sudhir V. Ranade",
+      "sane": "Shri Milind B. Sane"
+    },
+    "roles": {
+      "president_judge": "President (Retired District & Sessions Judge)",
+      "vice_president_judge": "Vice President (Retired District Judge)",
+      "trustee": "(Trustee)",
+      "trustee_tehsildar": "(Trustee, Tehsildar Kalwan)",
+      "executive_officer": "(Executive Officer)"
+    }
   }
 }

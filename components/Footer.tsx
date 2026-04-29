@@ -79,7 +79,6 @@ export default function Footer() {
               </div>
             </div>
             <ul className="space-y-2 text-xs font-medium text-white/40">
-              <li><a href="/admin" className="hover:text-white flex items-center gap-1.5"><ShieldCheck className="w-3 h-3" /> Admin Portal</a></li>
               <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
               <li><a href="#" className="hover:text-white">Terms of Service</a></li>
             </ul>
