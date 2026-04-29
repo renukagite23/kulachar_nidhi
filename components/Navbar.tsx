@@ -17,6 +17,7 @@ export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
   const [isOpen, setIsOpen] = React.useState(false);
   const [showProfileMenu, setShowProfileMenu] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [mounted, setMounted] = React.useState(false);
   const dispatch = useDispatch();
@@ -76,9 +77,9 @@ export default function Navbar() {
               <Link href="/" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
                 {t('nav.home')}
               </Link>
-              <a href="#about" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
+              <Link href="/about" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
                 {t('nav.about')}
-              </a>
+              </Link>
               <a href="#darshan" className="text-secondary/80 hover:text-primary font-semibold transition-colors px-3 py-1.5 text-sm rounded-lg hover:bg-muted/50">
                 {t('nav.darshan')}
               </a>
@@ -134,7 +135,7 @@ export default function Navbar() {
                                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-secondary hover:bg-muted font-bold transition-colors"
                                 onClick={() => setShowProfileMenu(false)}
                               >
-                                <LayoutDashboard className="w-4 h-4 text-primary" /> Admin Dashboard
+                                <LayoutDashboard className="w-4 h-4 text-primary" /> admin Dashboard
                               </Link>
                             )}
 
@@ -167,54 +168,70 @@ export default function Navbar() {
                       )}
                     </AnimatePresence>
                   </div>
-                )}
-              </div>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden flex items-center gap-3">
-              {(!mounted || !isAuthenticated) && (
-                <Link href="/login" className="p-1.5 rounded-lg text-secondary">
-                  <User className="w-6 h-6" />
+                ) : (
+                <Link href="/login" className="spiritual-button-outline !px-4 !py-2 text-xs">
+                  <User className="w-3.5 h-3.5 text-primary" /> Login
                 </Link>
-              )}
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="p-1.5 rounded-lg text-secondary"
-              >
-                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
+                    )}
+              </>
+                )}
             </div>
           </div>
-        </div>
 
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white px-4 pt-2 pb-6 space-y-1 border-t border-border shadow-inner"
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center gap-3">
+            {mounted && !isAuthenticated && (
+              <Link href="/login" className="p-1.5 rounded-lg text-secondary">
+                <User className="w-6 h-6" />
+              </Link>
+            )}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-1.5 rounded-lg text-secondary"
             >
-              <Link href="/" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.home')}</Link>
-              <a href="#about" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.about')}</a>
-              <a href="#darshan" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.darshan')}</a>
-              <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.contact')}</Link>
-              <Link href="/donation" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg">{t('nav.donate')}</Link>
-              <button
-                onClick={() => {
-                  setLanguage(language === 'en' ? 'mr' : 'en');
-                  setIsOpen(false);
-                }}
-                className="flex items-center gap-2 py-4 px-2 text-sm font-semibold text-secondary"
-              >
-                <Languages className="w-4 h-4 text-accent" /> {language === 'en' ? 'मराठी' : 'English'}
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-    </header>
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          className="md:hidden bg-white px-4 pt-2 pb-6 space-y-1 border-t border-border shadow-inner"
+        >
+          <Link href="/" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.home')}</Link>
+          <Link href="/about" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.about')}</Link>
+          <a href="#darshan" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.darshan')}</a>
+          <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.contact')}</Link>
+          <a href="#donations" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg">{t('nav.donate')}</a>
+          <button
+            onClick={() => {
+              setLanguage(language === 'en' ? 'mr' : 'en');
+              setIsOpen(false);
+            }}
+            className="flex items-center gap-2 py-4 px-2 text-sm font-semibold text-secondary"
+          >
+            <Link href="/" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.home')}</Link>
+            <a href="#about" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.about')}</a>
+            <a href="#darshan" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.darshan')}</a>
+            <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.contact')}</Link>
+            <Link href="/donation" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg">{t('nav.donate')}</Link>
+            <button
+              onClick={() => {
+                setLanguage(language === 'en' ? 'mr' : 'en');
+                setIsOpen(false);
+              }}
+              className="flex items-center gap-2 py-4 px-2 text-sm font-semibold text-secondary"
+            >
+              <Languages className="w-4 h-4 text-accent" /> {language === 'en' ? 'मराठी' : 'English'}
+            </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
+      </nav >
+    </header >
   );
 }
