@@ -4,6 +4,7 @@ import Donation from '@/models/Donation';
 import User from '@/models/User';
 import { generateReceiptNumber } from '@/lib/utils';
 import { getDataFromToken } from '@/lib/auth';
+import { sendDonationReceipt } from '@/lib/email';
 
 export async function POST(req: Request) {
   try {
@@ -31,6 +32,16 @@ export async function POST(req: Request) {
       await User.findByIdAndUpdate(userId, {
         $inc: { totalDonations: donation.amount }
       });
+    }
+
+    // Send email receipt automatically
+    try {
+      if (donation.email) {
+        await sendDonationReceipt(donation);
+      }
+    } catch (emailError) {
+      console.error('Failed to send email receipt:', emailError);
+      // We don't throw here to avoid failing the donation response
     }
 
     return NextResponse.json({ success: true, data: donation }, { status: 201 });

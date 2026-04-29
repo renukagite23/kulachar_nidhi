@@ -18,8 +18,13 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [showProfileMenu, setShowProfileMenu] = React.useState(false);
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const [mounted, setMounted] = React.useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -92,7 +97,11 @@ export default function Navbar() {
                   <HandHeart className="w-3.5 h-3.5" /> {t('nav.donate')}
                 </Link>
 
-                {isAuthenticated ? (
+                {(!mounted || !isAuthenticated) ? (
+                  <Link href="/login" className="spiritual-button-outline !px-4 !py-2 text-xs">
+                    <User className="w-3.5 h-3.5 text-primary" /> Login
+                  </Link>
+                ) : (
                   <div className="relative">
                     <button
                       onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -158,17 +167,13 @@ export default function Navbar() {
                       )}
                     </AnimatePresence>
                   </div>
-                ) : (
-                  <Link href="/login" className="spiritual-button-outline !px-4 !py-2 text-xs">
-                    <User className="w-3.5 h-3.5 text-primary" /> Login
-                  </Link>
                 )}
               </div>
             </div>
 
             {/* Mobile menu button */}
             <div className="md:hidden flex items-center gap-3">
-              {!isAuthenticated && (
+              {(!mounted || !isAuthenticated) && (
                 <Link href="/login" className="p-1.5 rounded-lg text-secondary">
                   <User className="w-6 h-6" />
                 </Link>

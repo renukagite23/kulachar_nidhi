@@ -29,15 +29,26 @@ export default function DonationForm() {
   const [formData, setFormData] = useState({
     donorType: 'individual',
     purpose: '',
-    donorName: user?.name || '',
+    donorName: '',
     panNumber: '',
     occasion: '',
     amount: '',
-    email: user?.email || '',
+    email: '',
     countryCode: '+91',
-    mobileNumber: user?.phone?.slice(-10) || '',
+    mobileNumber: '',
     address: '',
   });
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        donorName: user.name || prev.donorName,
+        email: user.email || prev.email,
+        mobileNumber: user.phone?.slice(-10) || prev.mobileNumber,
+      }));
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchCountries = async () => {

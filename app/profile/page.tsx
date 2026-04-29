@@ -10,20 +10,25 @@ import { User, Mail, Phone, Shield, IndianRupee, Heart, MapPin, Calendar, Edit3 
 
 export default function ProfilePage() {
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !isAuthenticated) {
       router.push('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, mounted]);
 
-  if (!user) return null;
+  if (!mounted || !user) return null;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FFFDF9]">
       <Navbar />
-      
+
       <main className="flex-grow container mx-auto px-4 py-12 max-w-4xl">
         <div className="mb-8 flex flex-col md:flex-row items-center gap-6">
           <div className="w-24 h-24 rounded-3xl bg-primary flex items-center justify-center p-0.5 shadow-2xl">
@@ -121,8 +126,8 @@ export default function ProfilePage() {
                 {user.totalDonations?.toLocaleString() || '0'}
               </div>
               <p className="text-[10px] text-muted-foreground font-bold mt-2">Lifetime Charity Contribution</p>
-              
-              <button 
+
+              <button
                 onClick={() => router.push('/donations')}
                 className="w-full mt-6 spiritual-button text-xs py-3"
               >
