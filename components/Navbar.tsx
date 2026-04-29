@@ -169,8 +169,9 @@ export default function Navbar() {
                   </div>
                 )}
             </div>
+          </div>
 
-            {/* Mobile menu button */}
+          {/* Mobile menu button */}
             <div className="md:hidden flex items-center gap-3">
               {mounted && !isAuthenticated && (
                 <Link href="/login" className="p-1.5 rounded-lg text-secondary">
