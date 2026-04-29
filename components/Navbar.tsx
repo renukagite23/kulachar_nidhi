@@ -48,13 +48,6 @@ export default function Navbar() {
           </div>
           <div className="flex items-center gap-5">
             <span className="flex items-center gap-1.5"><MapPin className="w-3 h-3 text-accent" /> {t('hero.title_1')} {t('hero.title_2')}, {t('hero.info.place')}</span>
-            <button
-              onClick={() => setLanguage(language === 'en' ? 'mr' : 'en')}
-              className="flex items-center gap-1.5 hover:text-white transition-colors border-l border-white/10 pl-5 ml-2"
-            >
-              <Languages className="w-3 h-3 text-accent" />
-              {language === 'en' ? 'मराठी' : 'English'}
-            </button>
           </div>
         </div>
       </div>
@@ -163,6 +156,20 @@ export default function Navbar() {
 
               {/* Actions */}
               <div className="flex items-center gap-3 ml-6 border-l border-border/50 pl-6">
+                {/* Highlighted Language Toggle */}
+                <button
+                  onClick={() => setLanguage(language === 'en' ? 'mr' : 'en')}
+                  className="flex items-center gap-2 px-3 py-2 bg-primary/10 hover:bg-primary/20 text-secondary rounded-xl transition-all border border-primary/20 hover:border-primary/40 group relative overflow-hidden"
+                  title={language === 'en' ? 'Switch to Marathi' : 'इंग्रजीमध्ये बदला'}
+                >
+                  <div className="absolute inset-0 bg-primary/5 group-hover:scale-110 transition-transform duration-500" />
+                  <Languages className="w-4 h-4 text-primary relative z-10" />
+                  <span className="text-[11px] font-black uppercase tracking-tight relative z-10">
+                    {language === 'en' ? 'मराठी' : 'English'}
+                  </span>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-accent/20 rounded-full blur-md group-hover:bg-accent/40 transition-all" />
+                </button>
+
                 <Link href="/donation" className="spiritual-button !px-6 !py-2.5 text-xs">
                   <HandHeart className="w-4 h-4" /> {t('nav.donate')}
                 </Link>
@@ -248,6 +255,20 @@ export default function Navbar() {
               className="md:hidden border-t border-border bg-white overflow-hidden"
             >
               <div className="px-4 py-6 space-y-2">
+                {/* Mobile Highlighted Language Toggle */}
+                <button
+                  onClick={() => {
+                    setLanguage(language === 'en' ? 'mr' : 'en');
+                    setIsOpen(false);
+                  }}
+                  className="flex items-center justify-center gap-2 w-full py-4 bg-primary/5 border-2 border-primary/20 text-secondary font-black rounded-2xl mb-6 shadow-sm shadow-primary/5 active:scale-95 transition-all"
+                >
+                  <Languages className="w-5 h-5 text-primary" />
+                  <span className="uppercase tracking-widest text-xs">
+                    {language === 'en' ? 'मराठी मध्ये बदला' : 'Switch to English'}
+                  </span>
+                </button>
+
                 <Link href="/" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-sm font-bold text-secondary hover:bg-muted rounded-xl transition-colors">
                   {t('nav.home')}
                 </Link>
@@ -328,17 +349,6 @@ export default function Navbar() {
                 <Link href="/donation" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-2 w-full py-4 bg-primary text-white font-black rounded-xl shadow-lg shadow-primary/20">
                   <HandHeart className="w-5 h-5" /> {t('nav.donate')}
                 </Link>
-
-                <button
-                  onClick={() => {
-                    setLanguage(language === 'en' ? 'mr' : 'en');
-                    setIsOpen(false);
-                  }}
-                  className="flex items-center justify-center gap-2 w-full py-4 border-2 border-border text-secondary font-black rounded-xl mt-4"
-                >
-                  <Languages className="w-5 h-5 text-accent" />
-                  {language === 'en' ? 'मराठी' : 'English'}
-                </button>
               </div>
             </motion.div>
           )}
