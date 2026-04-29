@@ -264,5 +264,28 @@
       "trustee_tehsildar": "(Trustee, Tehsildar Kalwan)",
       "executive_officer": "(Executive Officer)"
     }
+    "dropdown_title": "About Temple",
+    "history": "History",
+    "schedule": "Daily Schedule",
+    "pooja": "Daily Pooja",
+    "reach": "How to Reach",
+    "facilities": "Facilities",
+    "rti": "RTI Information",
+    "charges": "Religious Charges",
+    "sidebar_title": "Trust Services",
+    "online_darshan": "Online Darshan",
+    "news": "News / Tenders",
+    "videos": "Videos",
+    "contact_info": "Contact Info",
+    "address_label": "Address",
+    "phone_label": "Phone",
+    "email_label": "Email",
+    "mumbai_address": "Shri Mahalakshmi Temple Trust, Mumbai, Maharashtra 400026",
+    "landmarks": "Landmarks",
+    "online_booking": "Online Booking",
+    "register_online": "Register Online",
+    "certified_pundits": "Certified Pundits",
+    "secured_payment": "Secured Payment",
+    "view_calendar": "View Festival Calendar"
   }
 }

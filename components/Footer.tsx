@@ -11,9 +11,9 @@ export default function Footer() {
   return (
     <footer className="bg-secondary text-white/80 py-16 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Column */}
-          <div className="md:col-span-1 space-y-6">
+          <div className="space-y-6">
             <div className="flex items-center gap-3">
               <Link href="/" className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-2 shadow-lg shadow-primary/10">
                 <img src="/devi.png" alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
@@ -36,17 +36,32 @@ export default function Footer() {
           <div className="space-y-6">
             <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('footer.links')}</h4>
             <ul className="space-y-3 text-sm font-medium">
-              <li><a href="#" className="hover:text-primary transition-colors">{t('nav.home')}</a></li>
-              <li><a href="#about" className="hover:text-primary transition-colors">{t('nav.about')}</a></li>
+              <li><Link href="/" className="hover:text-primary transition-colors">{t('nav.home')}</Link></li>
+              <li><Link href="/about/history" className="hover:text-primary transition-colors">{t('nav.about')}</Link></li>
               <li><Link href="/donation" className="hover:text-primary transition-colors">{t('nav.donate')}</Link></li>
-              <li><a href="#" className="hover:text-primary transition-colors">{t('aarti.title')}</a></li>
+              <li><Link href="/gallery" className="hover:text-primary transition-colors">{t('nav.gallery') || 'Gallery'}</Link></li>
+              <li><Link href="/contact" className="hover:text-primary transition-colors">{t('nav.contact')}</Link></li>
             </ul>
           </div>
 
-          {/* Contact Information */}
+          {/* About Temple (Information) */}
+          <div className="space-y-6">
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('about.dropdown_title')}</h4>
+            <ul className="space-y-3 text-sm font-medium">
+              <li><Link href="/about/history" className="hover:text-primary transition-colors">{t('about.history')}</Link></li>
+              <li><Link href="/about/schedule" className="hover:text-primary transition-colors">{t('about.schedule')}</Link></li>
+              <li><Link href="/about/pooja" className="hover:text-primary transition-colors">{t('about.pooja')}</Link></li>
+              <li><Link href="/about/reach" className="hover:text-primary transition-colors">{t('about.reach')}</Link></li>
+              <li><Link href="/about/facilities" className="hover:text-primary transition-colors">{t('about.facilities')}</Link></li>
+              <li><Link href="/about/rti" className="hover:text-primary transition-colors">{t('about.rti')}</Link></li>
+              <li><Link href="/about/charges" className="hover:text-primary transition-colors">{t('about.charges')}</Link></li>
+            </ul>
+          </div>
+
+          {/* Contact & Trust Info */}
           <div className="space-y-6">
             <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('nav.contact')}</h4>
-            <ul className="space-y-4 text-sm font-medium">
+            <ul className="space-y-4 text-sm font-medium mb-6">
               <li className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary">
                   <Phone className="w-3.5 h-3.5" />
@@ -59,18 +74,8 @@ export default function Footer() {
                 </div>
                 <span>info@kuldaivattrust.org</span>
               </li>
-              <li className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary mt-0.5">
-                  <MapPin className="w-3.5 h-3.5" />
-                </div>
-                <span className="leading-relaxed">{t('hero.title_1')} {t('hero.title_2')},<br />{t('hero.info.place')} - ४०० ०२६</span>
-              </li>
             </ul>
-          </div>
 
-          {/* Legal / Trust Verification */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('footer.cert')}</h4>
             <div className="p-4 bg-white/5 rounded-2xl border border-white/10 flex items-start gap-3">
               <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0" />
               <div>
@@ -85,14 +90,24 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] font-bold uppercase tracking-wider text-white/30">
-          <p>© {new Date().getFullYear()} {t('hero.title_1').toUpperCase()} {t('hero.title_2').toUpperCase()}. {t('footer.rights')}</p>
-          <div className="flex items-center gap-2">
-            <span>{t('footer.dev_by')}</span>
-            <span className="text-white/60">PAARSH PROJECTS</span>
+        {/* Footer Bottom */}
+        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-wrap justify-center gap-6 text-[10px] font-black uppercase tracking-widest text-white/30">
+            <Link href="/admin" className="hover:text-primary transition-colors">Admin Portal</Link>
+            <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-4 text-[11px] font-bold uppercase tracking-wider text-white/30 text-center md:text-right">
+            <p>© {new Date().getFullYear()} {t('hero.title_1')?.toUpperCase()} {t('hero.title_2')?.toUpperCase()}. {t('footer.rights')}</p>
+            <div className="flex items-center gap-2">
+              <span>{t('footer.dev_by')}</span>
+              <span className="text-white/60">PAARSH PROJECTS</span>
+            </div>
           </div>
         </div>
       </div>
     </footer>
   );
 }
+
