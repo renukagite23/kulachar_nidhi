@@ -7,9 +7,9 @@ export default function Sidebar() {
   const { t } = useLanguage();
 
   const services = [
-    { name: t('about.online_darshan'), icon: Monitor, href: '/online-darshan' },
-    { name: t('about.news'), icon: Newspaper, href: '/news' },
-    { name: t('about.videos'), icon: Video, href: '/videos' },
+    { name: t('common.online_darshan'), icon: Monitor, href: '/online-darshan' },
+    { name: t('common.news'), icon: Newspaper, href: '/news' },
+    { name: t('common.videos'), icon: Video, href: '/videos' },
   ];
 
   return (
@@ -60,7 +60,7 @@ export default function Sidebar() {
           <div className="flex gap-3">
             <MapPin className="w-5 h-5 text-accent shrink-0" />
             <p className="text-xs text-white/80 leading-relaxed font-medium">
-              {t('about.mumbai_address')}
+              {t('common.mumbai_address')}
             </p>
           </div>
           <div className="flex gap-3">

@@ -21,7 +21,7 @@ export default function AboutLayout({
   bannerImage = "/images/bg2.png"
 }: AboutLayoutProps) {
   const { t } = useLanguage();
-  const displaySubtitle = subtitle || t('about.mumbai_address');
+  const displaySubtitle = subtitle || t('common.mumbai_address');
   return (
     <div className="min-h-screen flex flex-col bg-[#FFFDF9]">
       <Navbar />

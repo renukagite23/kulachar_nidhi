@@ -18,10 +18,10 @@ export default function Footer() {
               <Link href="/" className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-2 shadow-lg shadow-primary/10">
                 <img src="/devi.png" alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
               </Link>
-              <h3 className="text-xl font-black text-white tracking-tight">Kuldaivat Trust</h3>
+              <h3 className="text-xl font-black text-white tracking-tight">{t('hero.title_1')} {t('hero.title_2')}</h3>
             </div>
             <p className="text-sm leading-relaxed text-white/60">
-              {t('footer.desc')}
+              {t('footer.about_desc')}
             </p>
             <div className="flex space-x-3">
               {[Globe, MessageCircle, Send].map((Icon, i) => (
@@ -34,19 +34,19 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-6">
-            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('footer.links')}</h4>
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('footer.quick_links')}</h4>
             <ul className="space-y-3 text-sm font-medium">
               <li><Link href="/" className="hover:text-primary transition-colors">{t('nav.home')}</Link></li>
-              <li><Link href="/about/history" className="hover:text-primary transition-colors">{t('nav.about')}</Link></li>
+              <li><Link href="/about/history" className="hover:text-primary transition-colors">{t('nav.about_temple')}</Link></li>
               <li><Link href="/donation" className="hover:text-primary transition-colors">{t('nav.donate')}</Link></li>
-              <li><Link href="/gallery" className="hover:text-primary transition-colors">{t('nav.gallery') || 'Gallery'}</Link></li>
+              <li><Link href="/gallery" className="hover:text-primary transition-colors">{t('nav.gallery')}</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">{t('nav.contact')}</Link></li>
             </ul>
           </div>
 
           {/* About Temple (Information) */}
           <div className="space-y-6">
-            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('about.dropdown_title')}</h4>
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('footer.temple_info')}</h4>
             <ul className="space-y-3 text-sm font-medium">
               <li><Link href="/about/history" className="hover:text-primary transition-colors">{t('about.history')}</Link></li>
               <li><Link href="/about/schedule" className="hover:text-primary transition-colors">{t('about.schedule')}</Link></li>
@@ -60,13 +60,13 @@ export default function Footer() {
 
           {/* Contact & Trust Info */}
           <div className="space-y-6">
-            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('nav.contact')}</h4>
+            <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('footer.contact_us')}</h4>
             <ul className="space-y-4 text-sm font-medium mb-6">
               <li className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary">
                   <Phone className="w-3.5 h-3.5" />
                 </div>
-                <span>022-2351 4732</span>
+                <span>{t('hero.info.phone')}</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-primary">
@@ -79,13 +79,13 @@ export default function Footer() {
             <div className="p-4 bg-white/5 rounded-2xl border border-white/10 flex items-start gap-3">
               <ShieldCheck className="w-5 h-5 text-primary flex-shrink-0" />
               <div>
-                <p className="text-xs font-bold text-white">{t('footer.80g')}</p>
+                <p className="text-xs font-bold text-white uppercase tracking-tight">Tax Exemption</p>
                 <p className="text-[10px] text-white/40 mt-1">{t('footer.80g_desc')}</p>
               </div>
             </div>
             <ul className="space-y-2 text-xs font-medium text-white/40">
-              <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white">Terms of Service</a></li>
+              <li><Link href="/privacy" className="hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-white">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
@@ -101,13 +101,14 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center gap-4 text-[11px] font-bold uppercase tracking-wider text-white/30 text-center md:text-right">
             <p>© {new Date().getFullYear()} {t('hero.title_1')?.toUpperCase()} {t('hero.title_2')?.toUpperCase()}. {t('footer.rights')}</p>
             <div className="flex items-center gap-2">
-              <span>{t('footer.dev_by')}</span>
+              <span>{t('footer.developed_by')}</span>
               <span className="text-white/60">PAARSH PROJECTS</span>
             </div>
           </div>
         </div>
       </div>
     </footer>
+
   );
 }
 

@@ -1,7 +1,8 @@
 {
   "nav": {
     "home": "Home",
-    "about": "About Us",
+    "about_temple": "About Temple",
+    "about_trust": "About Trust",
     "darshan": "Darshan",
     "gallery": "Gallery",
     "contact": "Contact",
@@ -13,7 +14,7 @@
     "title_1": "Shri Mahalakshmi",
     "title_2": "Temple Trust",
     "subtitle": "One of Mumbai's most revered Hindu temples. Experience wealth, good fortune, and prosperity with the blessings of Goddess Mahalakshmi.",
-    "cta_donate": "Donate Online",
+    "cta_donate": "Online Donation",
     "cta_darshan": "View Darshan Timings",
     "info": {
       "darshan": "Darshan Timings",
@@ -28,7 +29,7 @@
   },
   "aarti": {
     "title": "Aarti Schedule",
-    "subtitle": "Join us in the divine Aarti ceremonies and receive the Goddess's blessings.",
+    "subtitle": "Join us in the divine aarti ceremonies and seek the blessings of the Goddess.",
     "morning": "Morning Aarti",
     "naivedya": "Naivedya Ceremony",
     "dhoop": "Dhoop Aarti",
@@ -38,178 +39,117 @@
   },
   "welcome": {
     "main_title": "Welcome to the Abode of Goddess Mahalakshmi",
-    "main_subtitle": "A sacred pilgrimage site in the heart of Mumbai",
-    "section_title": "Temple of Divine Grace and Rich Spiritual Tradition",
-    "desc": "Shri Mahalakshmi Temple is majestically situated on Bhulabhai Desai Road in Mahalakshmi, Mumbai. This revered temple is dedicated to Goddess Mahalakshmi, who resides as the main deity along with Goddess Mahakali and Goddess Mahasaraswati.",
+    "main_subtitle": "A sacred pilgrimage in the heart of Mumbai",
+    "section_title": "Temple of Divine Grace & Rich Spiritual Heritage",
+    "desc": "Shri Mahalakshmi Temple is majestically situated on Bhulabhai Desai Road in Mahalaxmi, Mumbai. This revered temple is dedicated to Goddess Mahalakshmi, who is the principal deity along with Goddess Mahakali and Goddess Mahasaraswati.",
     "badge_title": "Divine Grace",
-    "badge_subtitle": "Continuous for many years",
+    "badge_subtitle": "Unbroken for years",
     "features": {
       "heritage": "Ancient Heritage",
-      "heritage_desc": "A pillar of Mumbai's spiritual life since 1831.",
+      "heritage_desc": "The cornerstone of Mumbai's spiritual life since 1831.",
       "devotion": "Path of Devotion",
-      "devotion_desc": "Prosperity in life with the blessings of Goddess Mahalakshmi.",
+      "devotion_desc": "Experience prosperity with the blessings of Goddess Mahalakshmi.",
       "trust": "Trust Initiatives",
-      "trust_desc": "Working for the convenience of devotees and charitable work."
+      "trust_desc": "Working for the convenience of devotees and charitable causes."
     },
     "cta": "Read Full History"
   },
   "donation": {
-    "title": "Online Donation / Dan",
-    "subtitle": "Your contribution supports our spiritual & social initiatives.",
-    "badge": "Holy Offering",
-    "amount": "Select Amount",
-    "custom": "Enter Other Amount",
-    "reason": "Reason for Donation",
-    "reasons": {
-      "birthday": "Birthday",
-      "navratri": "Navratri",
-      "munji": "Javal (Munji)",
-      "other": "Other"
+    "badge": "Holy Donation",
+    "title": "Online Donation",
+    "subtitle": "Your contribution will be used for charitable causes.",
+    "donor_type": "Donor Type",
+    "individual": "Individual",
+    "organization": "Organization",
+    "organization_name": "Organization Name",
+    "organization_placeholder": "Enter organization name",
+    "gstn": "GSTN / TAN",
+    "gstn_placeholder": "Enter GSTN or TAN number",
+    "pan": "PAN Number",
+    "pan_warning": "PAN card is mandatory for 80G certificate",
+    "email": "Email ID",
+    "mobile": "Mobile Number",
+    "purpose": "Purpose of Donation",
+    "purpose_placeholder": "Select Purpose",
+    "name": "Full Name",
+    "amount": "Amount",
+    "occasion": "Select Occasion",
+    "occasion_placeholder": "Select Occasion",
+    "clear": "Clear Form",
+    "thank_you": "Thank You!",
+    "receipt_desc": "Your divine contribution has been received.",
+    "download": "Download Receipt",
+    "print": "Print",
+    "another": "Make Another Donation",
+    "instructions": {
+      "title": "Important Instructions",
+      "point1": "No refund will be given after the amount is credited to the Temple Trust account.",
+      "point2": "Devotees should complain to the concerned bank for failed transactions.",
+      "point3": "All rights are reserved with the Temple Trust.",
+      "point4": "PAN card number is mandatory for 80G certificate.",
+      "point5": "Temple is not responsible for any wrong information or failed transactions."
     },
     "purposes": {
       "general": "General Donation",
       "building": "Temple Building Fund",
       "education": "Education Support",
-      "medical": "Medical Aid Fund",
+      "medical": "Medical Help Fund",
       "annakshetra": "Annakshetra (Food Fund)",
       "other": "Other"
     },
     "occasions": {
       "birthday": "Birthday",
       "anniversary": "Wedding Anniversary",
-      "memorial": "In Memory Of",
+      "memorial": "In Remembrance",
       "navratri": "Navratri Festival",
       "other": "Other"
-    },
-    "donor_details": "Donor Details",
-    "name": "Full Name",
-    "mobile": "Mobile Number",
-    "address": "Address (Optional)",
-    "payment_title": "Complete Payment",
-    "total": "Total Amount",
-    "confirm": "Confirm Payment",
-    "thank_you": "Thank You!",
-    "receipt_desc": "Your divine contribution has been recorded.",
-    "download": "Download Receipt",
-    "print": "Print",
-    "another": "Make Another Donation",
-    "instructions": {
-      "title": "Important Instructions",
-      "point1": "There will be no refunds once the amount is credited to Temple Trust account.",
-      "point2": "For Failed Transactions Devotees Should raise complaints from the payment originating bank.",
-      "point3": "All Rights reserved to Temple Trust.",
-      "point4": "For 80 G certificate PAN number is mandatory.",
-      "point5": "Temple is not responsible for any incorrect information and any failure transactions."
-    },
-    "donor_type": "Donor Type",
-    "individual": "Individual",
-    "organization": "Organization",
-    "purpose": "Purpose Of Donation",
-    "occasion": "Select Occasion",
-    "organization_name": "Full Name of Organization",
-    "organization_placeholder": "Enter Organization Name",
-    "gstn": "GSTN/TAN",
-    "gstn_placeholder": "Enter Donor GSTN/TAN Number",
-    "pan": "Donor PAN Number",
-    "email": "Email ID",
-    "pan_warning": "Pan Card Mandatory for 80G Certificate",
-    "purpose_placeholder": "Select Purpose of Donation",
-    "occasion_placeholder": "Select Occasion",
-    "clear": "Clear"
+    }
   },
-  "footer": {
-    "location": "Mumbai | Mahalakshmi",
-    "desc": "Dedicated to preserving our rich spiritual heritage and supporting the welfare of society. Our work is based on the trio of transparency, technology, and devotion.",
-    "links": "Links",
-    "contact": "Contact",
-    "cert": "Certification",
-    "80g": "80G Certified",
-    "80g_desc": "All donations are eligible for income tax exemption.",
-    "rights": "ALL RIGHTS RESERVED.",
-    "dev_by": "DEVELOPED BY"
+  "donations": {
+    "title": "Support the Temple",
+    "subtitle": "Your contribution helps us maintain the sacred temple and support our charitable initiatives.",
+    "cta": "Donate Now",
+    "recent_title": "Recent Contributions",
+    "history_title": "Your Donation History",
+    "no_donations": "No donations found.",
+    "table": {
+      "date": "Date",
+      "amount": "Amount",
+      "type": "Type",
+      "status": "Status",
+      "receipt": "Receipt"
+    }
   },
   "contact": {
     "title_1": "Get in",
-    "title_2": "Touch with Us",
-    "subtitle": "If you have any difficulty or questions, you can contact us based on the information below. We are ready to serve you.",
+    "title_2": "Touch",
+    "subtitle": "If you have any queries or problems, you can contact us using the information below. We are here to help you.",
     "address": "Address",
     "email": "Email",
     "hours": "Office Hours",
     "phone": "Phone No.",
-    "feedback": "Feedback / Suggestions",
-    "feedback_desc": "You can reach out to us with your valuable feedback or suggestions. This will help us improve our service to devotees.",
-    "other_info": "Other Information",
+    "feedback": "Suggestions / Feedback",
+    "feedback_desc": "You can send us your valuable feedback or suggestions. This will help us improve our services for devotees.",
+    "other_info": "Other Info",
     "other_info_desc": "For more information regarding various religious rituals, pooja bookings and online donations, please contact our office.",
     "actions": {
       "map": "View on Google Map",
       "email": "Write to Us",
-      "hours": "View Timings",
+      "hours": "View Hours",
       "call": "Call Us",
-      "feedback": "Submit Feedback"
+      "feedback": "Record Feedback"
     }
   },
-  "gallery": {
-    "title": "Temple Gallery",
-    "view_all": "View All Photos",
-    "main_sanctum": "Main Sanctum",
-    "entrance": "Temple Entrance",
-    "deepotsav": "Deepotsav",
-    "festival": "Festival Ceremony"
-  },
-  "admin": {
-    "login": {
-      "title": "Trust Admin",
-      "subtitle": "Secure Access Gateway",
-      "role": "Select Role",
-      "chairman": "Chairman",
-      "collector": "Collector",
-      "password": "Access Password",
-      "enter": "Enter Dashboard",
-      "disclaimer": "Unauthorized access is strictly prohibited. Login attempts and IP addresses are recorded."
-    },
-    "dashboard": {
-      "title": "Dashboard Overview",
-      "welcome": "Welcome Back",
-      "subtitle": "Here is what's happening with the trust today.",
-      "export": "Export Report",
-      "stats": {
-        "total": "Total Donations",
-        "today": "Donations Today",
-        "collectors": "Collectors",
-        "growth": "Monthly Growth"
-      },
-      "recent": "Recent Donations",
-      "search": "Search donor...",
-      "table": {
-        "receipt": "Receipt",
-        "donor": "Donor Name",
-        "amount": "Amount",
-        "reason": "Reason",
-        "date": "Date",
-        "actions": "Actions",
-        "empty": "No donations found matching your search.",
-        "view_all": "View All Donations"
-      },
-      "birthdays": {
-        "title": "Upcoming Birthdays",
-        "today": "Today",
-        "tomorrow": "Tomorrow",
-        "calendar": "View Birthday Calendar"
-      },
-      "corner": {
-        "title": "Chairman's Corner",
-        "desc": "Review and approve trust actions.",
-        "bank": "Approve Bank Changes",
-        "collector": "Add New Collector"
-      },
-      "sidebar": {
-        "dashboard": "Dashboard",
-        "donations": "Donations",
-        "collectors": "Collectors",
-        "birthdays": "Birthdays",
-        "logout": "Logout"
-      }
-    }
+  "footer": {
+    "about_trust": "Shri Mahalakshmi Temple Trust",
+    "about_desc": "One of Mumbai's most revered Hindu temples. Experience wealth, good fortune, and prosperity with the blessings of Goddess Mahalakshmi.",
+    "quick_links": "Quick Links",
+    "temple_info": "Temple Info",
+    "contact_us": "Contact Us",
+    "address": "Shri Mahalakshmi Temple Trust, Bhulabhai Desai Road, Mumbai, Maharashtra 400026",
+    "rights": "All Rights Reserved.",
+    "developed_by": "Developed by Paarsh Infotech",
+    "80g_desc": "Donations are exempt under section 80G of Income Tax Act."
   },
   "impact": {
     "quote": "“Every donation given with faith is a strong foundation for the preservation of our culture.”"
@@ -242,7 +182,16 @@
       "staff_val": "250+",
       "prasadalaya": "Annapurna Prasadalaya",
       "free": "Free"
-    }
+    },
+    "history": "History",
+    "schedule": "Daily Schedule",
+    "pooja": "Daily Pooja",
+    "reach": "How to Reach",
+    "facilities": "Facilities",
+    "rti": "RTI Information",
+    "charges": "Religious Charges",
+    "sidebar_title": "Trust Services",
+    "contact_info": "Contact Info"
   },
   "trustees": {
     "title": "President and Board of Trustees",
@@ -264,15 +213,28 @@
       "trustee_tehsildar": "(Trustee, Tehsildar Kalwan)",
       "executive_officer": "(Executive Officer)"
     }
-    "dropdown_title": "About Temple",
-    "history": "History",
-    "schedule": "Daily Schedule",
-    "pooja": "Daily Pooja",
-    "reach": "How to Reach",
-    "facilities": "Facilities",
-    "rti": "RTI Information",
-    "charges": "Religious Charges",
-    "sidebar_title": "Trust Services",
+  },
+  "gallery": {
+    "title": "Temple Gallery",
+    "view_all": "View All Photos",
+    "main_sanctum": "Main Sanctum",
+    "entrance": "Temple Entrance",
+    "deepotsav": "Deepotsav",
+    "festival": "Festival Celebration"
+  },
+  "festival": {
+    "badge": "Celebrations",
+    "title": "Festival Spotlight",
+    "subtitle": "The temple comes alive during these major celebrations",
+    "view": "View Festival Calendar",
+    "navratri": "Sharad Navratri",
+    "navratri_desc": "The grandest festival at Mahalakshmi Temple. Nine nights of devotion and divine worship.",
+    "diwali": "Diwali Lakshmi Poojan",
+    "diwali_desc": "Worship Goddess Lakshmi for wealth and prosperity on Amavasya night.",
+    "mahalaxmi": "Akshaya Tritiya",
+    "mahalaxmi_desc": "An auspicious day for new beginnings and seeking blessings for unending prosperity."
+  },
+  "common": {
     "online_darshan": "Online Darshan",
     "news": "News / Tenders",
     "videos": "Videos",
@@ -287,5 +249,60 @@
     "certified_pundits": "Certified Pundits",
     "secured_payment": "Secured Payment",
     "view_calendar": "View Festival Calendar"
+  },
+  "admin": {
+    "login": {
+      "title": "Trust Admin",
+      "subtitle": "Secure Access Gateway",
+      "role": "Select Role",
+      "chairman": "Chairman",
+      "collector": "Collector",
+      "password": "Login Password",
+      "enter": "Enter Dashboard",
+      "disclaimer": "Unauthorized access is strictly prohibited. Login attempts and IP addresses are recorded."
+    },
+    "dashboard": {
+      "title": "Dashboard Overview",
+      "welcome": "Welcome back",
+      "subtitle": "Here's what's happening at the Trust today.",
+      "export": "Export Report",
+      "stats": {
+        "total": "Total Donation",
+        "today": "Today's Donation",
+        "collectors": "Collectors",
+        "growth": "Monthly Growth"
+      },
+      "recent": "Recent Donations",
+      "search": "Search devotees...",
+      "table": {
+        "receipt": "Receipt",
+        "donor": "Donor Name",
+        "amount": "Amount",
+        "reason": "Reason",
+        "date": "Date",
+        "actions": "Actions",
+        "empty": "No donations found matching your search.",
+        "view_all": "View All Donations"
+      },
+      "birthdays": {
+        "title": "Upcoming Birthdays",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "calendar": "View Birthday Calendar"
+      },
+      "corner": {
+        "title": "Chairman's Corner",
+        "desc": "Review and approve Trust actions.",
+        "bank": "Approve Bank Changes",
+        "collector": "Add New Collector"
+      },
+      "sidebar": {
+        "dashboard": "Dashboard",
+        "donations": "Donations",
+        "collectors": "Collectors",
+        "birthdays": "Birthdays",
+        "logout": "Logout"
+      }
+    }
   }
 }
