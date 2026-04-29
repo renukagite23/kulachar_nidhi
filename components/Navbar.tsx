@@ -153,6 +153,10 @@ export default function Navbar() {
                 {t('nav.gallery')}
               </Link>
 
+              <Link href="/festivals" className="text-secondary/80 hover:text-primary font-bold transition-colors px-4 py-2 text-sm rounded-xl hover:bg-muted/50">
+                {t('nav.festivals')}
+              </Link>
+
               <Link href="/contact" className="text-secondary/80 hover:text-primary font-bold transition-colors px-4 py-2 text-sm rounded-xl hover:bg-muted/50">
                 {t('nav.contact')}
               </Link>
@@ -309,6 +313,10 @@ export default function Navbar() {
 
                 <Link href="/gallery" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-sm font-bold text-secondary hover:bg-muted rounded-xl transition-colors">
                   {t('nav.gallery')}
+                </Link>
+
+                <Link href="/festivals" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-sm font-bold text-secondary hover:bg-muted rounded-xl transition-colors">
+                  {t('nav.festivals')}
                 </Link>
 
                 <Link href="/contact" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-sm font-bold text-secondary hover:bg-muted rounded-xl transition-colors">

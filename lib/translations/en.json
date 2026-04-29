@@ -6,6 +6,7 @@
     "darshan": "Darshan",
     "gallery": "Gallery",
     "contact": "Contact",
+    "festivals": "Festivals",
     "donate": "Donate",
     "book_pooja": "Book Pooja"
   },
@@ -215,7 +216,9 @@
     }
   },
   "gallery": {
-    "title": "Temple Gallery",
+    "title": "Photo Gallery",
+    "subtitle": "Experience the divine beauty and sacred moments of Shri Mahalakshmi Temple.",
+    "festival_desc": "Snapshots of tradition, devotion, and the architectural splendor of Goddess Mahalakshmi's abode.",
     "view_all": "View All Photos",
     "main_sanctum": "Main Sanctum",
     "entrance": "Temple Entrance",

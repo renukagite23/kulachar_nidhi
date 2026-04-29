@@ -26,19 +26,16 @@ export default function AboutLayout({
     <div className="min-h-screen flex flex-col bg-[#FFFDF9]">
       <Navbar />
 
-      {/* Top Banner */}
-      <section className="relative h-48 md:h-64 flex items-center justify-center overflow-hidden">
-        <img
-          src={bannerImage}
-          alt="Banner"
-          className="absolute inset-0 w-full h-full object-cover brightness-50"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/40" />
-        <div className="relative z-10 text-center px-4">
+      {/* Standardized Hero Section - Matching About Us format */}
+      <section className="relative py-20 bg-secondary text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <img src="/devi.png" alt="Pattern" className="w-full h-full object-cover scale-110" />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-5xl font-black text-white mb-2"
+            className="text-4xl md:text-6xl font-black mb-4 tracking-tight"
           >
             {title}
           </motion.h1>
@@ -46,7 +43,7 @@ export default function AboutLayout({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-accent text-xs md:text-sm font-black uppercase tracking-[0.3em]"
+            className="text-accent font-bold uppercase tracking-[0.3em] text-sm"
           >
             {displaySubtitle}
           </motion.p>
