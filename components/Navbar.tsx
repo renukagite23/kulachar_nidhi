@@ -63,8 +63,8 @@ export default function Navbar() {
                   <img src="/devi.png" alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-base md:text-lg font-black text-secondary leading-tight">श्री महालक्ष्मी मंदिर</span>
-                  <span className="text-[10px] text-accent font-black uppercase tracking-[0.2em]">मुंबई, महाराष्ट्र</span>
+                  <span className="text-base md:text-lg font-black text-secondary leading-tight">{t('nav.logo_title')}</span>
+                  <span className="text-[10px] text-accent font-black uppercase tracking-[0.2em]">{t('nav.logo_subtitle')}</span>
                 </div>
               </Link>
             </div>

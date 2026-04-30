@@ -8,13 +8,15 @@
     "contact": "Contact",
     "festivals": "Events",
     "donate": "Donate",
-    "book_pooja": "Book Pooja"
+    "book_pooja": "Book Pooja",
+    "logo_title": "Shri Kulaswamini Ekavira Devi Mandir",
+    "logo_subtitle": "Jaitapur, Maharashtra"
   },
   "hero": {
-    "mantra": "|| Om Shri Mahalakshmyai Namah ||",
-    "title_1": "Shri Mahalakshmi",
-    "title_2": "Temple Trust",
-    "subtitle": "One of Mumbai's most revered Hindu temples. Experience wealth, good fortune, and prosperity with the blessings of Goddess Mahalakshmi.",
+    "mantra": "|| Om Shri Ekvira Devyai Namah ||",
+    "title_1": "Shri Kulaswamini",
+    "title_2": "Ekavira Devi Mandir Trust",
+    "subtitle": "One of Maharashtra's most revered Hindu temples. Experience divine blessings, good fortune, and prosperity with the blessings of Goddess Ekavira.",
     "cta_donate": "Online Donation",
     "cta_darshan": "View Darshan Timings",
     "info": {
@@ -25,7 +27,7 @@
       "darshan_time": "6:00 AM - 10:00 PM",
       "next_aarti_time": "Dhoop Aarti @ 6:15 PM",
       "phone": "022-2351 4732",
-      "place": "Mahalakshmi, Mumbai"
+      "place": "Jaitapur, Maharashtra"
     }
   },
   "aarti": {
@@ -39,19 +41,21 @@
     "location": "Main Sanctum"
   },
   "welcome": {
-    "main_title": "Welcome to the Abode of Goddess Mahalakshmi",
-    "main_subtitle": "A sacred pilgrimage in the heart of Mumbai",
+    "main_title": "Welcome to the Abode of Goddess Ekavira",
+    "main_subtitle": "A sacred pilgrimage in the heart of Sahyadri",
     "section_title": "Temple of Divine Grace & Rich Spiritual Heritage",
-    "desc": "Shri Mahalakshmi Temple is majestically situated on Bhulabhai Desai Road in Mahalaxmi, Mumbai. This revered temple is dedicated to Goddess Mahalakshmi, who is the principal deity along with Goddess Mahakali and Goddess Mahasaraswati.",
+    "desc": "Shri Kulaswamini Ekavira Devi Temple is majestically situated in Jaitapur, Maharashtra. This revered temple is dedicated to Goddess Ekavira, who is the family deity (Kulaswamini) of the Agri and Koli communities.",
     "badge_title": "Divine Grace",
-    "badge_subtitle": "Unbroken for years",
+    "badge_subtitle": "Continuous for ages",
     "features": {
       "heritage": "Ancient Heritage",
-      "heritage_desc": "The cornerstone of Mumbai's spiritual life since 1831.",
+      "heritage_desc": "A pillar of spiritual life since historical times.",
       "devotion": "Path of Devotion",
-      "devotion_desc": "Experience prosperity with the blessings of Goddess Mahalakshmi.",
+      "devotion_desc": "Experience prosperity with the blessings of Goddess Ekavira.",
       "trust": "Trust Initiatives",
-      "trust_desc": "Working for the convenience of devotees and charitable causes."
+      "trust_desc": "Working for devotee convenience and charitable causes.",
+      "heritage_val": "For Ages",
+      "trust_val": "Registered"
     },
     "cta": "Read Full History"
   },
@@ -142,12 +146,12 @@
     }
   },
   "footer": {
-    "about_trust": "Shri Mahalakshmi Temple Trust",
-    "about_desc": "One of Mumbai's most revered Hindu temples. Experience wealth, good fortune, and prosperity with the blessings of Goddess Mahalakshmi.",
+    "about_trust": "Shri Kulaswamini Ekavira Devi Mandir Trust",
+    "about_desc": "One of Maharashtra's most revered Hindu temples. Experience divine blessings, good fortune, and prosperity with the blessings of Goddess Ekavira.",
     "quick_links": "Quick Links",
     "temple_info": "Temple Info",
     "contact_us": "Contact Us",
-    "address": "Shri Mahalakshmi Temple Trust, Bhulabhai Desai Road, Mumbai, Maharashtra 400026",
+    "address": "Shri Kulaswamini Ekavira Devi Mandir Trust, Jaitapur, Maharashtra",
     "rights": "All Rights Reserved.",
     "developed_by": "Developed by Paarsh Infotech",
     "80g_desc": "Donations are exempt under section 80G of Income Tax Act."
@@ -161,15 +165,17 @@
     "president_msg": "President's Message",
     "msg_para1": "This pride of a virtuous and sattvic state of mind, with the grace and blessings of Shri Mahalakshmi Devi, the acclamations of the devotees, good thoughts, and good actions...",
     "msg_para2": "On September 22, 1976, the first Board of Trustees of Shri Mahalakshmi Devi Trust started its magnificent journey. This is a journey of devotees' faith, the eternal presence of Shri Mahalakshmi Mata, and a scenic place of joy.",
+    "msg_para1": "This pride of a virtuous and sattvic state of mind, with the grace and blessings of Shri Ekavira Devi, the acclamations of the devotees, good thoughts, and good actions...",
+    "msg_para2": "On September 22, 1976, the first Board of Trustees of Shri Ekavira Devi Trust started its magnificent journey. This is a journey of devotees' faith, the eternal presence of Shri Ekavira Mata, and a scenic place of joy.",
     "msg_para3": "Every year 45 to 50 lakh devotees come from all over the world. A holy confluence of pilgrimage and tourism. Our sincere wish is to provide excellent facilities for the devotees. The Trust believes in increasing facilities while maintaining the holiness and significance of the region.",
     "major_works": "Major Developmental Works",
-    "works_desc": "Renovation of Shri Mahalakshmi Temple, construction of steps, magnificent entrance, meditation hall for devotees, Bhaktangan, Bhaktaniwas, Prasadalaya Annapurna, charitable dispensary, renovation of Shivalaya Lake, drinking water up to the temple area, concretization of internal roads on the hill, provision of three generators for power supply.",
+    "works_desc": "Renovation of Shri Ekavira Devi Temple, construction of steps, magnificent entrance, meditation hall for devotees, Bhaktangan, Bhaktaniwas, Prasadalaya Annapurna, charitable dispensary, renovation of Shivalaya Lake, drinking water up to the temple area, concretization of internal roads on the hill, provision of three generators for power supply.",
     "staff_quarters": "Staff Quarters",
     "staff_desc": "Efforts to acquire land for expansion of Bhaktaniwas. Proposal to Yavana, positive action. Various action programs and expansion work for beautification of the temple for spiritual joy, creation of educational institutions, peace, nobility, and holiness of the region.",
     "donor_remembrance": "The contribution of various generous donors of the Trust is remembered. The names of the donors are a mark of respect and manifestation of their generosity. Government cooperation, decisions, and the support of government agencies are remarkable. The staff is working promptly to keep the daily operations of the Trust smooth.",
-    "president_name": "Ma. Shri B.D. Chavan",
+    "president_name": "Hon. Shri B.D. Chavan",
     "president_role": "President,",
-    "trust_name": "Shri Mahalakshmi Devi Trust, Mumbai",
+    "trust_name": "Shri Kulaswamini Ekavira Devi Mandir Trust, Jaitapur",
     "badges": {
       "legacy": "Preserving Legacy",
       "mandate": "Trustees Mandate since 1976"
@@ -255,7 +261,7 @@
     "address_label": "Address",
     "phone_label": "Phone",
     "email_label": "Email",
-    "mumbai_address": "Shri Mahalakshmi Temple Trust, Mumbai, Maharashtra 400026",
+    "mumbai_address": "Shri Kulaswamini Ekavira Devi Mandir Trust, Jaitapur, Maharashtra",
     "landmarks": "Landmarks",
     "online_booking": "Online Booking",
     "register_online": "Register Online",
