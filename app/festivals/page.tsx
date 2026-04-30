@@ -5,31 +5,34 @@ import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
 import { CalendarDays, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
+import Link from 'next/link';
 
 export default function FestivalsPage() {
     const { t } = useLanguage();
 
     const festivals = [
         {
-            name: "Sharadiya Navaratri Ustav",
+            slug: "navratri",
+            name: "Sharadiy Navaratri Utsav",
             date: "September / October",
             desc: "Nine days of devotion and celebration",
-            image: "/images/sharad_navratri.png"
+            image: "/images/devi3.png"
         },
         {
-            name: "Diwali Lakshmi Poojan",
+            slug: "chaitra",
+            name: "Chaitra Paurnima",
             date: "October / November",
             desc: "Festival of lights seeking wealth and prosperity",
-            image: "/images/diwali_lakshmi.png"
+            image: "/devi.png"
         },
         {
-            name: "Akshaya Tritiya",
+            slug: "dhanurmas",
+            name: "Dhanurmas Ustav",
             date: "April / May",
-            desc: "Holy day for new beginnings and unending prosperity",
-            image: "/images/akshaya_tritiya.png"
+            desc: "Holy day for new beginnings prosperity",
+            image: "/images/devi2about.png"
         }
     ];
-
     return (
         <div className="flex flex-col min-h-screen bg-[#FFFDF9]">
 
@@ -93,9 +96,11 @@ export default function FestivalsPage() {
                                             {fest.desc}
                                         </p>
 
-                                        <button className="mt-4 spiritual-button w-full text-xs">
-                                            Book Participation
-                                        </button>
+                                        <Link href={`/festivals/${fest.slug}`}>
+                                            <button className="mt-4 spiritual-button w-full text-xs">
+                                                More Information
+                                            </button>
+                                        </Link>
                                     </div>
                                 </motion.div>
                             ))}

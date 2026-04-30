@@ -227,14 +227,14 @@
   },
   "festival": {
     "badge": "Celebrations",
-    "title": "Festival Spotlight",
+    "title": "Upcoming Events",
     "subtitle": "The temple comes alive during these major celebrations",
-    "view": "View Festival Calendar",
-    "navratri": "Sharad Navratri",
+    "view": "View Events Calendar",
+    "navratri": "Sharadiy Navaratri Ustav",
     "navratri_desc": "The grandest festival at Mahalakshmi Temple. Nine nights of devotion and divine worship.",
-    "diwali": "Diwali Lakshmi Poojan",
+    "diwali": "Paurnima",
     "diwali_desc": "Worship Goddess Lakshmi for wealth and prosperity on Amavasya night.",
-    "mahalaxmi": "Akshaya Tritiya",
+    "mahalaxmi": "Chaitra Navaratri Ustav",
     "mahalaxmi_desc": "An auspicious day for new beginnings and seeking blessings for unending prosperity."
   },
   "common": {
@@ -251,7 +251,7 @@
     "register_online": "Register Online",
     "certified_pundits": "Certified Pundits",
     "secured_payment": "Secured Payment",
-    "view_calendar": "View Festival Calendar"
+    "view_calendar": "View Events Calendar"
   },
   "admin": {
     "login": {
