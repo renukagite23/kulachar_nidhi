@@ -105,7 +105,7 @@ export default function RegisterPage() {
                     name="email"
                     type="email"
                     required
-                    className="spiritual-input pl-11 mt-2"
+                    className="spiritual-input pl-11"
                     placeholder="name@example.com"
                     value={formData.email}
                     onChange={handleChange}
