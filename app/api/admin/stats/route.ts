@@ -19,7 +19,9 @@ export async function GET() {
       { $group: { _id: null, total: { $sum: '$amount' } } }
     ]);
     const totalDonationAmount = totalDonationsArray[0]?.total || 0;
-    
+
+    const totalDonationsCount = await Donation.countDocuments({ paymentStatus: 'completed' });
+
     const recentTransactions = await Donation.find()
       .sort({ createdAt: -1 })
       .limit(5);
@@ -27,6 +29,7 @@ export async function GET() {
     const stats = {
       totalUsers,
       totalDonationAmount,
+      totalDonationsCount,
       recentTransactions,
     };
 

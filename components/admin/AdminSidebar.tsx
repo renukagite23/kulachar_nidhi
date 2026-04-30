@@ -3,21 +3,26 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  Users, 
-  IndianRupee, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Users,
+  IndianRupee,
+  Settings,
   LogOut,
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
-  Bell
+  Bell,
+  User,
+  FileText,
+  Calendar,
+  GalleryHorizontal
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/redux/slices/authSlice';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
+import { title } from 'process';
 
 export default function AdminSidebar() {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
@@ -43,6 +48,42 @@ export default function AdminSidebar() {
       href: '/admin/donations',
     },
     {
+      title: 'Donors',
+      icon: User,
+      href: '/admin/donors',
+    },
+    {
+      title: 'Collection Agents',
+      icon: User,
+      href: '/admin/collection-agents',
+    },
+    {
+      title: 'Access Control',
+      icon: ShieldCheck,
+      href: '/admin/access-control',
+    },
+    {
+      title: 'Notifications',
+      icon: Bell,
+      href: '/admin/notifications',
+    },
+    {
+      title: 'Reports',
+      icon: FileText,
+      href: '/admin/reports',
+    },
+    {
+      title: 'Events',
+      icon: Calendar,
+      href: '/admin/events',
+    },
+    {
+      title: 'Gallery',
+      icon: GalleryHorizontal,
+      href: '/admin/gallery'
+    },
+
+    {
       title: 'Settings',
       icon: Settings,
       href: '/admin/settings',
@@ -55,10 +96,9 @@ export default function AdminSidebar() {
   };
 
   return (
-    <div 
-      className={`h-screen flex flex-col bg-secondary text-white transition-all duration-300 relative border-r border-white/5 ${
-        isCollapsed ? 'w-20' : 'w-72'
-      }`}
+    <div
+      className={`h-screen flex flex-col bg-secondary text-white transition-all duration-300 relative border-r border-white/5 ${isCollapsed ? 'w-20' : 'w-72'
+        }`}
     >
       {/* Logo Section */}
       <div className="p-6 flex items-center gap-3 border-b border-white/5">
@@ -99,11 +139,10 @@ export default function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all group ${
-                isActive 
-                  ? 'bg-primary text-white shadow-xl shadow-primary/20' 
-                  : 'text-white/60 hover:bg-white/5 hover:text-white'
-              }`}
+              className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all group ${isActive
+                ? 'bg-primary text-white shadow-xl shadow-primary/20'
+                : 'text-white/60 hover:bg-white/5 hover:text-white'
+                }`}
             >
               <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-primary'}`} />
               {!isCollapsed && (

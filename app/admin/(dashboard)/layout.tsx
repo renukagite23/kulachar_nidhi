@@ -1,10 +1,11 @@
 'use client';
 
 import AdminSidebar from '@/components/admin/AdminSidebar';
+import AdminNavbar from '@/components/admin/AdminNavbar';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function AdminDashboardLayout({
   children,
@@ -13,14 +14,20 @@ export default function AdminDashboardLayout({
 }) {
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated || user?.role !== 'admin') {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && (!isAuthenticated || user?.role !== 'admin')) {
       router.push('/admin');
     }
-  }, [isAuthenticated, user, router]);
+  }, [isAuthenticated, user, router, mounted]);
 
-  if (!isAuthenticated || user?.role !== 'admin') {
+  // Return a generic loading state that matches the server render until mounted
+  if (!mounted || !isAuthenticated || user?.role !== 'admin') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FFFDF9]">
         <div className="h-10 w-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
@@ -31,8 +38,11 @@ export default function AdminDashboardLayout({
   return (
     <div className="flex h-screen overflow-hidden bg-white">
       <AdminSidebar />
-      <div className="flex-grow overflow-y-auto bg-[#FFFDF9]">
-        {children}
+      <div className="flex-grow flex flex-col overflow-hidden bg-[#FFFDF9]">
+        <AdminNavbar />
+        <div className="flex-grow overflow-y-auto">
+          {children}
+        </div>
       </div>
     </div>
   );

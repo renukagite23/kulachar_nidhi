@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { 
-  LayoutDashboard, Users, IndianRupee, TrendingUp, 
+import {
+  LayoutDashboard, Users, IndianRupee, TrendingUp,
   ArrowUpRight, Clock, ShieldCheck, Download
 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -65,45 +65,60 @@ export default function AdminDashboard() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="spiritual-card p-6 bg-white flex items-start justify-between border-gray-100 shadow-sm">
+        {/* Card 1: Total Users */}
+        <div className="spiritual-card p-6 bg-white flex items-center justify-between border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
           <div>
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Total Devotees</p>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <Users className="w-4 h-4" />
+              </div>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total Users</p>
+            </div>
             <h3 className="text-3xl font-black text-secondary">{stats?.totalUsers || 0}</h3>
-            <div className="mt-2 flex items-center gap-1 text-green-600 font-bold text-[10px]">
-              <TrendingUp className="w-3 h-3" /> +12% growth
-            </div>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-            <Users className="w-6 h-6" />
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded-md font-bold text-[10px]">
+              <TrendingUp className="w-3 h-3" /> +12%
+            </div>
           </div>
         </div>
 
-        <div className="spiritual-card p-6 bg-white flex items-start justify-between border-gray-100 shadow-sm">
+        {/* Card 2: Total Donations (Count) */}
+        <div className="spiritual-card p-6 bg-white flex items-center justify-between border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
           <div>
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Kulachar Collection</p>
-            <div className="text-3xl font-black text-secondary flex items-baseline gap-1">
-              <IndianRupee className="w-5 h-5 text-accent" />
-              {stats?.totalDonationAmount?.toLocaleString() || 0}
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <ShieldCheck className="w-4 h-4" />
+              </div>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total Donations</p>
             </div>
-            <div className="mt-2 flex items-center gap-1 text-green-600 font-bold text-[10px]">
-              <TrendingUp className="w-3 h-3" /> Target reached
-            </div>
+            <h3 className="text-3xl font-black text-secondary">{stats?.totalDonationsCount || 0}</h3>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-primary">
-            <IndianRupee className="w-6 h-6" />
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded-md font-bold text-[10px]">
+              <TrendingUp className="w-3 h-3" /> Active
+            </div>
           </div>
         </div>
 
-        <div className="spiritual-card p-6 bg-white flex items-start justify-between border-gray-100 shadow-sm">
+        {/* Card 3: Total Amount */}
+        <div className="spiritual-card p-6 bg-white flex items-center justify-between border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
           <div>
-            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Terminal Activity</p>
-            <h3 className="text-3xl font-black text-secondary">Active</h3>
-            <div className="mt-2 flex items-center gap-1 text-amber-600 font-bold text-[10px]">
-              <Clock className="w-3 h-3" /> Updated just now
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <IndianRupee className="w-4 h-4" />
+              </div>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total Amount</p>
             </div>
+            <h3 className="text-3xl font-black text-secondary flex items-baseline gap-1">
+              <span className="text-xl text-primary font-bold">₹</span>
+              {stats?.totalDonationAmount?.toLocaleString('en-IN') || 0}
+            </h3>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-secondary">
-            <LayoutDashboard className="w-6 h-6" />
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded-md font-bold text-[10px]">
+              <TrendingUp className="w-3 h-3" /> Target
+            </div>
           </div>
         </div>
       </div>
