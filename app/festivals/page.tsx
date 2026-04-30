@@ -12,25 +12,18 @@ export default function FestivalsPage() {
 
     const festivals = [
         {
-            slug: "navratri",
-            name: t('festival.navratri'),
-            date: t('festival.navratri_date'),
-            desc: t('festival.navratri_page_desc'),
-            image: "/images/devi3.png"
-        },
-        {
-            slug: "chaitra",
-            name: t('festival.chaitra'),
-            date: t('festival.chaitra_date'),
-            desc: t('festival.chaitra_page_desc'),
-            image: "/devi.png"
-        },
-        {
-            slug: "dhanurmas",
-            name: t('festival.dhanurmas'),
-            date: t('festival.dhanurmas_date'),
-            desc: t('festival.dhanurmas_page_desc'),
+            slug: "kojagiri",
+            name: t('festival.kojagiri'),
+            date: t('festival.kojagiri_date'),
+            desc: t('festival.kojagiri_desc'),
             image: "/images/devi2about.png"
+        },
+        {
+            slug: "tripuri",
+            name: t('festival.tripuri'),
+            date: t('festival.tripuri_date'),
+            desc: t('festival.tripuri_desc'),
+            image: "/devi.png"
         }
     ];
     return (
@@ -62,8 +55,8 @@ export default function FestivalsPage() {
                 <section className="py-20 bg-transparent relative overflow-hidden">
                     <div className="max-w-7xl mx-auto px-4 relative z-10">
 
-                        {/* Cards */}
-                        <div className="grid md:grid-cols-3 gap-6">
+                        {/* Cards - Centered */}
+                        <div className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
                             {festivals.map((fest, i) => (
                                 <motion.div
                                     key={i}
@@ -71,7 +64,7 @@ export default function FestivalsPage() {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ delay: i * 0.2 }}
                                     viewport={{ once: true }}
-                                    className="bg-white rounded-2xl border border-gray-100 shadow-md hover:shadow-xl transition overflow-hidden"
+                                    className="bg-white rounded-2xl border border-gray-100 shadow-md hover:shadow-xl transition overflow-hidden w-full md:w-[calc(50%-1rem)] max-w-sm"
                                 >
                                     {/* Image */}
                                     <div className="h-48 overflow-hidden">

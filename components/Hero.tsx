@@ -17,7 +17,7 @@ export default function Hero() {
   ];
 
   return (
-    <div className="relative h-[75vh] min-h-[600px] flex flex-col justify-center overflow-hidden bg-background">
+    <div className="relative h-[60vh] min-h-[400px] flex flex-col justify-center overflow-hidden bg-background">
       {/* Devi Image with Shaded Effect on Right */}
       <div className="absolute inset-0 z-0 md:left-auto md:right-0 md:w-[65%] lg:w-[55%] h-full bg-white">
         <img
@@ -41,25 +41,25 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
           className="max-w-2xl"
         >
-          <div className="flex items-center gap-2 mb-6">
-            <div className="h-px w-8 bg-primary" />
-            <span className="text-primary font-bold tracking-[0.2em] text-xs uppercase">{t('hero.mantra')}</span>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="h-px w-6 bg-primary" />
+            <span className="text-primary font-bold tracking-[0.2em] text-[9px] uppercase">{t('hero.mantra')}</span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black text-secondary tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-3xl md:text-5xl font-black text-secondary tracking-tight leading-[1] mb-2">
             {t('hero.title_1')} <br />
             <span className="text-primary">{t('hero.title_2')}</span>
           </h1>
 
-          <p className="text-secondary/70 text-lg md:text-xl font-medium mb-10 leading-relaxed">
+          <p className="text-secondary/70 text-sm md:text-base font-medium mb-5 leading-relaxed max-w-lg">
             {t('hero.subtitle')}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <Link href="/donation" className="spiritual-button !px-8 !py-4 text-base w-full sm:w-auto shadow-lg shadow-primary/20">
+            <Link href="/donation" className="spiritual-button !px-6 !py-3 text-sm md:text-base w-full sm:w-auto shadow-lg shadow-primary/20">
               {t('hero.cta_donate')} <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
-            <button className="spiritual-button-outline !px-8 !py-4 text-base w-full sm:w-auto hover:bg-white">
+            <button className="spiritual-button-outline !px-6 !py-3 text-sm md:text-base w-full sm:w-auto hover:bg-white">
               {t('hero.cta_darshan')}
             </button>
           </div>
@@ -67,7 +67,7 @@ export default function Hero() {
       </div>
 
       {/* Quick Info Bar - Floating & Compact */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 w-full max-w-5xl px-4">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 w-full max-w-4xl px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

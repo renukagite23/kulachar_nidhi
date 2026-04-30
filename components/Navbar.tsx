@@ -55,7 +55,7 @@ export default function Navbar() {
       {/* Main Navbar */}
       <nav className="sticky top-0 bg-white border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between h-16 md:h-20">
+          <div className="flex justify-between h-14 md:h-16">
             {/* Logo */}
             <div className="flex items-center">
               <Link href="/" className="flex items-center gap-3">
