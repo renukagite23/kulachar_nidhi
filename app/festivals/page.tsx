@@ -13,23 +13,23 @@ export default function FestivalsPage() {
     const festivals = [
         {
             slug: "navratri",
-            name: "Sharadiy Navaratri Utsav",
-            date: "September / October",
-            desc: "Nine days of devotion and celebration",
+            name: t('festival.navratri'),
+            date: t('festival.navratri_date'),
+            desc: t('festival.navratri_page_desc'),
             image: "/images/devi3.png"
         },
         {
             slug: "chaitra",
-            name: "Chaitra Paurnima",
-            date: "October / November",
-            desc: "Festival of lights seeking wealth and prosperity",
+            name: t('festival.chaitra'),
+            date: t('festival.chaitra_date'),
+            desc: t('festival.chaitra_page_desc'),
             image: "/devi.png"
         },
         {
             slug: "dhanurmas",
-            name: "Dhanurmas Ustav",
-            date: "April / May",
-            desc: "Holy day for new beginnings prosperity",
+            name: t('festival.dhanurmas'),
+            date: t('festival.dhanurmas_date'),
+            desc: t('festival.dhanurmas_page_desc'),
             image: "/images/devi2about.png"
         }
     ];
@@ -54,7 +54,7 @@ export default function FestivalsPage() {
                             {t('nav.festivals')}
                         </motion.h1>
                         <p className="text-accent font-bold uppercase tracking-[0.3em] text-sm italic">
-                            Celebrate the Divine Grace of Mahalakshmi
+                            {t('festival.page_subtitle')}
                         </p>
                     </div>
                 </section>
@@ -98,7 +98,7 @@ export default function FestivalsPage() {
 
                                         <Link href={`/festivals/${fest.slug}`}>
                                             <button className="mt-4 spiritual-button w-full text-xs">
-                                                More Information
+                                                {t('festival.more_info')}
                                             </button>
                                         </Link>
                                     </div>

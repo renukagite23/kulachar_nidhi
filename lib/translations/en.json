@@ -232,10 +232,20 @@
     "view": "View Events Calendar",
     "navratri": "Sharadiy Navaratri Ustav",
     "navratri_desc": "The grandest festival at Mahalakshmi Temple. Nine nights of devotion and divine worship.",
+    "navratri_date": "September / October",
+    "navratri_page_desc": "Nine days of devotion and celebration",
     "diwali": "Paurnima",
     "diwali_desc": "Worship Goddess Lakshmi for wealth and prosperity on Amavasya night.",
     "mahalaxmi": "Chaitra Navaratri Ustav",
-    "mahalaxmi_desc": "An auspicious day for new beginnings and seeking blessings for unending prosperity."
+    "mahalaxmi_desc": "An auspicious day for new beginnings and seeking blessings for unending prosperity.",
+    "chaitra": "Chaitra Paurnima",
+    "chaitra_date": "October / November",
+    "chaitra_page_desc": "Festival of lights seeking wealth and prosperity",
+    "dhanurmas": "Dhanurmas Ustav",
+    "dhanurmas_date": "April / May",
+    "dhanurmas_page_desc": "Holy day for new beginnings prosperity",
+    "page_subtitle": "Celebrate the Divine Grace of Mahalakshmi",
+    "more_info": "More Information"
   },
   "common": {
     "online_darshan": "Online Darshan",

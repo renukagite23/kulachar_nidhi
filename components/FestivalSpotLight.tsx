@@ -68,7 +68,7 @@ export default function FestivalSpotlight() {
               viewport={{ once: true }}
               className="group bg-white rounded-3xl border border-border shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden"
             >
-              <div className="h-56 overflow-hidden relative">
+              <div className="h-48 overflow-hidden relative">
                 <img
                   src={fest.image}
                   alt={fest.name}
@@ -77,23 +77,23 @@ export default function FestivalSpotlight() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
-              <div className="p-8">
-                <div className="flex items-center gap-2 text-xs text-primary font-bold mb-3 uppercase tracking-wider">
+              <div className="p-6">
+                <div className="flex items-center gap-2 text-xs text-primary font-bold mb-2 uppercase tracking-wider">
                   <CalendarDays className="w-4 h-4" />
                   {fest.date}
                 </div>
 
-                <h3 className="text-xl font-black text-secondary group-hover:text-primary transition-colors duration-300">
+                <h3 className="text-xl font-black text-secondary group-hover:text-primary transition-colors duration-300 line-clamp-1">
                   {fest.name}
                 </h3>
 
-                <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
+                <p className="text-sm text-muted-foreground mt-2 leading-relaxed line-clamp-2">
                   {fest.desc}
                 </p>
 
-                <div className="mt-6 pt-6 border-t border-border/50">
+                <div className="mt-4 pt-4 border-t border-border/50">
                   <Link href="/festivals" className="inline-flex items-center text-xs font-black text-secondary hover:text-primary transition-colors gap-2">
-                    Learn More <ArrowRight className="w-3 h-3" />
+                    {t('festival.more_info')} <ArrowRight className="w-3 h-3" />
                   </Link>
                 </div>
               </div>
