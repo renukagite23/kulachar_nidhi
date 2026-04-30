@@ -3,93 +3,119 @@
 import React from 'react';
 import AboutLayout from '@/components/AboutLayout';
 import { motion } from 'framer-motion';
-import { useLanguage } from '@/lib/LanguageContext';
 
 export default function HistoryPage() {
-  const { t, language } = useLanguage();
-
-  const content = {
-    en: {
-      quote: "Shri Mahalakshmi Temple is one of the oldest and most famous temples in Mumbai. Dating back to the 18th century, it holds immense historical and religious significance.",
-      sec1_title: "Ancient References and Legends",
-      sec1_text: "According to Shri Skanda Purana, the story of this Goddess's incarnation is found as follows. After the death of Sage Kardama in the Krita Yuga, his wife Anubhuti decided to perform Sahagamana (sati) with her husband. However, as she had a minor son, other sages convinced her to postpone her plan for the sake of the child. She then began performing penance on the banks of the Mandakini river.",
-      sec2_title: "Temple Establishment",
-      sec2_text: "At that time, a demon named Kukar tried to disturb her penance and violate her chastity. In her moment of distress, Anubhuti called out to Shri Bhagwati. The Goddess incarnated, killed the evil demon, and at Anubhuti's request, made her permanent abode on the Yamunachal (Bala Ghat) mountains.",
-      modern_title: "Modern Form",
-      modern_text: "Today, this temple is the center of Mumbai's spiritual life. Millions of devotees visit for darshan every year, especially during Navratri. The Temple Trust conducts several social and educational initiatives.",
-      year: "Approx. 18th Century",
-      arch: "Maratha and Hindu Architecture"
-    },
-    mr: {
-      quote: "श्री महालक्ष्मी मंदिर हे मुंबईतील सर्वात जुन्या आणि प्रसिद्ध मंदिरांपैकी एक आहे. हे मंदिर १८ व्या शतकातील असून याचे ऐतिहासिक आणि धार्मिक महत्त्व अनन्यसाधारण आहे.",
-      sec1_title: "प्राचीन संदर्भ आणि आख्यायिका",
-      sec1_text: "श्री स्कंद पुराणात या देवीची अवतार कथा खालीलप्रमाणे दिलेली आढळते. कृत युगात कर्दूम ऋषींच्या मृत्यू नंतर त्यांची पत्नी अनुभूती हिने पती बरोबर सहगमन करण्याचे ठरविले. परंतु तिला अल्पवयी मुलगा असल्याने इतर ऋषीमुनींनी तिची समजूत घातल्याने अल्पवयी मुलासाठी तिने तो बेत रहित केला व मंदाकिनी नदीवर तटावर ती तपश्चर्या करू लागली.",
-      sec2_title: "मंदिराची स्थापना",
-      sec2_text: "त्या वेळी कुकर नाम दैत्याने तिचे तापाचा व पतिव्रत्याचा भंग करण्याचा प्रयत्न केला. अनुभूतीने संकट समयी श्री भगवतीचा धावा केला व श्री भगवतीने अवतार धारण करून त्या दुष्ट दैत्याचा वध केला व अनुभूतीचे विनंतीवरून यमुनाचल (बाला घाट) पर्वतावर अखंड वास्तव्य केले.",
-      modern_title: "आधुनिक स्वरूप",
-      modern_text: "आज हे मंदिर मुंबईच्या आध्यात्मिक जीवनाचा केंद्रबिंदू आहे. दरवर्षी नवरात्रीच्या काळात येथे लाखो भक्त दर्शनासाठी येतात. मंदिराच्या ट्रस्टद्वारे अनेक सामाजिक आणि शैक्षणिक उपक्रम राबविले जातात.",
-      year: "अंदाजे १८ वे शतक",
-      arch: "मराठा आणि हिंदू स्थापत्यशास्त्र"
-    }
-  }[language === 'mr' ? 'mr' : 'en'];
-
   return (
-    <AboutLayout title={t('about.history')} bannerImage="/images/bg2.png">
-      <div className="space-y-8">
-        <section className="bg-primary/5 p-6 rounded-2xl border-l-4 border-primary">
-          <p className="text-secondary font-bold leading-relaxed italic">
-            "{content.quote}"
-          </p>
-        </section>
+    <AboutLayout title="मंदिराचा इतिहास" bannerImage="/images/bg2.png">
 
-        <div className="space-y-6">
-          <h2 className="text-2xl font-black text-secondary flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-lg">1</span>
-            {content.sec1_title}
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            {content.sec1_text}
+      <div className="max-w-6xl mx-auto px-4 md:px-6 space-y-12">
+
+        {/* Intro Quote */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-primary/5 p-6 rounded-2xl border-l-4 border-primary"
+        >
+          <p className="text-secondary font-semibold italic leading-relaxed">
+            “श्री कुलस्वामिनी एकवीरा देवी मंदिर हे जैतापूर (ता. बागलाण, जि. नाशिक) येथील डोंगरावर वसलेले प्राचीन आणि पवित्र मंदिर असून, याला ऐतिहासिक, धार्मिक आणि नैसर्गिक महत्त्व आहे.”
           </p>
+        </motion.section>
+
+        {/* Section 1 */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          <h2 className="text-2xl md:text-3xl font-black text-secondary flex items-center gap-3">
+            <span className="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary rounded-xl text-lg font-bold">1</span>
+            प्राचीन संदर्भ आणि पार्श्वभूमी
+          </h2>
+
+          <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+            जैतापूर गावाच्या लगत असलेल्या डोंगरावर दोन प्राचीन मंदिरे आहेत –
+            दक्षिणाभिमुख श्री एकवीरा देवी मंदिर आणि पूर्वाभिमुख प्राचीन शिव मंदिर.
+            ही दोन्ही मंदिरे सुमारे २५० ते ३०० वर्षे जुनी असल्याचा अंदाज आहे.
+          </p>
+
+          <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+            या डोंगरासमोर महाराष्ट्रातील दुसऱ्या क्रमांकाचे उंच शिखर साल्हेर किल्ला आहे.
+            तसेच जवळील मुल्हेर येथे श्री उद्धव महाराजांचे समाधीस्थान आहे, ज्यामुळे
+            या परिसराला धार्मिक महत्त्व प्राप्त झाले आहे.
+          </p>
+
+          <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+            नैसर्गिक सौंदर्य, शांत वातावरण आणि धार्मिक परंपरा यामुळे हा परिसर
+            अत्यंत पवित्र मानला जातो.
+          </p>
+
           <img
-            src="/images/devi2about.png"
-            alt="Historical Image"
-            className="w-full h-80 object-cover rounded-2xl shadow-sm border border-border"
+            src="/devi.png"
+            alt="Temple"
+            className="w-full h-80 object-cover rounded-2xl shadow-md"
           />
-        </div>
+        </motion.div>
 
-        <div className="space-y-6">
-          <h2 className="text-2xl font-black text-secondary flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary text-lg">2</span>
-            {content.sec2_title}
+        {/* Section 2 */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-6"
+        >
+          <h2 className="text-2xl md:text-3xl font-black text-secondary flex items-center gap-3">
+            <span className="w-10 h-10 flex items-center justify-center bg-primary/10 text-primary rounded-xl text-lg font-bold">2</span>
+            मंदिराची स्थापना व विकास
           </h2>
-          <p className="text-gray-600 leading-relaxed">
-            {content.sec2_text}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-muted rounded-xl border border-border">
-              <h4 className="font-bold text-primary mb-1">{language === 'mr' ? 'स्थापना वर्ष' : 'Year of Establishment'}</h4>
-              <p className="text-sm text-secondary font-medium">{content.year}</p>
-            </div>
-            <div className="p-4 bg-muted rounded-xl border border-border">
-              <h4 className="font-bold text-primary mb-1">{language === 'mr' ? 'वास्तुकला' : 'Architecture'}</h4>
-              <p className="text-sm text-secondary font-medium">{content.arch}</p>
-            </div>
-          </div>
-        </div>
 
-        <section className="bg-secondary p-8 rounded-3xl text-white relative overflow-hidden">
-          <div className="relative z-10">
-            <h3 className="text-xl font-black mb-4 text-accent">{content.modern_title}</h3>
-            <p className="text-white/80 leading-relaxed text-sm">
-              {content.modern_text}
-            </p>
+          <ul className="space-y-3 text-gray-600 text-sm md:text-base">
+            <li>• सन 1991 मध्ये एकवीरा देवी मंदिराचा प्राथमिक जीर्णोद्धार करण्यात आला.</li>
+            <li>• मंदिर डोंगरावर असल्यामुळे दगडी पायऱ्यांची निर्मिती करण्यात आली.</li>
+            <li>• सन 2011 मध्ये मंदिरासाठी २ हेक्टर (५ एकर) जागा शासनाकडून मंजूर झाली.</li>
+            <li>• “श्री कुलस्वामिनी एकवीरा देवी भक्तगण मंडळ” विश्वस्त संस्था स्थापन करण्यात आली.</li>
+          </ul>
+
+          {/* Info Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { title: 'स्थापना कालावधी', value: '२५०–३०० वर्षे' },
+              { title: 'जीर्णोद्धार', value: '1991 पासून' },
+              { title: 'जमीन', value: '५ एकर' },
+              { title: 'स्थान', value: 'जैतापूर, नाशिक' },
+            ].map((item, i) => (
+              <div key={i} className="p-4 bg-muted rounded-xl border text-center">
+                <h4 className="text-xs font-bold text-primary mb-1">{item.title}</h4>
+                <p className="text-sm font-semibold text-secondary">{item.value}</p>
+              </div>
+            ))}
           </div>
-          <div className="absolute top-0 right-0 p-4 opacity-10">
-            <img src="/devi.png" alt="Icon" className="w-32 h-32 brightness-0 invert" />
+        </motion.div>
+
+        {/* Modern Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-secondary text-white p-8 rounded-3xl relative overflow-hidden"
+        >
+          <div className="relative z-10 space-y-4">
+            <h3 className="text-xl md:text-2xl font-black text-accent">
+              आधुनिक स्वरूप
+            </h3>
+
+            <ul className="text-white/80 text-sm md:text-base space-y-2">
+              <li>• प्राचीन शिव मंदिराचे नवीन दगडी बांधकाम सुरू (2026 पासून)</li>
+              <li>• गर्भगृह, दर्शन मंडप, सभा मंडप आणि मुखमंडप यांचा समावेश असलेला नवीन आराखडा</li>
+              <li>• मंदिर परिसर अधिक सुबक व भक्तांसाठी सोयीस्कर करण्याचे प्रयत्न</li>
+            </ul>
           </div>
-        </section>
+
+          <img
+            src="/devi.png"
+            alt="icon"
+            className="absolute right-4 top-4 w-32 opacity-10 brightness-0 invert"
+          />
+        </motion.section>
+
       </div>
     </AboutLayout>
   );
 }
-

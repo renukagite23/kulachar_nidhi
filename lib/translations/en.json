@@ -41,20 +41,20 @@
     "location": "Main Sanctum"
   },
   "welcome": {
-    "main_title": "Welcome to the Abode of Goddess Ekavira",
-    "main_subtitle": "A sacred pilgrimage in the heart of Sahyadri",
-    "section_title": "Temple of Divine Grace & Rich Spiritual Heritage",
-    "desc": "Shri Kulaswamini Ekavira Devi Temple is majestically situated in Jaitapur, Maharashtra. This revered temple is dedicated to Goddess Ekavira, who is the family deity (Kulaswamini) of the Agri and Koli communities.",
-    "badge_title": "Divine Grace",
-    "badge_subtitle": "Continuous for ages",
+    "main_title": "Welcome to the Sacred Abode of the Goddess",
+    "main_subtitle": "Nestled on a hill adorned with natural beauty, this ancient temple offers devotees a unique experience of faith, peace, and spirituality.",
+    "section_title": "Shri Ekavira Devi Temple – Spiritual Heritage",
+    "desc": "Located on a hill in Jaitapur (Taluka Baglan, District Nashik), Shri Kulaswamini Ekavira Devi Temple is an ancient sacred site believed to be around 250 to 300 years old. Along with the Ekavira Devi temple, there is also an ancient Shiva temple at this place. Surrounded by serene natural beauty and deep-rooted religious traditions, this site is considered highly sacred by devotees.",
+    "badge_title": "Ancient Temple",
+    "badge_subtitle": "250+ Years of Heritage",
     "features": {
       "heritage": "Ancient Heritage",
-      "heritage_desc": "A pillar of spiritual life since historical times.",
-      "devotion": "Path of Devotion",
-      "devotion_desc": "Experience prosperity with the blessings of Goddess Ekavira.",
-      "trust": "Trust Initiatives",
-      "trust_desc": "Working for devotee convenience and charitable causes.",
-      "heritage_val": "For Ages",
+      "heritage_desc": "A temple with a history of 250 to 300 years, preserving rich traditions and heritage.",
+      "devotion": "Hilltop Location",
+      "devotion_desc": "Situated on a hill, accessible through stone steps.",
+      "trust": "Religious Significance",
+      "trust_desc": "Sacred place of Ekavira Devi and Shiva, known for its peaceful and spiritual environment.",
+      "heritage_val": "250+ Years",
       "trust_val": "Registered"
     },
     "cta": "Read Full History"

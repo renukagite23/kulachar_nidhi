@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/LanguageContext';
 import { motion } from 'framer-motion';
-import { Clock, HandHeart, MapPin, Phone, Calendar, ArrowRight } from 'lucide-react';
+import { Clock, MapPin, Phone, Calendar, ArrowRight } from 'lucide-react';
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -17,23 +17,27 @@ export default function Hero() {
   ];
 
   return (
-    <div className="relative h-[60vh] min-h-[400px] flex flex-col justify-center overflow-hidden bg-background">
-      {/* Devi Image with Shaded Effect on Right */}
-      <div className="absolute inset-0 z-0 md:left-auto md:right-0 md:w-[65%] lg:w-[55%] h-full bg-white">
+    <div className="relative h-[65vh] min-h-[450px] flex flex-col justify-center overflow-hidden bg-background">
+
+      {/* Image Section */}
+      <div className="absolute inset-0 z-0 md:left-auto md:right-0 md:w-[60%] lg:w-[50%] h-full bg-white">
         <img
           src="/devi.png"
-          alt="Temple Hero"
-          className="w-full h-full object-cover object-right opacity-30 md:opacity-100"
+          alt="Ekavira Devi"
+          className="w-full h-full object-contain md:object-cover object-center md:object-[80%_center] opacity-40 md:opacity-100"
         />
-        {/* Mobile-only shaded background effect so text remains readable */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent md:hidden" />
-        
-        {/* Shaded fade strictly confined to the left edge so the rest of the Devi image is completely dark and clear */}
-        <div className="absolute inset-y-0 left-0 w-full md:w-[35%] bg-gradient-to-r from-background via-background/50 to-transparent hidden md:block" />
-        
+
+        {/* Mobile Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-transparent md:hidden" />
+
+        {/* Desktop Left Fade */}
+        <div className="absolute inset-y-0 left-0 w-full md:w-[40%] bg-gradient-to-r from-background via-background/70 to-transparent hidden md:block" />
+
+        {/* Subtle cinematic right fade */}
+        <div className="absolute right-0 top-0 h-full w-[10%] bg-gradient-to-l from-black/10 to-transparent hidden md:block" />
       </div>
 
-      {/* Hero Content - Aligned Left for Professional Look */}
+      {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -41,24 +45,35 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
           className="max-w-2xl"
         >
+          {/* Mantra */}
           <div className="flex items-center gap-2 mb-3">
             <div className="h-px w-6 bg-primary" />
-            <span className="text-primary font-bold tracking-[0.2em] text-[9px] uppercase">{t('hero.mantra')}</span>
+            <span className="text-primary font-bold tracking-[0.2em] text-[9px] uppercase">
+              {t('hero.mantra')}
+            </span>
           </div>
 
-          <h1 className="text-3xl md:text-5xl font-black text-secondary tracking-tight leading-[1] mb-2">
+          {/* Heading */}
+          <h1 className="text-3xl md:text-5xl font-black text-secondary tracking-tight leading-[1.1] mb-3">
             {t('hero.title_1')} <br />
             <span className="text-primary">{t('hero.title_2')}</span>
           </h1>
 
-          <p className="text-secondary/70 text-sm md:text-base font-medium mb-5 leading-relaxed max-w-lg">
+          {/* Subtitle */}
+          <p className="text-secondary/70 text-sm md:text-base font-medium mb-6 leading-relaxed max-w-lg">
             {t('hero.subtitle')}
           </p>
 
+          {/* Buttons */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <Link href="/donation" className="spiritual-button !px-6 !py-3 text-sm md:text-base w-full sm:w-auto shadow-lg shadow-primary/20">
-              {t('hero.cta_donate')} <ArrowRight className="w-4 h-4 ml-1" />
+            <Link
+              href="/donation"
+              className="spiritual-button !px-6 !py-3 text-sm md:text-base w-full sm:w-auto shadow-lg shadow-primary/20 flex items-center justify-center"
+            >
+              {t('hero.cta_donate')}
+              <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
+
             <button className="spiritual-button-outline !px-6 !py-3 text-sm md:text-base w-full sm:w-auto hover:bg-white">
               {t('hero.cta_darshan')}
             </button>
@@ -66,7 +81,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Quick Info Bar - Floating & Compact */}
+      {/* Info Bar */}
       <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 w-full max-w-4xl px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -77,14 +92,20 @@ export default function Hero() {
           {infoItems.map((item, index) => (
             <div
               key={index}
-              className={`flex items-center gap-3 ${index !== infoItems.length - 1 ? 'md:border-r border-border/50' : ''} px-2`}
+              className={`flex items-center gap-3 ${index !== infoItems.length - 1 ? 'md:border-r border-border/50' : ''
+                } px-2`}
             >
               <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center text-primary flex-shrink-0">
                 <item.icon className="w-4 h-4" />
               </div>
+
               <div className="flex flex-col min-w-0">
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">{item.label}</span>
-                <span className="text-[13px] font-bold text-secondary truncate">{item.value}</span>
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">
+                  {item.label}
+                </span>
+                <span className="text-[13px] font-bold text-secondary truncate">
+                  {item.value}
+                </span>
               </div>
             </div>
           ))}
