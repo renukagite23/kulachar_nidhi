@@ -1,14 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { motion } from 'framer-motion';
-import { Sparkles, Camera, ZoomIn } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, Camera, ZoomIn, X } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function GalleryPage() {
     const { t } = useLanguage();
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
     const images = [
         "/devi.png",
@@ -69,7 +70,8 @@ export default function GalleryPage() {
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     transition={{ duration: 0.5, delay: i * 0.05 }}
                                     viewport={{ once: true }}
-                                    className="relative group"
+                                    className="relative group cursor-pointer"
+                                    onClick={() => setSelectedImage(img)}
                                 >
                                     <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl border-8 border-white group-hover:shadow-2xl transition-all duration-500 aspect-[4/3]">
                                         <img
@@ -111,6 +113,43 @@ export default function GalleryPage() {
                     </div>
                 </section>
             </main>
+
+            {/* Image Zoom Modal */}
+            <AnimatePresence>
+                {selectedImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-secondary/95 backdrop-blur-md p-4 md:p-10"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <motion.button
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                            className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+                            onClick={() => setSelectedImage(null)}
+                        >
+                            <X className="w-6 h-6" />
+                        </motion.button>
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative max-w-5xl w-full h-full flex items-center justify-center"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <img
+                                src={selectedImage}
+                                alt="Zoomed View"
+                                className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl border-4 border-white/10"
+                            />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <Footer />
         </div>

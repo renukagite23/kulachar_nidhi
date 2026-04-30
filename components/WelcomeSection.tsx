@@ -71,7 +71,7 @@ export default function WelcomeSection() {
             </div>
 
             <div className="pt-4">
-              <button className="spiritual-button-secondary !px-8 !py-4 shadow-lg shadow-secondary/10">
+              <button className="spiritual-button !px-8 !py-4 shadow-lg shadow-primary/20">
                 {t('welcome.cta')} <ArrowRight className="w-4 h-4 ml-2" />
               </button>
             </div>
