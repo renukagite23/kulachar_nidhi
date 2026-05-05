@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, CalendarDays, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
@@ -7,21 +8,26 @@ import Link from 'next/link';
 
 export default function FestivalSpotlight() {
   const { t } = useLanguage();
+  const [festivals, setFestivals] = useState<any[]>([]);
 
-  const festivals = [
-    {
-      name: t('festival.kojagiri'),
-      date: t('festival.kojagiri_date'),
-      desc: t('festival.kojagiri_desc'),
-      image: "/images/devi2about.png"
-    },
-    {
-      name: t('festival.tripuri'),
-      date: t('festival.tripuri_date'),
-      desc: t('festival.tripuri_desc'),
-      image: "/devi.png"
-    }
-  ];
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch('/api/events');
+        const data = await res.json();
+        // Filter upcoming events and take first 2
+        const now = new Date();
+        const upcoming = data
+          .filter((e: any) => new Date(e.endDate) >= now)
+          .slice(0, 2);
+        setFestivals(upcoming);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return (
     <section id="festivals" className="py-16 md:py-24 bg-background relative overflow-hidden">
@@ -74,7 +80,7 @@ export default function FestivalSpotlight() {
               <div className="p-6">
                 <div className="flex items-center gap-2 text-xs text-primary font-bold mb-2 uppercase tracking-wider">
                   <CalendarDays className="w-4 h-4" />
-                  {fest.date}
+                  {new Date(fest.startDate).toLocaleDateString()}
                 </div>
 
                 <h3 className="text-xl font-black text-secondary group-hover:text-primary transition-colors duration-300 line-clamp-1">
@@ -82,7 +88,7 @@ export default function FestivalSpotlight() {
                 </h3>
 
                 <p className="text-sm text-muted-foreground mt-2 leading-relaxed line-clamp-2">
-                  {fest.desc}
+                  {fest.description}
                 </p>
 
                 <div className="mt-4 pt-4 border-t border-border/50">

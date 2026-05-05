@@ -1,27 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Camera, ZoomIn, X } from 'lucide-react';
+import { Sparkles, Camera, ZoomIn, X, Loader2, Image as ImageIcon } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function GalleryPage() {
     const { t } = useLanguage();
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [images, setImages] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const images = [
-        "/devi.png",
-        "/images/diwali_lakshmi.png",
-        "/images/sharad_navratri.png",
-        "/images/akshaya_tritiya.png",
-        "/images/devi2about.png",
-        "/images/devi3.png",
-        "/devi.png",
-        "/images/diwali_lakshmi.png",
-        "/images/sharad_navratri.png",
-    ];
+    useEffect(() => {
+        const fetchImages = async () => {
+            try {
+                const res = await fetch('/api/gallery');
+                const data = await res.json();
+                setImages(data);
+            } catch (err) {
+                console.error('Failed to fetch gallery images', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchImages();
+    }, []);
 
     return (
         <div className="flex flex-col min-h-screen bg-white">
@@ -62,37 +68,56 @@ export default function GalleryPage() {
                             </h2>
                         </div>
                         
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {images.map((img, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
-                                    transition={{ duration: 0.5, delay: i * 0.05 }}
-                                    viewport={{ once: true }}
-                                    className="relative group cursor-pointer"
-                                    onClick={() => setSelectedImage(img)}
-                                >
-                                    <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl border-8 border-white group-hover:shadow-2xl transition-all duration-500 aspect-[4/3]">
-                                        <img
-                                            src={img}
-                                            alt={`Temple Gallery ${i + 1}`}
-                                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                                        />
-                                        
-                                        {/* Overlay */}
-                                        <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[2px]">
-                                            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-secondary scale-50 group-hover:scale-100 transition-transform duration-500">
-                                                <ZoomIn className="w-6 h-6" />
+                        {loading ? (
+                            <div className="flex flex-col items-center justify-center py-20 w-full col-span-full">
+                                <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
+                                <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs italic">Loading Divine Gallery...</p>
+                            </div>
+                        ) : images.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+                                {images.map((img, i) => (
+                                    <motion.div
+                                        key={img._id}
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        whileInView={{ opacity: 1, scale: 1 }}
+                                        transition={{ duration: 0.5, delay: i * 0.05 }}
+                                        viewport={{ once: true }}
+                                        className="relative group cursor-pointer"
+                                        onClick={() => setSelectedImage(img.imageUrl)}
+                                    >
+                                        <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl border-8 border-white group-hover:shadow-2xl transition-all duration-500 aspect-[4/3]">
+                                            <img
+                                                src={img.imageUrl}
+                                                alt={img.caption || `Temple Gallery ${i + 1}`}
+                                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                            />
+                                            
+                                            {/* Overlay */}
+                                            <div className="absolute inset-0 bg-secondary/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[2px]">
+                                                <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-secondary scale-50 group-hover:scale-100 transition-transform duration-500">
+                                                    <ZoomIn className="w-6 h-6" />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {/* Decorative corner */}
-                                    <div className="absolute -bottom-2 -right-2 w-8 h-8 border-r-4 border-b-4 border-accent/20 rounded-br-2xl group-hover:border-accent transition-colors duration-500" />
-                                </motion.div>
-                            ))}
-                        </div>
+                                        {/* Caption if exists */}
+                                        {img.caption && (
+                                            <div className="mt-4 px-2">
+                                                <p className="text-xs font-black text-secondary uppercase tracking-widest italic">{img.caption}</p>
+                                            </div>
+                                        )}
+
+                                        {/* Decorative corner */}
+                                        <div className="absolute -bottom-2 -right-2 w-8 h-8 border-r-4 border-b-4 border-accent/20 rounded-br-2xl group-hover:border-accent transition-colors duration-500" />
+                                    </motion.div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-20 w-full col-span-full">
+                                <ImageIcon className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+                                <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs italic">No images in the gallery yet.</p>
+                            </div>
+                        )}
 
                         {/* End Message */}
                         <div className="mt-24 text-center">

@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Search, Bell, Settings, SearchIcon } from 'lucide-react';
+import { Search, Settings, SearchIcon } from 'lucide-react';
+import NotificationBell from '../NotificationBell';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { usePathname } from 'next/navigation';
@@ -41,10 +42,7 @@ export default function AdminNavbar() {
       <div className="flex items-center gap-4">
         {/* Actions */}
         <div className="flex items-center gap-2 border-r border-border pr-4">
-          <button className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-secondary transition-colors relative">
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full animate-pulse border-2 border-white"></span>
-          </button>
+          <NotificationBell />
           <button className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-secondary transition-colors">
             <Settings className="w-5 h-5" />
           </button>

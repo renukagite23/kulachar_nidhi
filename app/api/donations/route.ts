@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Donation from '@/models/Donation';
 import User from '@/models/User';
+import Notification from '@/models/Notification';
 import { generateReceiptNumber } from '@/lib/utils';
 import { getDataFromToken } from '@/lib/auth';
 import { sendDonationReceipt } from '@/lib/email';
@@ -26,6 +27,17 @@ export async function POST(req: Request) {
       paymentStatus: 'completed',
       ...(userId && { userId }),
     });
+
+    // Create Notification
+    try {
+      await Notification.create({
+        title: 'New Donation Received',
+        message: `${donation.donorName} donated ₹${donation.amount} for ${donation.purpose}.`,
+        type: 'donation',
+      });
+    } catch (notifError) {
+      console.error('Failed to create notification:', notifError);
+    }
 
     // Increment user's totalDonations if authenticated
     if (userId) {

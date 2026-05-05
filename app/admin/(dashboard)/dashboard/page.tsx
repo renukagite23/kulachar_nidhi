@@ -64,7 +64,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {/* Card 1: Total Users */}
         <div className="spiritual-card p-6 bg-white flex items-center justify-between border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
           <div>
@@ -83,7 +83,25 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Card 2: Total Donations (Count) */}
+        {/* Card 2: Total Events */}
+        <div className="spiritual-card p-6 bg-white flex items-center justify-between border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <LayoutDashboard className="w-4 h-4" />
+              </div>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total Events</p>
+            </div>
+            <h3 className="text-3xl font-black text-secondary">{stats?.totalEvents || 0}</h3>
+          </div>
+          <div className="flex flex-col items-end">
+            <div className="flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded-md font-bold text-[10px]">
+              <TrendingUp className="w-3 h-3" /> Managed
+            </div>
+          </div>
+        </div>
+
+        {/* Card 3: Total Donations (Count) */}
         <div className="spiritual-card p-6 bg-white flex items-center justify-between border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group">
           <div>
             <div className="flex items-center gap-2 mb-2">

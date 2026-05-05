@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import Donation from '@/models/Donation';
+import Event from '@/models/Event';
 import { getDataFromToken } from '@/lib/auth';
 
 export async function GET() {
@@ -21,6 +22,7 @@ export async function GET() {
     const totalDonationAmount = totalDonationsArray[0]?.total || 0;
 
     const totalDonationsCount = await Donation.countDocuments({ paymentStatus: 'completed' });
+    const totalEvents = await Event.countDocuments();
 
     const recentTransactions = await Donation.find()
       .sort({ createdAt: -1 })
@@ -30,6 +32,7 @@ export async function GET() {
       totalUsers,
       totalDonationAmount,
       totalDonationsCount,
+      totalEvents,
       recentTransactions,
     };
 
