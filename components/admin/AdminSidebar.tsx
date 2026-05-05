@@ -113,26 +113,10 @@ export default function AdminSidebar() {
         )}
       </div>
 
-      {/* Profile Section */}
-      {!isCollapsed && (
-        <div className="p-6 bg-white/5 mx-4 mt-6 rounded-2xl border border-white/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold shadow-inner">
-              {user?.name?.[0]?.toUpperCase() || 'A'}
-            </div>
-            <div className="overflow-hidden">
-              <p className="font-bold text-sm truncate">{user?.name || 'Administrator'}</p>
-              <div className="flex items-center gap-1 text-[9px] text-green-500 font-bold uppercase tracking-wider">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                System Online
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Profile Section Removed as requested */}
 
       {/* Navigation */}
-      <nav className="flex-grow p-4 mt-4 space-y-2">
+      <nav className="flex-grow overflow-y-auto overflow-x-hidden p-4 mt-4 space-y-2 scrollbar-thin">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
           return (

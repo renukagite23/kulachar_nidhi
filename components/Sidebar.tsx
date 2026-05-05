@@ -7,9 +7,9 @@ export default function Sidebar() {
   const { t } = useLanguage();
 
   const services = [
-    { name: t('common.online_darshan'), icon: Monitor, href: '/online-darshan' },
-    { name: t('common.news'), icon: Newspaper, href: '/news' },
-    { name: t('common.videos'), icon: Video, href: '/videos' },
+    { name: t('about.online_darshan'), icon: Monitor, href: '/online-darshan' },
+    { name: t('about.news'), icon: Newspaper, href: '/news' },
+    { name: t('about.videos'), icon: Video, href: '/videos' },
   ];
 
   return (
@@ -46,7 +46,8 @@ export default function Sidebar() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-4 left-4 text-white">
             <p className="text-[10px] font-black uppercase tracking-widest text-accent">Temple View</p>
-            <p className="font-bold">श्री महालक्ष्मी मंदिर</p>
+            <p className="font-bold">Shri Kulaswamini
+              Ekavira Devi Mandir Trust</p>
           </div>
         </div>
       </div>
@@ -60,7 +61,7 @@ export default function Sidebar() {
           <div className="flex gap-3">
             <MapPin className="w-5 h-5 text-accent shrink-0" />
             <p className="text-xs text-white/80 leading-relaxed font-medium">
-              {t('common.mumbai_address')}
+              {t('about.mumbai_address')}
             </p>
           </div>
           <div className="flex gap-3">

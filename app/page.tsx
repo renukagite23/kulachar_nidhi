@@ -142,9 +142,9 @@ export default function Home() {
               </div>
 
               {/* Trust Name */}
-              <p className="text-orange-700 font-semibold uppercase tracking-[0.2em] text-[10px]">
-                श्री महालक्ष्मी मंदिर ट्रस्ट, मुंबई
-              </p>
+              {/* <p className="text-orange-700 font-semibold uppercase tracking-[0.2em] text-[10px]">
+                Shri Kulaswamini Ekavira Devi Mandir Trust
+              </p> */}
 
             </motion.div>
           </div>
