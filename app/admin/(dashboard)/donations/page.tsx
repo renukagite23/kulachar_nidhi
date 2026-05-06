@@ -33,10 +33,9 @@ export default function AdminDonationsPage() {
   // State for search, filter and pagination
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
-  // Modal & Action States
   const [selectedDonation, setSelectedDonation] = useState<any>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
@@ -111,6 +110,39 @@ export default function AdminDonationsPage() {
     }
   };
 
+  const handleExportCSV = () => {
+    if (filteredDonations.length === 0) {
+      showToast('No data to export', 'error');
+      return;
+    }
+
+    const headers = ['Receipt Number', 'Donor Name', 'Email/Phone', 'Amount', 'Status', 'Date', 'Purpose'];
+    const csvRows = [headers.join(',')];
+
+    filteredDonations.forEach(tx => {
+      const row = [
+        tx.receiptNumber || 'MT-GEN-001',
+        `"${tx.donorName || ''}"`,
+        `"${tx.email || tx.mobileNumber || ''}"`,
+        tx.amount || 0,
+        tx.paymentStatus || '',
+        `"${format(new Date(tx.donationDate || tx.createdAt), 'dd MMM yyyy')}"`,
+        `"${tx.reason || tx.purpose || 'General'}"`
+      ];
+      csvRows.push(row.join(','));
+    });
+
+    const csvContent = "data:text/csv;charset=utf-8," + csvRows.join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `donations_export_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showToast('Export downloaded successfully', 'success');
+  };
+
   // Filter and Search logic
   const filteredDonations = donations.filter((tx) => {
     const query = searchQuery.toLowerCase();
@@ -122,7 +154,22 @@ export default function AdminDonationsPage() {
 
     const matchesStatus = statusFilter === 'all' || tx.paymentStatus === statusFilter;
 
-    return matchesSearch && matchesStatus;
+    let matchesDate = true;
+    if (dateFilter !== 'all') {
+      const txDate = new Date(tx.donationDate || tx.createdAt);
+      const now = new Date();
+      if (dateFilter === 'today') {
+        matchesDate = txDate.toDateString() === now.toDateString();
+      } else if (dateFilter === 'week') {
+        const weekAgo = new Date(now.setDate(now.getDate() - 7));
+        matchesDate = txDate >= weekAgo;
+      } else if (dateFilter === 'month') {
+        const monthAgo = new Date(now.setMonth(now.getMonth() - 1));
+        matchesDate = txDate >= monthAgo;
+      }
+    }
+
+    return matchesSearch && matchesStatus && matchesDate;
   });
 
   // Pagination logic
@@ -152,15 +199,18 @@ export default function AdminDonationsPage() {
           <h1 className="text-4xl font-black text-secondary tracking-tight">Charity Transactions</h1>
         </div>
         <div className="flex gap-3">
-          <button className="bg-white border border-border px-4 py-2.5 rounded-xl text-xs font-bold text-secondary hover:bg-muted/50 transition-all flex items-center gap-2 shadow-sm">
+          <button
+            onClick={handleExportCSV}
+            className="bg-white border border-border px-4 py-2.5 rounded-xl text-xs font-bold text-secondary hover:bg-muted/50 transition-all flex items-center gap-2 shadow-sm"
+          >
             <Download className="w-4 h-4" /> Export CSV
           </button>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-col lg:flex-row gap-4 mb-8 bg-white p-4 rounded-2xl border border-border shadow-sm">
-        <div className="relative flex-grow">
+      <div className="flex flex-col lg:flex-row gap-0 lg:gap-4 mb-8 bg-white p-2 rounded-2xl border border-border shadow-sm items-center">
+        <div className="relative flex-grow w-full lg:w-auto">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
@@ -170,18 +220,21 @@ export default function AdminDonationsPage() {
               setSearchQuery(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full pl-12 pr-4 h-11 bg-muted/20 border border-transparent rounded-xl text-sm focus:bg-white focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all"
+            className="w-full pl-10 pr-4 h-11 bg-transparent border-transparent text-sm focus:outline-none transition-all placeholder:text-muted-foreground/70"
           />
         </div>
-        <div className="flex flex-wrap sm:flex-nowrap gap-4">
-          <div className="relative">
+
+        <div className="hidden lg:block w-px h-8 bg-border"></div>
+
+        <div className="flex flex-row w-full lg:w-auto items-center divide-x divide-border border-t lg:border-t-0 border-border lg:mt-0 mt-2">
+          <div className="relative flex-1 lg:flex-none">
             <select
               value={statusFilter}
               onChange={(e) => {
                 setStatusFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="h-11 pl-4 pr-10 appearance-none bg-muted/20 border border-transparent rounded-xl font-bold text-xs text-secondary hover:bg-muted/50 focus:bg-white focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all min-w-[140px]"
+              className="w-full h-11 pl-4 pr-10 appearance-none bg-transparent border-transparent font-bold text-xs text-secondary focus:outline-none cursor-pointer hover:bg-muted/30 transition-all rounded-bl-xl lg:rounded-none"
             >
               <option value="all">All Statuses</option>
               <option value="completed">Completed</option>
@@ -190,9 +243,23 @@ export default function AdminDonationsPage() {
             </select>
             <Filter className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
           </div>
-          <button className="h-11 px-4 flex items-center gap-2 bg-muted/20 border border-transparent rounded-xl font-bold text-xs text-secondary hover:bg-muted/50 transition-all min-w-max">
-            <Calendar className="w-4 h-4" /> Date Range
-          </button>
+
+          <div className="relative flex-1 lg:flex-none">
+            <select
+              value={dateFilter}
+              onChange={(e) => {
+                setDateFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full h-11 pl-10 pr-10 appearance-none bg-transparent border-transparent font-bold text-xs text-secondary focus:outline-none cursor-pointer hover:bg-muted/30 transition-all rounded-br-xl lg:rounded-r-xl"
+            >
+              <option value="all">All Time</option>
+              <option value="today">Today</option>
+              <option value="week">Last 7 Days</option>
+              <option value="month">Last 30 Days</option>
+            </select>
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+          </div>
         </div>
       </div>
 
