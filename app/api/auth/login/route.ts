@@ -38,9 +38,13 @@ export async function POST(req: Request) {
       { expiresIn: '30d' }
     );
 
+    const isAdmin = user.role === 'admin';
+    const cookieName = isAdmin ? 'admin_token' : 'token';
+
     const response = NextResponse.json({
       message: 'Logged in successfully',
       token,
+      cookieName, // Inform client which cookie was set
       user: {
         id: user._id,
         name: user.name,
@@ -51,9 +55,9 @@ export async function POST(req: Request) {
       },
     });
 
-    // Set cookie for middleware
-    response.cookies.set('token', token, {
-      httpOnly: false, // Set to false to allow client-side access if needed, though JWT is in Redux too
+    // Set role-specific cookie for middleware
+    response.cookies.set(cookieName, token, {
+      httpOnly: false,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 30 * 24 * 60 * 60, // 30 days
       path: '/',

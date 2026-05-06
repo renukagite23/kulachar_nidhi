@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '@/redux/slices/authSlice';
 import { ShieldCheck, Mail, Lock, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { setAdminCredentials } from '@/redux/slices/adminAuthSlice';
 import { motion } from 'framer-motion';
 
 export default function AdminLoginPage() {
@@ -38,7 +39,7 @@ export default function AdminLoginPage() {
         throw new Error('Access denied. Admin privileges required.');
       }
 
-      dispatch(setCredentials({ user: data.user, token: data.token }));
+      dispatch(setAdminCredentials({ admin: data.user, token: data.token }));
       router.push('/admin/dashboard');
     } catch (err: any) {
       setError(err.message);

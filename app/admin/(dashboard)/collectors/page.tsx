@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { 
   Users, Search, Plus, Mail, Phone, Calendar, 
   Trash2, Edit, CheckCircle2, AlertCircle, 
-  Loader2, Link as LinkIcon, Copy, Check 
+  Loader2, Link as LinkIcon, Copy, Check, Eye
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { 
@@ -14,6 +14,7 @@ import {
   useDeleteCollectorMutation 
 } from '@/redux/api/collectorApiSlice';
 import CollectorModal from '@/components/admin/CollectorModal';
+import CollectorViewModal from '@/components/admin/CollectorViewModal';
 
 // Toast Component
 const Toast = ({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) => {
@@ -34,6 +35,8 @@ export default function AdminCollectorsPage() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewingCollectorId, setViewingCollectorId] = useState<string | null>(null);
 
   const { data, isLoading, isFetching } = useGetCollectorsQuery({ 
     search: searchQuery, 
@@ -58,6 +61,11 @@ export default function AdminCollectorsPage() {
   const handleOpenEditModal = (collector: any) => {
     setSelectedCollector(collector);
     setIsModalOpen(true);
+  };
+
+  const handleOpenViewModal = (id: string) => {
+    setViewingCollectorId(id);
+    setIsViewModalOpen(true);
   };
 
   const handleSubmit = async (formData: any) => {
@@ -140,6 +148,7 @@ export default function AdminCollectorsPage() {
               <tr className="bg-muted/30 border-b border-border">
                 <th className="px-6 py-4 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Collector</th>
                 <th className="px-6 py-4 text-[11px] font-bold text-muted-foreground uppercase tracking-wider text-center">Referrals</th>
+                <th className="px-6 py-4 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Referral Link</th>
                 <th className="px-6 py-4 text-[11px] font-bold text-muted-foreground uppercase tracking-wider text-right">Total Raised</th>
                 <th className="px-6 py-4 text-[11px] font-bold text-muted-foreground uppercase tracking-wider text-center">Status</th>
                 <th className="px-6 py-4 text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Created</th>
@@ -185,6 +194,22 @@ export default function AdminCollectorsPage() {
                     </div>
                   </td>
 
+                  {/* REFERRAL LINK */}
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-2 max-w-[200px]">
+                      <div className="flex-grow truncate text-[10px] font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded border border-border">
+                        {`${typeof window !== 'undefined' ? window.location.origin : ''}/register?ref=${collector.referralCode}`}
+                      </div>
+                      <button
+                        onClick={() => handleCopyLink(collector.referralCode, collector._id)}
+                        className={`shrink-0 p-1.5 rounded-lg transition-all ${copiedId === collector._id ? 'bg-green-100 text-green-600' : 'bg-primary/10 text-primary hover:bg-primary/20'}`}
+                        title="Copy Link"
+                      >
+                        {copiedId === collector._id ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </td>
+
                   {/* TOTAL RAISED */}
                   <td className="px-6 py-4 text-right">
                     <div className="flex flex-col items-end">
@@ -212,7 +237,15 @@ export default function AdminCollectorsPage() {
 
                   {/* ACTIONS */}
                   <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex justify-end gap-2">
+                      <button 
+                        onClick={() => handleOpenViewModal(collector._id)}
+                        className="p-2 text-primary hover:bg-primary/5 rounded-lg transition-colors" 
+                        title="View Details"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+
                       <button 
                         onClick={() => handleOpenEditModal(collector)}
                         className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" 
@@ -280,6 +313,12 @@ export default function AdminCollectorsPage() {
         onSubmit={handleSubmit}
         collector={selectedCollector}
         loading={isCreating || isUpdating}
+      />
+
+      <CollectorViewModal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        collectorId={viewingCollectorId}
       />
 
       {/* DELETE CONFIRMATION */}

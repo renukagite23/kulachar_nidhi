@@ -4,7 +4,17 @@ import jwt from 'jsonwebtoken';
 export async function getDataFromToken() {
   try {
     const headerList = await headers();
-    const token = headerList.get('authorization')?.split(' ')[1] || '';
+    const bearerToken = headerList.get('authorization')?.split(' ')[1];
+    
+    // Check Authorization header first
+    let token = bearerToken || '';
+
+    // If no bearer token, check cookies
+    if (!token) {
+      const { cookies } = await import('next/headers');
+      const cookieStore = await cookies();
+      token = cookieStore.get('admin_token')?.value || cookieStore.get('token')?.value || '';
+    }
     
     if (!token) return null;
 

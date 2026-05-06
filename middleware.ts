@@ -11,9 +11,12 @@ export function middleware(request: NextRequest) {
   // For simplicity since I'm using Redux + LocalStorage for client-side, 
   // I'll handle true protection in the components/API routes.
   // BUT, I can check for a cookie if I set it during login.
+  // Get tokens from cookies
   const token = request.cookies.get('token')?.value || '';
+  const adminToken = request.cookies.get('admin_token')?.value || '';
 
-  if (path.startsWith('/admin/') && !token) {
+  if (path.startsWith('/admin/') && !adminToken) {
+    if (path === '/admin') return NextResponse.next();
     return NextResponse.redirect(new URL('/admin', request.nextUrl));
   }
 

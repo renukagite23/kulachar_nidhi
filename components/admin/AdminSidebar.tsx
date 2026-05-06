@@ -19,17 +19,16 @@ import {
   GalleryHorizontal
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '@/redux/slices/authSlice';
+import { adminLogout } from '@/redux/slices/adminAuthSlice';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
-import { title } from 'process';
 
 export default function AdminSidebar() {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const pathname = usePathname();
   const dispatch = useDispatch();
   const router = useRouter();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { admin } = useSelector((state: RootState) => state.adminAuth);
 
   const menuItems = [
     {
@@ -91,7 +90,7 @@ export default function AdminSidebar() {
   ];
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(adminLogout());
     router.push('/admin');
   };
 
