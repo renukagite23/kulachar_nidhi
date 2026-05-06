@@ -53,9 +53,9 @@ export default function AdminSidebar() {
       href: '/admin/donors',
     },
     {
-      title: 'Collection Agents',
-      icon: User,
-      href: '/admin/collection-agents',
+      title: 'Collectors',
+      icon: Users,
+      href: '/admin/collectors',
     },
     {
       title: 'Access Control',
