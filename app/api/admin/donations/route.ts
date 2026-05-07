@@ -5,7 +5,7 @@ import { getDataFromToken } from '@/lib/auth';
 
 async function checkAdmin() {
   const decoded = await getDataFromToken();
-  if (!decoded || decoded.role !== 'admin') return false;
+  if (!decoded || (decoded.role !== 'admin' && decoded.role !== 'president')) return false;
   return true;
 }
 

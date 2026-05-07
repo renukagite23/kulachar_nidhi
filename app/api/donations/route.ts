@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import Donation from '@/models/Donation';
 import User from '@/models/User';
 import Notification from '@/models/Notification';
+import ActivityLog from '@/models/ActivityLog';
 import { generateReceiptNumber } from '@/lib/utils';
 import { getDataFromToken } from '@/lib/auth';
 import { sendDonationReceipt } from '@/lib/email';
@@ -11,21 +12,27 @@ export async function POST(req: Request) {
   try {
     await dbConnect();
     const body = await req.json();
-    console.log('Donation Request Body:', body);
 
     // Get user details from token if authenticated
     const decoded = await getDataFromToken();
     let userId = null;
+    let userRole = null;
+    let userName = null;
 
     if (decoded && decoded.id) {
       userId = decoded.id;
+      userRole = decoded.role;
+      userName = decoded.name;
     }
 
     const donation = await Donation.create({
       ...body,
       receiptNumber: generateReceiptNumber(),
       paymentStatus: 'completed',
-      ...(userId && { userId }),
+      ...(userId && {
+        userId,
+        collector: userId // Assuming the logged-in user is the collector
+      }),
     });
 
     // Create Notification
@@ -37,6 +44,20 @@ export async function POST(req: Request) {
       });
     } catch (notifError) {
       console.error('Failed to create notification:', notifError);
+    }
+
+    // Log Activity if staff
+    if (userId && userRole && userRole !== 'user') {
+      try {
+        await ActivityLog.create({
+          user: userId,
+          action: `${userName} collected donation from ${donation.donorName}`,
+          amount: donation.amount,
+          details: `Purpose: ${donation.purpose}`,
+        });
+      } catch (logError) {
+        console.error('Failed to create activity log:', logError);
+      }
     }
 
     // Increment user's totalDonations if authenticated

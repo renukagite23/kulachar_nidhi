@@ -10,7 +10,7 @@ export async function GET() {
     await dbConnect();
     const decoded = await getDataFromToken();
 
-    if (!decoded || decoded.role !== 'admin') {
+    if (!decoded || (decoded.role !== 'admin' && decoded.role !== 'president')) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 

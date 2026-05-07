@@ -16,8 +16,20 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['admin', 'user', 'chairman', 'collector'],
+    enum: ['admin', 'user', 'chairman', 'collector', 'president', 'agent', 'staff'],
     default: 'user',
+  },
+  approvalStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'blocked'],
+    default: 'approved',
+  },
+  permissions: {
+    canCollectDonations: { type: Boolean, default: false },
+    canGenerateReceipts: { type: Boolean, default: false },
+    canViewReports: { type: Boolean, default: false },
+    canEditBankDetails: { type: Boolean, default: false },
+    canDeleteDonations: { type: Boolean, default: false },
   },
   phone: String,
   totalDonations: {
