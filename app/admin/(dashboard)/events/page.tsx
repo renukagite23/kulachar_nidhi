@@ -64,7 +64,10 @@ export default function EventsPage() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const res = await fetch('/api/events');
+                const res = await fetch('/api/events', {
+                    credentials: 'include',
+                });
+                if (!res.ok) throw new Error('Failed to fetch events');
                 const data = await res.json();
                 setEvents(data);
             } catch (err) {
@@ -85,6 +88,7 @@ export default function EventsPage() {
 
             const res = await fetch(url, {
                 method,
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
             });
@@ -137,6 +141,7 @@ export default function EventsPage() {
         try {
             const res = await fetch(`/api/events/${deleteId}`, {
                 method: 'DELETE',
+                credentials: 'include',
             });
 
             if (!res.ok) throw new Error('Delete failed');

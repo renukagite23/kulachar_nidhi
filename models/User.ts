@@ -21,8 +21,15 @@ const UserSchema = new mongoose.Schema({
   },
   approvalStatus: {
     type: String,
-    enum: ['pending', 'approved', 'blocked'],
-    default: 'approved',
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending',
+  },
+  approvedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  approvedAt: {
+    type: Date,
   },
   permissions: {
     canCollectDonations: { type: Boolean, default: false },
@@ -51,4 +58,5 @@ const UserSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
+delete mongoose.models.User;
 export default mongoose.models.User || mongoose.model('User', UserSchema);

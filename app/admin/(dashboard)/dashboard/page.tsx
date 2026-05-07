@@ -18,6 +18,7 @@ export default function AdminDashboard() {
     const fetchStats = async () => {
       try {
         const res = await fetch('/api/admin/stats', {
+          credentials: 'include',
           headers: {
             Authorization: `Bearer ${token}`,
           },

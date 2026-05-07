@@ -17,12 +17,14 @@ export default function DonorsPage() {
         const fetchDonors = async () => {
             try {
                 const res = await fetch('/api/admin/donations', {
+                    credentials: 'include',
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
                 let data;
                 if (res.status === 404) {
                     const fallbackRes = await fetch('/api/donations', {
+                        credentials: 'include',
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     data = await fallbackRes.json();

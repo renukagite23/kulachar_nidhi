@@ -9,7 +9,10 @@ import crypto from 'crypto';
 export async function GET(req: Request) {
   try {
     const decodedToken = await getDataFromToken();
+    console.log('API DEBUG: decodedToken:', decodedToken);
+
     if (!hasAdminAccess(decodedToken)) {
+      console.log('API DEBUG: Unauthorized access attempt. User role:', decodedToken?.role);
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -129,7 +132,15 @@ export async function POST(req: Request) {
       phone,
       role: 'collector',
       referralCode,
-      isActive: isActive !== undefined ? isActive : true,
+      isActive: false, // Default to inactive until approved
+      approvalStatus: 'pending',
+      permissions: {
+        canCollectDonations: false,
+        canGenerateReceipts: false,
+        canViewReports: false,
+        canEditBankDetails: false,
+        canDeleteDonations: false,
+      },
     });
 
     return NextResponse.json({

@@ -30,7 +30,7 @@ interface User {
   email: string;
   phone: string;
   role: 'admin' | 'user' | 'chairman' | 'collector' | 'president' | 'agent';
-  approvalStatus: 'pending' | 'approved' | 'blocked';
+  approvalStatus: 'pending' | 'approved' | 'rejected';
   permissions: UserPermissions;
   totalCollected?: number;
   receiptCount?: number;
@@ -91,7 +91,7 @@ const Badge = ({ children, color }: { children: React.ReactNode, color: string }
 };
 
 export default function AccessControlPage() {
-  const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
+  const { adminToken: token, admin } = useSelector((state: RootState) => state.adminAuth);
   const [users, setUsers] = useState<User[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,8 +114,8 @@ export default function AccessControlPage() {
     try {
       setLoading(true);
       const [usersRes, logsRes] = await Promise.all([
-        fetch('/api/admin/users?role=staff', { headers: { Authorization: `Bearer ${token}` } }),
-        fetch('/api/admin/activity-logs', { headers: { Authorization: `Bearer ${token}` } })
+        fetch('/api/admin/users?role=staff', { credentials: 'include', headers: { Authorization: `Bearer ${token}` } }),
+        fetch('/api/admin/activity-logs', { credentials: 'include', headers: { Authorization: `Bearer ${token}` } })
       ]);
 
       const usersData = await usersRes.json();
@@ -143,6 +143,7 @@ export default function AccessControlPage() {
       setActionLoading(true);
       const res = await fetch(`/api/admin/users/${userId}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -180,6 +181,7 @@ export default function AccessControlPage() {
       setActionLoading(true);
       const res = await fetch(`/api/admin/users/${userId}`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -207,7 +209,7 @@ export default function AccessControlPage() {
       else if (activeTab === 'agents') matchesTab = u.role === 'agent';
       else if (activeTab === 'admins') matchesTab = u.role === 'admin' || u.role === 'president';
       else if (activeTab === 'pending') matchesTab = u.approvalStatus === 'pending';
-      else if (activeTab === 'blocked') matchesTab = u.approvalStatus === 'blocked';
+      else if (activeTab === 'rejected') matchesTab = u.approvalStatus === 'rejected';
 
       return matchesSearch && matchesTab;
     });
@@ -221,7 +223,7 @@ export default function AccessControlPage() {
     totalAgents: users.filter(u => u.role === 'agent').length,
     activeCollectors: users.filter(u => u.role === 'collector' && u.approvalStatus === 'approved').length,
     pendingApprovals: users.filter(u => u.approvalStatus === 'pending').length,
-    blockedUsers: users.filter(u => u.approvalStatus === 'blocked').length,
+    rejectedUsers: users.filter(u => u.approvalStatus === 'rejected').length,
     totalCollected: users.reduce((acc, u) => acc + (u.totalCollected || 0), 0)
   };
 
@@ -246,7 +248,7 @@ export default function AccessControlPage() {
   const getStatusColor = (status: string) => {
     if (status === 'approved') return 'green';
     if (status === 'pending') return 'yellow';
-    if (status === 'blocked') return 'red';
+    if (status === 'rejected') return 'red';
     return 'yellow';
   };
 
@@ -307,20 +309,13 @@ export default function AccessControlPage() {
             <p className="text-2xl font-black text-secondary">{stats.pendingApprovals}</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-[2.5rem] border border-border shadow-sm flex items-center gap-5 relative overflow-hidden">
-          <div className="absolute right-4 top-4 opacity-10">
-            <ShieldCheck className="w-12 h-12" />
+        <div className="bg-white p-6 rounded-[2.5rem] border border-border shadow-sm flex items-center gap-5">
+          <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center shrink-0 shadow-sm">
+            <Ban className="w-7 h-7" />
           </div>
-          <div className="z-10">
-            <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-2">Protected Settings</p>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-[10px] font-bold text-secondary">
-                <Unlock className="w-3 h-3 text-emerald-500" /> UPI Gateway Active
-              </div>
-              <div className="flex items-center gap-2 text-[10px] font-bold text-secondary">
-                <Database className="w-3 h-3 text-primary" /> Bank Details Locked
-              </div>
-            </div>
+          <div>
+            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-wider mb-1">Rejected Users</p>
+            <p className="text-2xl font-black text-secondary">{stats.rejectedUsers}</p>
           </div>
         </div>
       </div>
@@ -331,7 +326,7 @@ export default function AccessControlPage() {
           {/* Controls & Tabs */}
           <div className="space-y-4">
             <div className="flex flex-wrap gap-2">
-              {['all', 'collectors', 'agents', 'admins', 'pending', 'blocked'].map(tab => (
+              {['all', 'collectors', 'agents', 'admins', 'pending', 'rejected'].map(tab => (
                 <button
                   key={tab}
                   onClick={() => { setActiveTab(tab); setCurrentPage(1); }}
@@ -423,13 +418,18 @@ export default function AccessControlPage() {
                             {u.approvalStatus === 'pending' ? (
                               <>
                                 <button
-                                  onClick={() => handleUpdateUser(u._id, { approvalStatus: 'approved' })}
+                                  onClick={() => handleUpdateUser(u._id, {
+                                    approvalStatus: 'approved',
+                                    isActive: true,
+                                    approvedBy: admin?.id,
+                                    approvedAt: new Date()
+                                  })}
                                   className="px-3 py-2 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all flex items-center gap-1.5 shadow-sm"
                                 >
                                   <Check className="w-3.5 h-3.5" /> Approve
                                 </button>
                                 <button
-                                  onClick={() => handleUpdateUser(u._id, { approvalStatus: 'blocked' })}
+                                  onClick={() => handleUpdateUser(u._id, { approvalStatus: 'rejected' })}
                                   className="px-3 py-2 bg-rose-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-700 transition-all flex items-center gap-1.5 shadow-sm"
                                 >
                                   <Ban className="w-3.5 h-3.5" /> Reject
@@ -450,12 +450,12 @@ export default function AccessControlPage() {
                                   <Edit className="w-4 h-4" />
                                 </button>
                                 <button
-                                  onClick={() => handleUpdateUser(u._id, { approvalStatus: u.approvalStatus === 'blocked' ? 'approved' : 'blocked' })}
-                                  className={`p-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${u.approvalStatus === 'blocked' ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white' : 'bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white'
+                                  onClick={() => handleUpdateUser(u._id, { approvalStatus: u.approvalStatus === 'rejected' ? 'approved' : 'rejected' })}
+                                  className={`p-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${u.approvalStatus === 'rejected' ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white' : 'bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white'
                                     }`}
                                 >
-                                  {u.approvalStatus === 'blocked' ? <Unlock className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
-                                  {u.approvalStatus === 'blocked' ? 'Unblock' : 'Block'}
+                                  {u.approvalStatus === 'rejected' ? <Unlock className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
+                                  {u.approvalStatus === 'rejected' ? 'Unblock' : 'Block'}
                                 </button>
                                 <button
                                   onClick={() => handleDeleteUser(u._id)}
@@ -729,7 +729,7 @@ export default function AccessControlPage() {
                       >
                         <option value="approved">Approved</option>
                         <option value="pending">Pending Approval</option>
-                        <option value="blocked">Blocked</option>
+                        <option value="rejected">Rejected / Blocked</option>
                       </select>
                     </div>
                   </div>

@@ -44,12 +44,16 @@ export default function ReportsPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch('/api/admin/donations', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            try {
+                const res = await fetch('/api/admin/donations', {
+                    credentials: 'include',
+                    headers: { Authorization: `Bearer ${token}` },
+                });
 
-            const data = await res.json();
-            const donations = data.data || data;
+                if (!res.ok) throw new Error('Failed to fetch data');
+
+                const data = await res.json();
+                const donations = data.data || data;
 
             const now = new Date();
             const prevDate = new Date();
@@ -139,8 +143,11 @@ export default function ReportsPage() {
             setLastYear(ly);
             setTopDonor(top);
             setChartData(last6Months);
-
-            setLoading(false);
+            } catch (error) {
+                console.error('Failed to fetch reports', error);
+            } finally {
+                setLoading(false);
+            }
         };
 
         if (token) fetchData();

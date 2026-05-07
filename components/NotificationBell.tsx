@@ -8,16 +8,22 @@ export default function NotificationBell() {
     const [count, setCount] = useState(0);
 
     const fetchCount = async () => {
-        const res = await fetch('/api/notifications');
-        const data = await res.json();
-
-        const unread = data.filter((n: any) => !n.isRead).length;
-        setCount(unread);
+        try {
+            const res = await fetch('/api/notifications', {
+                credentials: 'include',
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+            const unread = data.filter((n: any) => !n.isRead).length;
+            setCount(unread);
+        } catch {
+            // Silently ignore network errors — bell is non-critical UI
+        }
     };
 
     useEffect(() => {
         fetchCount();
-        const interval = setInterval(fetchCount, 5000);
+        const interval = setInterval(fetchCount, 30000); // Poll every 30s instead of 5s
         return () => clearInterval(interval);
     }, []);
 

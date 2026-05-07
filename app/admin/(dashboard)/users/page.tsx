@@ -51,6 +51,7 @@ export default function AdminUsersPage() {
     const fetchUsers = async () => {
       try {
         const res = await fetch('/api/admin/users', {
+          credentials: 'include',
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -93,6 +94,7 @@ export default function AdminUsersPage() {
     try {
       const res = await fetch(`/api/admin/users/${selectedUser._id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -124,6 +126,7 @@ export default function AdminUsersPage() {
     try {
       const res = await fetch(`/api/admin/users/${deleteConfirmId}`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
           Authorization: `Bearer ${token}`,
         },

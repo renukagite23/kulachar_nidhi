@@ -49,6 +49,7 @@ export default function AdminDonationsPage() {
     const fetchDonations = async () => {
       try {
         const res = await fetch('/api/admin/donations', {
+          credentials: 'include',
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -57,6 +58,7 @@ export default function AdminDonationsPage() {
         // Fallback if /api/admin/donations doesn't exist but /api/donations does
         if (res.status === 404) {
           const fallbackRes = await fetch('/api/donations', {
+            credentials: 'include',
             headers: { Authorization: `Bearer ${token}` }
           });
           const fallbackData = await fallbackRes.json();
@@ -89,6 +91,7 @@ export default function AdminDonationsPage() {
     try {
       const res = await fetch(`/api/admin/donations/${deleteConfirmId}`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
           Authorization: `Bearer ${token}`,
         },

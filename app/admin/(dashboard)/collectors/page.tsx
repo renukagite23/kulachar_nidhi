@@ -1,17 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import { 
-  Users, Search, Plus, Mail, Phone, Calendar, 
-  Trash2, Edit, CheckCircle2, AlertCircle, 
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import {
+  Users, Search, Plus, Mail, Phone, Calendar,
+  Trash2, Edit, CheckCircle2, AlertCircle,
   Loader2, Link as LinkIcon, Copy, Check, Eye
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { 
-  useGetCollectorsQuery, 
-  useCreateCollectorMutation, 
-  useUpdateCollectorMutation, 
-  useDeleteCollectorMutation 
+import {
+  useGetCollectorsQuery,
+  useCreateCollectorMutation,
+  useUpdateCollectorMutation,
+  useDeleteCollectorMutation
 } from '@/redux/api/collectorApiSlice';
 import CollectorModal from '@/components/admin/CollectorModal';
 import CollectorViewModal from '@/components/admin/CollectorViewModal';
@@ -38,12 +40,16 @@ export default function AdminCollectorsPage() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [viewingCollectorId, setViewingCollectorId] = useState<string | null>(null);
 
-  const { data, isLoading, isFetching } = useGetCollectorsQuery({ 
-    search: searchQuery, 
-    page, 
-    limit: 10 
+  const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
+
+  const { data, isLoading, isFetching, error } = useGetCollectorsQuery({
+    search: searchQuery,
+    page,
+    limit: 10
+  }, {
+    skip: !token
   });
-  
+
   const [createCollector, { isLoading: isCreating }] = useCreateCollectorMutation();
   const [updateCollector, { isLoading: isUpdating }] = useUpdateCollectorMutation();
   const [deleteCollector, { isLoading: isDeleting }] = useDeleteCollectorMutation();
@@ -131,7 +137,7 @@ export default function AdminCollectorsPage() {
             />
           </div>
 
-          <button 
+          <button
             onClick={handleOpenAddModal}
             className="h-12 px-6 flex items-center justify-center gap-2 bg-primary text-white rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 font-bold text-sm"
           >
@@ -159,9 +165,17 @@ export default function AdminCollectorsPage() {
             <tbody className="divide-y divide-border/50">
               {isLoading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-24 text-center">
+                  <td colSpan={7} className="px-6 py-24 text-center">
                     <Loader2 className="w-10 h-10 animate-spin text-primary mx-auto mb-4" />
                     <p className="font-bold text-secondary">Loading collectors...</p>
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-24 text-center">
+                    <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-4" />
+                    <p className="font-bold text-secondary">Failed to load collectors</p>
+                    <p className="text-xs text-muted-foreground mt-1">{(error as any)?.data?.message || 'Unauthorized or network error'}</p>
                   </td>
                 </tr>
               ) : data?.collectors.map((collector: any) => (
@@ -238,25 +252,25 @@ export default function AdminCollectorsPage() {
                   {/* ACTIONS */}
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
-                      <button 
+                      <button
                         onClick={() => handleOpenViewModal(collector._id)}
-                        className="p-2 text-primary hover:bg-primary/5 rounded-lg transition-colors" 
+                        className="p-2 text-primary hover:bg-primary/5 rounded-lg transition-colors"
                         title="View Details"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
 
-                      <button 
+                      <button
                         onClick={() => handleOpenEditModal(collector)}
-                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" 
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         title="Edit Collector"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
 
-                      <button 
+                      <button
                         onClick={() => setDeleteConfirmId(collector._id)}
-                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Delete Collector"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -267,7 +281,7 @@ export default function AdminCollectorsPage() {
               ))}
               {!isLoading && data?.collectors.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center">
+                  <td colSpan={7} className="px-6 py-12 text-center">
                     <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mx-auto mb-4 text-muted-foreground/50">
                       <Users className="w-8 h-8" />
                     </div>
@@ -307,7 +321,7 @@ export default function AdminCollectorsPage() {
       </div>
 
       {/* MODAL */}
-      <CollectorModal 
+      <CollectorModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}

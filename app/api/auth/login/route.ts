@@ -32,6 +32,14 @@ export async function POST(req: Request) {
       );
     }
 
+    // Check approval status (exempt admin/president for system access if needed, but usually everyone should be approved)
+    if (user.role !== 'admin' && user.role !== 'president' && user.approvalStatus !== 'approved') {
+      return NextResponse.json(
+        { message: `Access denied. Your account status is ${user.approvalStatus || 'pending'}.` },
+        { status: 403 }
+      );
+    }
+
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET || 'fallback_secret_key',
@@ -57,8 +65,9 @@ export async function POST(req: Request) {
 
     // Set role-specific cookie for middleware
     response.cookies.set(cookieName, token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
       maxAge: 30 * 24 * 60 * 60, // 30 days
       path: '/',
     });
