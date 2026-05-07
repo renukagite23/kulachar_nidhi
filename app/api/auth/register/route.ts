@@ -6,7 +6,7 @@ import User from '@/models/User';
 export async function POST(req: Request) {
   try {
     await dbConnect();
-    const { name, email, password, phone } = await req.json();
+    const { name, email, password, phone, referralCode } = await req.json();
 
     if (!name || !email || !password) {
       return NextResponse.json(
@@ -26,12 +26,21 @@ export async function POST(req: Request) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    let referredBy = null;
+    if (referralCode) {
+      const collector = await User.findOne({ referralCode, role: 'collector' });
+      if (collector) {
+        referredBy = collector._id;
+      }
+    }
+
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
       phone,
       role: 'user', // Default role for registration
+      referredBy,
     });
 
     return NextResponse.json(

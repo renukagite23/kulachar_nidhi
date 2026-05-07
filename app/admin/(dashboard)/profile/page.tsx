@@ -5,10 +5,10 @@ import { RootState } from '@/redux/store';
 import { useState } from 'react';
 
 export default function ProfilePage() {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { admin } = useSelector((state: RootState) => state.adminAuth);
 
-  const [name, setName] = useState(user?.name || '');
-  const [email, setEmail] = useState(user?.email || '');
+  const [name, setName] = useState(admin?.name || '');
+  const [email, setEmail] = useState(admin?.email || '');
 
   const handleSave = () => {
     // later connect API

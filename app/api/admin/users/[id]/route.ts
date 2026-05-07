@@ -1,18 +1,21 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
+import ActivityLog from '@/models/ActivityLog';
 import { getDataFromToken } from '@/lib/auth';
+import { hasAdminAccess } from '@/lib/adminAuth';
 
 async function checkAdmin() {
   const decoded = await getDataFromToken();
-  if (!decoded || decoded.role !== 'admin') return false;
-  return true;
+  if (!hasAdminAccess(decoded)) return null;
+  return decoded;
 }
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
-    if (!(await checkAdmin())) {
+    const adminUser = await checkAdmin();
+    if (!adminUser) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -22,15 +25,23 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     // Never allow password update from this route
     delete body.password;
 
+    const oldUser = await User.findById(id);
+    if (!oldUser) {
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { $set: body },
       { new: true, runValidators: true, select: '-password' }
     );
 
-    if (!updatedUser) {
-      return NextResponse.json({ message: 'User not found' }, { status: 404 });
-    }
+    // Log the activity
+    await ActivityLog.create({
+      user: adminUser.id,
+      action: `Updated user: ${updatedUser.name} (${updatedUser.role})`,
+      details: `Changes: ${JSON.stringify(body)}`,
+    });
 
     return NextResponse.json(updatedUser);
   } catch (error: any) {
@@ -42,7 +53,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
-    if (!(await checkAdmin())) {
+    const adminUser = await checkAdmin();
+    if (!adminUser) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -52,6 +64,13 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     if (!deleted) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
+
+    // Log the activity
+    await ActivityLog.create({
+      user: adminUser.id,
+      action: `Deleted user: ${deleted.name}`,
+      details: `User ID: ${id}`,
+    });
 
     return NextResponse.json({ message: 'User deleted successfully' });
   } catch (error: any) {

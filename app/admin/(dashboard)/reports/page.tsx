@@ -18,7 +18,18 @@ interface DonationType {
 }
 
 export default function ReportsPage() {
-    const [donations, setDonations] = useState<DonationType[]>([]);
+
+    const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
+
+    const [loading, setLoading] = useState(true);
+
+    const [allTime, setAllTime] = useState(0);
+    const [thisMonth, setThisMonth] = useState(0);
+    const [lastMonth, setLastMonth] = useState(0);
+    const [thisYear, setThisYear] = useState(0);
+    const [lastYear, setLastYear] = useState(0);
+    const [topDonor, setTopDonor] = useState<any>(null);
+
     const [chartData, setChartData] = useState<any[]>([]);
 
     const [totalDonations, setTotalDonations] = useState(0);
@@ -29,24 +40,39 @@ export default function ReportsPage() {
     const [topDonorAmount, setTopDonorAmount] = useState(0);
 
     useEffect(() => {
-        fetchReports();
-    }, []);
 
-    const fetchReports = async () => {
-        try {
-            const res = await fetch('/api/donations');
+        const fetchData = async () => {
+            try {
+                const res = await fetch('/api/admin/donations', {
+                    credentials: 'include',
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+
+                if (!res.ok) throw new Error('Failed to fetch data');
+
+                const data = await res.json();
+                const donations = data.data || data;
+
 
             if (!res.ok) {
                 throw new Error('Failed to fetch donations');
             }
 
-            const data = await res.json();
 
-            const donationsData = Array.isArray(data)
-                ? data
-                : Array.isArray(data.donations)
-                ? data.donations
-                : [];
+            setAllTime(all);
+            setThisMonth(m);
+            setLastMonth(lm);
+            setThisYear(y);
+            setLastYear(ly);
+            setTopDonor(top);
+            setChartData(last6Months);
+            } catch (error) {
+                console.error('Failed to fetch reports', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
 
             setDonations(donationsData);
 
@@ -365,4 +391,3 @@ export default function ReportsPage() {
 
         </div>
     );
-}

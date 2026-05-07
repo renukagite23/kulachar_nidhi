@@ -9,29 +9,24 @@ export default function NotificationBell() {
 
     const fetchCount = async () => {
         try {
-            const res = await fetch('/api/notifications');
 
+            const res = await fetch('/api/notifications', {
+                credentials: 'include',
+            });
             if (!res.ok) return;
-
             const data = await res.json();
+            const unread = data.filter((n: any) => !n.isRead).length;
+            setCount(unread);
+        } catch {
+            // Silently ignore network errors — bell is non-critical UI
 
-            const unread = Array.isArray(data)
-                ? data.filter((n: any) => !n.isRead).length
-                : 0;
-
-            // Only update if changed (prevents extra re-renders)
-            setCount(prev => (prev !== unread ? unread : prev));
-
-        } catch (error) {
-            console.error('Notification fetch error:', error);
         }
     };
 
     useEffect(() => {
         fetchCount();
 
-        // 🔁 Poll every 10 seconds (better than 5s)
-        const interval = setInterval(fetchCount, 10000);
+        const interval = setInterval(fetchCount, 30000); // Poll every 30s instead of 5s
 
         return () => clearInterval(interval);
     }, []);

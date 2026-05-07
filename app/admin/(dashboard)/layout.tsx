@@ -12,7 +12,7 @@ export default function AdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { admin, isAdminAuthenticated } = useSelector((state: RootState) => state.adminAuth);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -21,13 +21,13 @@ export default function AdminDashboardLayout({
   }, []);
 
   useEffect(() => {
-    if (mounted && (!isAuthenticated || user?.role !== 'admin')) {
+    if (mounted && (!isAdminAuthenticated || admin?.role !== 'admin')) {
       router.push('/admin');
     }
-  }, [isAuthenticated, user, router, mounted]);
+  }, [isAdminAuthenticated, admin, router, mounted]);
 
   // Return a generic loading state that matches the server render until mounted
-  if (!mounted || !isAuthenticated || user?.role !== 'admin') {
+  if (!mounted || !isAdminAuthenticated || admin?.role !== 'admin') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FFFDF9]">
         <div className="h-10 w-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>

@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Donation from '@/models/Donation';
 import { getDataFromToken } from '@/lib/auth';
+import { hasAdminAccess } from '@/lib/adminAuth';
 
 async function checkAdmin() {
   const decoded = await getDataFromToken();
-  if (!decoded || decoded.role !== 'admin') return false;
+  if (!hasAdminAccess(decoded)) return false;
   return true;
 }
 

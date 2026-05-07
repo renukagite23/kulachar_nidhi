@@ -15,7 +15,8 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function DonorsPage() {
-    const { token } = useSelector((state: RootState) => state.auth);
+
+    const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
 
     const [donors, setDonors] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -28,13 +29,21 @@ export default function DonorsPage() {
                 setLoading(true);
 
                 const res = await fetch('/api/admin/donations', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+
+                    credentials: 'include',
+                    headers: { Authorization: `Bearer ${token}` }
                 });
 
-                if (!res.ok) {
-                    throw new Error('Failed to fetch donations');
+                let data;
+                if (res.status === 404) {
+                    const fallbackRes = await fetch('/api/donations', {
+                        credentials: 'include',
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    data = await fallbackRes.json();
+                } else {
+                    data = await res.json();
+
                 }
 
                 const data = await res.json();

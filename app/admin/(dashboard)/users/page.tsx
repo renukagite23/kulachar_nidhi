@@ -26,7 +26,7 @@ const Toast = ({ message, type, onClose }: { message: string, type: 'success' | 
 };
 
 export default function AdminUsersPage() {
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,21 +48,24 @@ export default function AdminUsersPage() {
   };
 
   useEffect(() => {
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
 
-      const res = await fetch('/api/admin/users', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch('/api/admin/users', {
+          credentials: 'include',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setUsers(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch users', err);
+      } finally {
+        setLoading(false);
 
-      // ✅ HANDLE FAILED RESPONSE
-      if (!res.ok) {
-        throw new Error('Failed to fetch users');
       }
 
       const data = await res.json();
@@ -122,6 +125,7 @@ export default function AdminUsersPage() {
     try {
       const res = await fetch(`/api/admin/users/${selectedUser._id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -153,6 +157,7 @@ export default function AdminUsersPage() {
     try {
       const res = await fetch(`/api/admin/users/${deleteConfirmId}`, {
         method: 'DELETE',
+        credentials: 'include',
         headers: {
           Authorization: `Bearer ${token}`,
         },

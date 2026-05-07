@@ -10,7 +10,7 @@ import {
 import { format } from 'date-fns';
 
 export default function AdminDashboard() {
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -18,6 +18,7 @@ export default function AdminDashboard() {
     const fetchStats = async () => {
       try {
         const res = await fetch('/api/admin/stats', {
+          credentials: 'include',
           headers: {
             Authorization: `Bearer ${token}`,
           },

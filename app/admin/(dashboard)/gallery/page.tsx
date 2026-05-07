@@ -37,7 +37,9 @@ export default function AdminGalleryPage() {
     // FETCH IMAGES
     const fetchImages = async () => {
         try {
-            const res = await fetch('/api/gallery');
+            const res = await fetch('/api/gallery', {
+                credentials: 'include',
+            });
             const data = await res.json();
             setImages(data);
         } catch (err) {
@@ -63,6 +65,7 @@ export default function AdminGalleryPage() {
         try {
             const res = await fetch('/api/upload', {
                 method: 'POST',
+                credentials: 'include',
                 body: formData,
             });
 
@@ -87,6 +90,7 @@ export default function AdminGalleryPage() {
         try {
             const res = await fetch('/api/gallery', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ imageUrl, caption }),
             });
@@ -110,6 +114,7 @@ export default function AdminGalleryPage() {
         try {
             const res = await fetch(`/api/gallery/${deleteId}`, {
                 method: 'DELETE',
+                credentials: 'include',
             });
 
             if (!res.ok) throw new Error('Delete failed');

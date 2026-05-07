@@ -10,10 +10,11 @@ import {
 import NotificationBell from '../NotificationBell';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { adminLogout } from '@/redux/slices/adminAuthSlice';
 import { usePathname, useRouter } from 'next/navigation';
 
 export default function AdminNavbar() {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { admin } = useSelector((state: RootState) => state.adminAuth);
   const dispatch = useDispatch();
   const pathname = usePathname();
   const router = useRouter();
@@ -43,12 +44,8 @@ export default function AdminNavbar() {
 
   // Logout
   const confirmLogout = () => {
-    localStorage.removeItem('token');
-
-    // Optional: clear redux state
-    dispatch({ type: 'auth/logout' });
-
-    router.push('/login');
+    dispatch(adminLogout());
+    router.push('/admin');
   };
 
   return (
@@ -93,15 +90,15 @@ export default function AdminNavbar() {
             >
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-bold text-secondary leading-tight">
-                  {user?.name || 'Administrator'}
+                  {admin?.name || 'Administrator'}
                 </p>
                 <p className="text-[10px] font-black text-primary uppercase tracking-widest">
-                  {user?.role || 'Admin'}
+                  {admin?.role || 'Admin'}
                 </p>
               </div>
 
               <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-black shadow-inner group-hover:bg-primary group-hover:text-white transition-colors">
-                {user?.name?.[0]?.toUpperCase() || 'A'}
+                {admin?.name?.[0]?.toUpperCase() || 'A'}
               </div>
             </div>
 

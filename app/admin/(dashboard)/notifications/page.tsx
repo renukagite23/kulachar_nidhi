@@ -12,7 +12,7 @@ const Toast = ({ message, type, onClose }: any) => {
     }, [onClose]);
 
     return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
@@ -38,7 +38,10 @@ export default function AdminNotificationsPage() {
     // FETCH
     const fetchData = async () => {
         try {
-            const res = await fetch('/api/notifications');
+            const res = await fetch('/api/notifications', {
+                credentials: 'include',
+            });
+            if (!res.ok) throw new Error('Failed to fetch');
             const data = await res.json();
             setNotifications(data);
         } catch (err) {
@@ -61,6 +64,7 @@ export default function AdminNotificationsPage() {
         try {
             const res = await fetch('/api/notifications', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
             });
@@ -81,6 +85,7 @@ export default function AdminNotificationsPage() {
         try {
             const res = await fetch(`/api/notifications/${id}`, {
                 method: 'DELETE',
+                credentials: 'include',
             });
             if (!res.ok) throw new Error('Failed');
             setToast({ message: 'Notification removed', type: 'success' });
@@ -95,6 +100,7 @@ export default function AdminNotificationsPage() {
         try {
             const res = await fetch(`/api/notifications/${id}`, {
                 method: 'PATCH',
+                credentials: 'include',
             });
             if (!res.ok) throw new Error('Failed');
             fetchData();
@@ -164,16 +170,14 @@ export default function AdminNotificationsPage() {
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
-                                className={`group p-5 rounded-[1.5rem] border transition-all duration-300 flex justify-between items-center bg-white hover:shadow-lg ${
-                                    n.isRead 
-                                    ? 'opacity-60 bg-muted/20 border-transparent hover:border-border' 
+                                className={`group p-5 rounded-[1.5rem] border transition-all duration-300 flex justify-between items-center bg-white hover:shadow-lg ${n.isRead
+                                    ? 'opacity-60 bg-muted/20 border-transparent hover:border-border'
                                     : 'border-primary/20 shadow-sm shadow-primary/5 hover:border-primary/40'
-                                }`}
+                                    }`}
                             >
                                 <div className="flex gap-4">
-                                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-                                        n.isRead ? 'bg-muted' : 'bg-primary/5'
-                                    }`}>
+                                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 ${n.isRead ? 'bg-muted' : 'bg-primary/5'
+                                        }`}>
                                         {getTypeIcon(n.type)}
                                     </div>
                                     <div>
@@ -185,11 +189,10 @@ export default function AdminNotificationsPage() {
                                         </div>
                                         <p className="text-sm text-muted-foreground leading-relaxed">{n.message}</p>
                                         <div className="mt-2 flex items-center gap-3">
-                                            <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded ${
-                                                n.type === 'event' ? 'bg-orange-100 text-orange-600' :
+                                            <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded ${n.type === 'event' ? 'bg-orange-100 text-orange-600' :
                                                 n.type === 'donation' ? 'bg-red-100 text-red-600' :
-                                                'bg-blue-100 text-blue-600'
-                                            }`}>
+                                                    'bg-blue-100 text-blue-600'
+                                                }`}>
                                                 {n.type}
                                             </span>
                                             <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -228,7 +231,7 @@ export default function AdminNotificationsPage() {
                                 <Megaphone className="w-8 h-8 text-muted-foreground opacity-30" />
                             </div>
                             <p className="text-muted-foreground font-black italic">No notifications found in the history.</p>
-                            <button 
+                            <button
                                 onClick={() => setShowCreate(true)}
                                 className="mt-4 text-primary font-bold text-sm hover:underline"
                             >
@@ -254,7 +257,7 @@ export default function AdminNotificationsPage() {
 
                             <div className="flex justify-between items-center mb-6">
                                 <h2 className="font-black text-2xl text-secondary italic">Create Broadcast</h2>
-                                <button 
+                                <button
                                     onClick={() => setShowCreate(false)}
                                     className="p-2 hover:bg-muted rounded-full transition-colors"
                                 >

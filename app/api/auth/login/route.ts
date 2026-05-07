@@ -22,15 +22,54 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
+    // Check approval status (exempt admin/president for system access if needed, but usually everyone should be approved)
+    if (user.role !== 'admin' && user.role !== 'president' && user.approvalStatus !== 'approved') {
+      return NextResponse.json(
+        { message: `Access denied. Your account status is ${user.approvalStatus || 'pending'}.` },
+        { status: 403 }
+      );
+    }
+
     const token = jwt.sign(
       { id: user._id, role: user.role },
       'secret_key',
       { expiresIn: '1d' }
     );
 
-    return NextResponse.json({ token, user });
 
-  } catch (error) {
-    return NextResponse.json({ error: 'Login failed' }, { status: 500 });
+    const isAdminAccess = user.role === 'admin' || user.role === 'president';
+    const cookieName = isAdminAccess ? 'admin_token' : 'token';
+
+    const response = NextResponse.json({
+      message: 'Logged in successfully',
+      token,
+      cookieName, // Inform client which cookie was set
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: user.phone,
+        totalDonations: user.totalDonations,
+      },
+    });
+
+    // Set role-specific cookie for middleware
+    response.cookies.set(cookieName, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+      path: '/',
+    });
+
+    return response;
+  } catch (error: any) {
+    console.error('Login error:', error);
+    return NextResponse.json(
+      { message: 'Server error during login' },
+      { status: 500 }
+    );
+
   }
 }

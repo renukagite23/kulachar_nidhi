@@ -1,11 +1,15 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { UserPlus, Mail, Lock, User, Phone, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-export default function RegisterPage() {
+function RegisterForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const referralCode = searchParams.get('ref') || '';
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,7 +19,6 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,7 +33,7 @@ export default function RegisterPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, referralCode }),
       });
 
       const data = await res.json();
@@ -60,6 +63,13 @@ export default function RegisterPage() {
           <h2 className="text-3xl font-black text-[#4E342E]">Join Devotees</h2>
           <p className="mt-2 text-sm text-[#8B7361] uppercase tracking-widest font-bold">Create your account</p>
         </div>
+
+        {referralCode && !success && (
+          <div className="bg-orange-50 border border-orange-200 p-3 rounded-xl flex items-center gap-3">
+            <CheckCircle2 className="h-4 w-4 text-orange-500" />
+            <p className="text-xs text-orange-700 font-medium">Referral code <span className="font-bold">{referralCode}</span> applied</p>
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-50 border-l-4 border-red-500 p-4 flex items-start gap-3 rounded-r-xl">
@@ -172,5 +182,17 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#FFFDF9]">
+        <div className="h-10 w-10 border-4 border-[#E65100]/30 border-t-[#E65100] rounded-full animate-spin"></div>
+      </div>
+    }>
+      <RegisterForm />
+    </Suspense>
   );
 }

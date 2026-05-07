@@ -42,6 +42,23 @@ export default function AdminEventsPage() {
 
     // FETCH EVENTS
     useEffect(() => {
+<
+        const fetchEvents = async () => {
+            try {
+                const res = await fetch('/api/events', {
+                    credentials: 'include',
+                });
+                if (!res.ok) throw new Error('Failed to fetch events');
+                const data = await res.json();
+                setEvents(data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+
         fetchEvents();
     }, []);
 
@@ -49,27 +66,11 @@ export default function AdminEventsPage() {
         try {
             const res = await fetch('/api/events');
 
-            if (!res.ok) {
-                throw new Error('Failed to fetch events');
-            }
+            const res = await fetch(url, {
+                method,
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
 
-            const data = await res.json();
-
-            setEvents(Array.isArray(data) ? data : []);
-        } catch (error) {
-            console.error('FETCH EVENTS ERROR:', error);
-            setEvents([]);
-        }
-    };
-
-    // ADD EVENT
-    const handleSubmit = async () => {
-        try {
-            const res = await fetch('/api/events', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify(form),
             });
 
@@ -109,6 +110,7 @@ export default function AdminEventsPage() {
         try {
             const res = await fetch(`/api/events/${id}`, {
                 method: 'DELETE',
+                credentials: 'include',
             });
 
             if (!res.ok) {
