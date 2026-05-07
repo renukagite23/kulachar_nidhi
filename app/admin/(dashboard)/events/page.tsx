@@ -1,181 +1,190 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {
-    CalendarDays,
-    Plus,
-    Eye,
-    Trash2,
-    MapPin,
-    X,
-    CheckCircle2,
-    AlertCircle,
-    Pencil,
-} from 'lucide-react';
-import { format } from 'date-fns';
+import { Plus, Pencil, Trash2, Eye, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Toast Component
-const Toast = ({ message, type, onClose }: any) => {
-    useEffect(() => {
-        const t = setTimeout(onClose, 3000);
-        return () => clearTimeout(t);
-    }, []);
+interface EventType {
+    _id?: string;
+    title_en: string;
+    title_mr: string;
+    desc_en: string;
+    desc_mr: string;
+    date: string;
+    image: string;
+}
 
-    return (
-        <div className={`fixed bottom-4 right-4 px-4 py-3 rounded-xl text-white font-bold shadow-lg z-50 ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}`}>
-            {message}
-        </div>
-    );
-};
+export default function AdminEventsPage() {
+    const [events, setEvents] = useState<EventType[]>([]);
+    const [showModal, setShowModal] = useState(false);
+    const [showViewModal, setShowViewModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
 
-export default function EventsPage() {
-    const [events, setEvents] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
 
-    const [showCreate, setShowCreate] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState<any>(null);
-    const [deleteId, setDeleteId] = useState<string | null>(null);
-
-    const [toast, setToast] = useState<any>(null);
-    const [editId, setEditId] = useState<string | null>(null);
-
-    const [form, setForm] = useState({
-        name: '',
-        description: '',
-        startDate: '',
-        endDate: '',
-        location: '',
+    const [form, setForm] = useState<EventType>({
+        title_en: '',
+        title_mr: '',
+        desc_en: '',
+        desc_mr: '',
+        date: '',
         image: '',
     });
 
-    // STATUS
-    const getStatus = (start: string, end: string) => {
-        const now = new Date();
-        const s = new Date(start);
-        const e = new Date(end);
-
-        if (now < s) return 'upcoming';
-        if (now >= s && now <= e) return 'ongoing';
-        return 'completed';
-    };
+    const [editEvent, setEditEvent] = useState<EventType>({
+        title_en: '',
+        title_mr: '',
+        desc_en: '',
+        desc_mr: '',
+        date: '',
+        image: '',
+    });
 
     // FETCH EVENTS
     useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const res = await fetch('/api/events');
-                const data = await res.json();
-                setEvents(data);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchEvents();
     }, []);
 
-    // CREATE OR UPDATE EVENT
-    const handleCreate = async () => {
+    const fetchEvents = async () => {
         try {
-            const method = editId ? 'PATCH' : 'POST';
-            const url = editId ? `/api/events/${editId}` : '/api/events';
+            const res = await fetch('/api/events');
 
-            const res = await fetch(url, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
+            if (!res.ok) {
+                throw new Error('Failed to fetch events');
+            }
+
+            const data = await res.json();
+
+            setEvents(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error('FETCH EVENTS ERROR:', error);
+            setEvents([]);
+        }
+    };
+
+    // ADD EVENT
+    const handleSubmit = async () => {
+        try {
+            const res = await fetch('/api/events', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(form),
             });
 
-            if (!res.ok) throw new Error('Failed');
-
-            const savedEvent = await res.json();
-
-            if (editId) {
-                setEvents(events.map((e) => (e._id === editId ? savedEvent : e)));
-                setToast({ message: 'Event updated successfully', type: 'success' });
-            } else {
-                setEvents([savedEvent, ...events]);
-                setToast({ message: 'Event created successfully', type: 'success' });
+            if (!res.ok) {
+                throw new Error('Failed to create event');
             }
 
-            setShowCreate(false);
-            setEditId(null);
+            const data = await res.json();
+
+            setEvents((prev) => [data, ...prev]);
+
             setForm({
-                name: '',
-                description: '',
-                startDate: '',
-                endDate: '',
-                location: '',
+                title_en: '',
+                title_mr: '',
+                desc_en: '',
+                desc_mr: '',
+                date: '',
                 image: '',
             });
-        } catch {
-            setToast({ message: editId ? 'Failed to update event' : 'Failed to create event', type: 'error' });
-        }
-    };
 
-    // HANDLE EDIT CLICK
-    const handleEditClick = (event: any) => {
-        setEditId(event._id);
-        setForm({
-            name: event.name || '',
-            description: event.description || '',
-            startDate: event.startDate ? format(new Date(event.startDate), 'yyyy-MM-dd') : '',
-            endDate: event.endDate ? format(new Date(event.endDate), 'yyyy-MM-dd') : '',
-            location: event.location || '',
-            image: event.image || '',
-        });
-        setShowCreate(true);
+            setShowModal(false);
+        } catch (error) {
+            console.error('CREATE EVENT ERROR:', error);
+        }
     };
 
     // DELETE EVENT
-    const handleDelete = async () => {
-        if (!deleteId) return;
+    const handleDelete = async (id?: string) => {
+        if (!id) return;
+
+        const confirmDelete = confirm(
+            'Are you sure you want to delete this event?'
+        );
+
+        if (!confirmDelete) return;
 
         try {
-            const res = await fetch(`/api/events/${deleteId}`, {
+            const res = await fetch(`/api/events/${id}`, {
                 method: 'DELETE',
             });
 
-            if (!res.ok) throw new Error('Delete failed');
+            if (!res.ok) {
+                throw new Error('Failed to delete event');
+            }
 
-            setEvents(events.filter((e) => e._id !== deleteId));
-            setDeleteId(null);
-            setToast({ message: 'Event deleted', type: 'success' });
-        } catch {
-            setToast({ message: 'Delete failed', type: 'error' });
+            setEvents((prev) => prev.filter((event) => event._id !== id));
+        } catch (error) {
+            console.error('DELETE EVENT ERROR:', error);
         }
     };
 
-    if (loading) {
-        return (
-            <div className="p-12 flex justify-center">
-                <div className="h-10 w-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-            </div>
-        );
-    }
+    // OPEN EDIT MODAL
+    const handleEditClick = (event: EventType) => {
+        setEditEvent({
+            _id: event._id,
+            title_en: event.title_en || '',
+            title_mr: event.title_mr || '',
+            desc_en: event.desc_en || '',
+            desc_mr: event.desc_mr || '',
+            date: event.date || '',
+            image: event.image || '',
+        });
+
+        setShowEditModal(true);
+    };
+
+    // UPDATE EVENT
+    const handleUpdate = async () => {
+        try {
+            const res = await fetch(`/api/events/${editEvent._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(editEvent),
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to update event');
+            }
+
+            const updatedEvent = await res.json();
+
+            setEvents((prev) =>
+                prev.map((event) =>
+                    event._id === updatedEvent._id
+                        ? updatedEvent
+                        : event
+                )
+            );
+
+            setShowEditModal(false);
+        } catch (error) {
+            console.error('UPDATE EVENT ERROR:', error);
+        }
+    };
 
     return (
-        <div className="p-6 md:p-10 max-w-[1400px] mx-auto">
-
-            {toast && <Toast {...toast} onClose={() => setToast(null)} />}
+        <div className="p-6 md:p-10 bg-[#f8f6f4] min-h-screen">
 
             {/* HEADER */}
-            <div className="flex justify-between items-end mb-8">
+            <div className="flex justify-between items-center mb-6">
                 <div>
-                    <div className="text-[10px] uppercase font-black tracking-widest text-primary mb-1">
+                    <p className="text-xs font-bold text-orange-600 uppercase">
                         Temple Events
-                    </div>
-                    <h1 className="text-4xl font-black text-secondary">
+                    </p>
+
+                    <h1 className="text-3xl font-black text-gray-800">
                         Events Management
                     </h1>
                 </div>
 
                 <button
-                    onClick={() => setShowCreate(true)}
-                    className="spiritual-button flex items-center gap-2"
+                    onClick={() => setShowModal(true)}
+                    className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-xl shadow hover:bg-orange-700 transition"
                 >
                     <Plus className="w-4 h-4" />
                     Create Event
@@ -183,172 +192,430 @@ export default function EventsPage() {
             </div>
 
             {/* TABLE */}
-            <div className="spiritual-card bg-white border-border shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left">
-                        <thead className="bg-muted/30 border-b border-border">
-                            <tr>
-                                <th className="p-4 text-xs font-bold uppercase">Event</th>
-                                <th className="p-4 text-xs font-bold uppercase">Date</th>
-                                <th className="p-4 text-xs font-bold uppercase">Location</th>
-                                <th className="p-4 text-xs font-bold uppercase">Status</th>
-                                <th className="p-4 text-xs font-bold uppercase text-right">Actions</th>
-                            </tr>
-                        </thead>
+            <div className="bg-white rounded-3xl shadow-sm overflow-hidden border border-orange-100">
 
-                        <tbody className="divide-y divide-border/50">
-                            {events.map((e) => {
-                                const status = getStatus(e.startDate, e.endDate);
+                <table className="w-full text-left">
+
+                    {/* TABLE HEADER */}
+                    <thead className="bg-orange-50 text-xs uppercase text-gray-600">
+                        <tr>
+                            <th className="p-4">Event</th>
+                            <th className="p-4">Date</th>
+                            <th className="p-4">Status</th>
+                            <th className="p-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+
+                    {/* TABLE BODY */}
+                    <tbody className="divide-y divide-orange-50">
+
+                        {events.length === 0 ? (
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    className="text-center p-6 text-gray-500"
+                                >
+                                    No events found
+                                </td>
+                            </tr>
+                        ) : (
+                            events.map((e, index) => {
+
+                                const today = new Date();
+
+                                const eventDate = e.date
+                                    ? new Date(e.date)
+                                    : new Date();
+
+                                let status = 'Upcoming';
+
+                                if (eventDate < today) {
+                                    status = 'Completed';
+                                }
 
                                 return (
-                                    <tr key={e._id} className="hover:bg-muted/20">
+                                    <tr
+                                        key={e._id || index}
+                                        className="hover:bg-orange-50/40 transition"
+                                    >
+
+                                        {/* EVENT */}
                                         <td className="p-4">
-                                            <div className="font-bold text-secondary">{e.name}</div>
-                                            <div className="text-xs text-muted-foreground">
-                                                {e.description}
+                                            <div className="flex items-center gap-3">
+
+                                                <img
+                                                    src={
+                                                        e.image ||
+                                                        '/festival-placeholder.jpg'
+                                                    }
+                                                    alt={e.title_en}
+                                                    className="w-14 h-14 rounded-xl object-cover"
+                                                />
+
+                                                <div>
+                                                    <div className="font-bold text-gray-800">
+                                                        {e.title_en ||
+                                                            'Untitled Event'}
+                                                    </div>
+
+                                                    <div className="text-xs text-gray-500 line-clamp-2 max-w-xs">
+                                                        {e.desc_en ||
+                                                            'No description'}
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </td>
 
-                                        <td className="p-4 text-sm text-secondary">
-                                            {format(new Date(e.startDate), 'dd MMM')} -{' '}
-                                            {format(new Date(e.endDate), 'dd MMM yyyy')}
+                                        {/* DATE */}
+                                        <td className="p-4 text-sm text-gray-700">
+                                            {e.date || 'No Date'}
                                         </td>
 
-                                        <td className="p-4 flex items-center gap-1 text-muted-foreground text-sm">
-                                            <MapPin className="w-3 h-3" />
-                                            {e.location}
-                                        </td>
-
+                                        {/* STATUS */}
                                         <td className="p-4">
-                                            <span className={`px-2 py-1 text-[10px] font-bold uppercase rounded border ${status === 'upcoming'
-                                                ? 'bg-blue-50 text-blue-700 border-blue-200'
-                                                : status === 'ongoing'
-                                                    ? 'bg-green-50 text-green-700 border-green-200'
-                                                    : 'bg-gray-100 text-gray-600 border-gray-200'
-                                                }`}>
+                                            <span
+                                                className={`px-3 py-1 text-xs rounded-full font-semibold ${
+                                                    status === 'Completed'
+                                                        ? 'bg-gray-100 text-gray-600'
+                                                        : 'bg-orange-100 text-orange-700'
+                                                }`}
+                                            >
                                                 {status}
                                             </span>
                                         </td>
 
-                                        <td className="p-4 flex justify-end gap-2">
-                                            <button
-                                                onClick={() => handleEditClick(e)}
-                                                className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg"
-                                            >
-                                                <Pencil className="w-4 h-4" />
-                                            </button>
+                                        {/* ACTIONS */}
+                                        <td className="p-4">
+                                            <div className="flex justify-end gap-2">
 
-                                            <button
-                                                onClick={() => setSelectedEvent(e)}
-                                                className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg"
-                                            >
-                                                <Eye className="w-4 h-4" />
-                                            </button>
+                                                <button
+                                                    onClick={() =>
+                                                        handleEditClick(e)
+                                                    }
+                                                    className="p-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition"
+                                                >
+                                                    <Pencil className="w-4 h-4" />
+                                                </button>
 
-                                            <button
-                                                onClick={() => setDeleteId(e._id)}
-                                                className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg"
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedEvent(e);
+                                                        setShowViewModal(true);
+                                                    }}
+                                                    className="p-2 rounded-lg bg-green-50 hover:bg-green-100 text-green-600 transition"
+                                                >
+                                                    <Eye className="w-4 h-4" />
+                                                </button>
+
+                                                <button
+                                                    onClick={() =>
+                                                        handleDelete(e._id)
+                                                    }
+                                                    className="p-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+
+                                            </div>
                                         </td>
+
                                     </tr>
                                 );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
+                            })
+                        )}
+
+                    </tbody>
+
+                </table>
             </div>
 
-            {/* CREATE MODAL */}
+            {/* ADD MODAL */}
             <AnimatePresence>
-                {showCreate && (
-                    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-                        <motion.div className="bg-white rounded-2xl w-full max-w-md p-6">
-                            <h2 className="font-bold text-lg mb-4">{editId ? 'Edit Event' : 'Create Event'}</h2>
+                {showModal && (
+                    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white rounded-3xl p-6 w-full max-w-md"
+                        >
+
+                            <div className="flex justify-between items-center mb-5">
+                                <h2 className="text-xl font-bold text-gray-800">
+                                    Create Event
+                                </h2>
+
+                                <button onClick={() => setShowModal(false)}>
+                                    <X className="w-5 h-5 text-gray-500" />
+                                </button>
+                            </div>
 
                             <div className="space-y-3">
-                                <input placeholder="Event Name" className="spiritual-input w-full"
-                                    value={form.name}
-                                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+
+                                <input
+                                    placeholder="Title (English)"
+                                    value={form.title_en}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            title_en: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500"
                                 />
-                                <input placeholder="Location" className="spiritual-input w-full"
-                                    value={form.location}
-                                    onChange={(e) => setForm({ ...form, location: e.target.value })}
+
+                                <input
+                                    placeholder="Title (Marathi)"
+                                    value={form.title_mr}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            title_mr: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500"
                                 />
-                                <input type="date" className="spiritual-input w-full"
-                                    value={form.startDate}
-                                    onChange={(e) => setForm({ ...form, startDate: e.target.value })}
+
+                                <textarea
+                                    placeholder="Description (English)"
+                                    value={form.desc_en}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            desc_en: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500"
                                 />
-                                <input type="date" className="spiritual-input w-full"
-                                    value={form.endDate}
-                                    onChange={(e) => setForm({ ...form, endDate: e.target.value })}
+
+                                <textarea
+                                    placeholder="Description (Marathi)"
+                                    value={form.desc_mr}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            desc_mr: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500"
                                 />
-                                <input placeholder="Image URL (optional)" className="spiritual-input w-full"
+
+                                <input
+                                    type="date"
+                                    value={form.date}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            date: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500"
+                                />
+
+                                <input
+                                    placeholder="Image URL"
                                     value={form.image}
-                                    onChange={(e) => setForm({ ...form, image: e.target.value })}
+                                    onChange={(e) =>
+                                        setForm({
+                                            ...form,
+                                            image: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500"
                                 />
-                                <textarea placeholder="Description" className="spiritual-input w-full"
-                                    value={form.description}
-                                    onChange={(e) => setForm({ ...form, description: e.target.value })}
-                                />
+
                             </div>
 
-                            <div className="flex gap-3 mt-6">
-                                <button onClick={() => { setShowCreate(false); setEditId(null); }} className="flex-1 border py-2 rounded-xl">
+                            <div className="flex gap-3 mt-5">
+
+                                <button
+                                    onClick={() => setShowModal(false)}
+                                    className="flex-1 border border-orange-200 py-3 rounded-xl font-medium"
+                                >
                                     Cancel
                                 </button>
-                                <button onClick={handleCreate} className="flex-1 spiritual-button">
-                                    {editId ? 'Update' : 'Create'}
+
+                                <button
+                                    onClick={handleSubmit}
+                                    className="flex-1 bg-orange-600 hover:bg-orange-700 text-white rounded-xl py-3 font-medium transition"
+                                >
+                                    Add Event
                                 </button>
+
                             </div>
+
                         </motion.div>
+
                     </div>
                 )}
             </AnimatePresence>
 
             {/* VIEW MODAL */}
             <AnimatePresence>
-                {selectedEvent && (
-                    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-                        <motion.div className="bg-white rounded-2xl w-full max-w-lg p-6">
-                            <div className="flex justify-between mb-4">
-                                <h2 className="font-bold text-lg">{selectedEvent.name}</h2>
-                                <button onClick={() => setSelectedEvent(null)}><X /></button>
+                {showViewModal && selectedEvent && (
+                    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white rounded-3xl overflow-hidden w-full max-w-lg"
+                        >
+
+                            <img
+                                src={
+                                    selectedEvent.image ||
+                                    '/festival-placeholder.jpg'
+                                }
+                                alt={selectedEvent.title_en}
+                                className="w-full h-64 object-cover"
+                            />
+
+                            <div className="p-6">
+
+                                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                                    {selectedEvent.title_en}
+                                </h2>
+
+                                <p className="text-orange-600 font-medium mb-4">
+                                    {selectedEvent.date}
+                                </p>
+
+                                <p className="text-gray-600 leading-relaxed">
+                                    {selectedEvent.desc_en}
+                                </p>
+
+                                <button
+                                    onClick={() =>
+                                        setShowViewModal(false)
+                                    }
+                                    className="mt-6 w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-xl transition"
+                                >
+                                    Close
+                                </button>
+
                             </div>
 
-                            <img src={selectedEvent.image || '/devi.png'} className="rounded-xl mb-4" />
-
-                            <p className="text-sm mb-3">{selectedEvent.description}</p>
-
-                            <div className="text-sm text-muted-foreground space-y-2">
-                                <div>📅 {selectedEvent.startDate} → {selectedEvent.endDate}</div>
-                                <div>📍 {selectedEvent.location}</div>
-                            </div>
                         </motion.div>
+
                     </div>
                 )}
             </AnimatePresence>
 
-            {/* DELETE MODAL */}
+            {/* EDIT MODAL */}
             <AnimatePresence>
-                {deleteId && (
-                    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
-                        <motion.div className="bg-white p-6 rounded-2xl text-center">
-                            <h3 className="font-bold mb-3">Delete Event?</h3>
-                            <div className="flex gap-3">
-                                <button onClick={() => setDeleteId(null)} className="flex-1 border py-2 rounded-xl">
+                {showEditModal && (
+                    <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white rounded-3xl p-6 w-full max-w-md"
+                        >
+
+                            <h2 className="text-xl font-bold mb-5 text-gray-800">
+                                Edit Event
+                            </h2>
+
+                            <div className="space-y-3">
+
+                                <input
+                                    value={editEvent.title_en || ''}
+                                    onChange={(e) =>
+                                        setEditEvent({
+                                            ...editEvent,
+                                            title_en: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl"
+                                />
+
+                                <input
+                                    value={editEvent.title_mr || ''}
+                                    onChange={(e) =>
+                                        setEditEvent({
+                                            ...editEvent,
+                                            title_mr: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl"
+                                />
+
+                                <textarea
+                                    value={editEvent.desc_en || ''}
+                                    onChange={(e) =>
+                                        setEditEvent({
+                                            ...editEvent,
+                                            desc_en: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl"
+                                />
+
+                                <textarea
+                                    value={editEvent.desc_mr || ''}
+                                    onChange={(e) =>
+                                        setEditEvent({
+                                            ...editEvent,
+                                            desc_mr: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl"
+                                />
+
+                                <input
+                                    type="date"
+                                    value={editEvent.date || ''}
+                                    onChange={(e) =>
+                                        setEditEvent({
+                                            ...editEvent,
+                                            date: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl"
+                                />
+
+                                <input
+                                    value={editEvent.image || ''}
+                                    onChange={(e) =>
+                                        setEditEvent({
+                                            ...editEvent,
+                                            image: e.target.value,
+                                        })
+                                    }
+                                    className="w-full border border-orange-200 p-3 rounded-xl"
+                                />
+
+                            </div>
+
+                            <div className="flex gap-3 mt-5">
+
+                                <button
+                                    onClick={() =>
+                                        setShowEditModal(false)
+                                    }
+                                    className="flex-1 border border-orange-200 py-3 rounded-xl"
+                                >
                                     Cancel
                                 </button>
-                                <button onClick={handleDelete} className="flex-1 bg-red-600 text-white rounded-xl">
-                                    Delete
+
+                                <button
+                                    onClick={handleUpdate}
+                                    className="flex-1 bg-orange-600 hover:bg-orange-700 text-white rounded-xl py-3 transition"
+                                >
+                                    Update
                                 </button>
+
                             </div>
+
                         </motion.div>
+
                     </div>
                 )}
             </AnimatePresence>
-
         </div>
     );
 }

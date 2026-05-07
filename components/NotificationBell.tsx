@@ -8,16 +8,31 @@ export default function NotificationBell() {
     const [count, setCount] = useState(0);
 
     const fetchCount = async () => {
-        const res = await fetch('/api/notifications');
-        const data = await res.json();
+        try {
+            const res = await fetch('/api/notifications');
 
-        const unread = data.filter((n: any) => !n.isRead).length;
-        setCount(unread);
+            if (!res.ok) return;
+
+            const data = await res.json();
+
+            const unread = Array.isArray(data)
+                ? data.filter((n: any) => !n.isRead).length
+                : 0;
+
+            // Only update if changed (prevents extra re-renders)
+            setCount(prev => (prev !== unread ? unread : prev));
+
+        } catch (error) {
+            console.error('Notification fetch error:', error);
+        }
     };
 
     useEffect(() => {
         fetchCount();
-        const interval = setInterval(fetchCount, 5000);
+
+        // 🔁 Poll every 10 seconds (better than 5s)
+        const interval = setInterval(fetchCount, 10000);
+
         return () => clearInterval(interval);
     }, []);
 

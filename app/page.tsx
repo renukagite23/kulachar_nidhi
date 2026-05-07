@@ -10,8 +10,9 @@ import DonationForm from '@/components/DonationForm';
 import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
 import { Sparkles, Heart } from 'lucide-react';
-import { useLanguage } from '@/lib/LanguageContext';
+// import { useLanguage } from '@/lib/LanguageContext';
 import FestivalSpotLight from '@/components/FestivalSpotLight';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Home() {
   const { t } = useLanguage();

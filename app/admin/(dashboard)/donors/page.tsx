@@ -4,76 +4,122 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { format } from 'date-fns';
-import { X, CalendarDays, IndianRupee, Tag, CheckCircle2, AlertCircle, Eye } from 'lucide-react';
+import {
+    X,
+    Eye,
+    Trash2,
+    Pencil,
+    Mail,
+    Phone
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function DonorsPage() {
     const { token } = useSelector((state: RootState) => state.auth);
+
     const [donors, setDonors] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedDonor, setSelectedDonor] = useState<any | null>(null);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         const fetchDonors = async () => {
             try {
+                setLoading(true);
+
                 const res = await fetch('/api/admin/donations', {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
 
-                let data;
-                if (res.status === 404) {
-                    const fallbackRes = await fetch('/api/donations', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    data = await fallbackRes.json();
-                } else {
-                    data = await res.json();
+                if (!res.ok) {
+                    throw new Error('Failed to fetch donations');
                 }
 
-                const donationsList = data.data || data;
-                
-                if (Array.isArray(donationsList)) {
-                    // Group by email or mobileNumber
-                    const grouped = donationsList.reduce((acc: any, curr: any) => {
-                        const key = curr.email || curr.mobileNumber || curr.donorName;
-                        if (!acc[key]) {
-                            acc[key] = {
-                                name: curr.donorName,
-                                email: curr.email,
-                                phone: curr.mobileNumber,
-                                totalAmount: 0,
-                                donationsCount: 0,
-                                latestType: curr.reason || curr.purpose || 'General',
-                                latestStatus: curr.paymentStatus,
-                                latestDate: curr.donationDate || curr.createdAt,
-                                history: []
-                            };
-                        }
-                        acc[key].totalAmount += curr.amount || 0;
-                        acc[key].donationsCount += 1;
-                        acc[key].history.push(curr);
+                const data = await res.json();
 
-                        // Keep the latest type/status/date
-                        const currDate = new Date(curr.donationDate || curr.createdAt);
-                        const latestDate = new Date(acc[key].latestDate);
-                        if (currDate > latestDate) {
-                            acc[key].latestDate = currDate;
-                            acc[key].latestType = curr.reason || curr.purpose || 'General';
-                            acc[key].latestStatus = curr.paymentStatus;
-                        }
+                console.log('DONATIONS API:', data);
 
-                        return acc;
-                    }, {});
+                // ✅ SAFE ARRAY FIX
+                const donationsList = Array.isArray(data)
+                    ? data
+                    : Array.isArray(data?.data)
+                        ? data.data
+                        : [];
 
-                    // Convert back to array
-                    const groupedArray = Object.values(grouped).sort((a: any, b: any) =>
-                        new Date(b.latestDate).getTime() - new Date(a.latestDate).getTime()
+                // ✅ GROUP DONORS
+                const grouped = donationsList.reduce((acc: any, curr: any) => {
+
+                    if (!curr) return acc;
+
+                    const key =
+                        curr.email ||
+                        curr.mobileNumber ||
+                        curr.donorName ||
+                        Math.random().toString();
+
+                    if (!acc[key]) {
+                        acc[key] = {
+                            name: curr.donorName || 'Unknown',
+                            email: curr.email || '',
+                            phone: curr.mobileNumber || '',
+                            totalAmount: 0,
+                            donationsCount: 0,
+                            latestType:
+                                curr.reason ||
+                                curr.purpose ||
+                                'General',
+                            latestStatus:
+                                curr.paymentStatus || 'pending',
+                            latestDate:
+                                curr.donationDate ||
+                                curr.createdAt ||
+                                new Date(),
+                            history: [],
+                        };
+                    }
+
+                    acc[key].totalAmount += Number(curr.amount || 0);
+
+                    acc[key].donationsCount += 1;
+
+                    acc[key].history.push(curr);
+
+                    const currDate = new Date(
+                        curr.donationDate || curr.createdAt || new Date()
                     );
 
-                    setDonors(groupedArray);
-                }
+                    const latestDate = new Date(acc[key].latestDate);
+
+                    // ✅ UPDATE LATEST DONATION
+                    if (currDate > latestDate) {
+                        acc[key].latestDate = currDate;
+
+                        acc[key].latestType =
+                            curr.reason ||
+                            curr.purpose ||
+                            'General';
+
+                        acc[key].latestStatus =
+                            curr.paymentStatus || 'pending';
+                    }
+
+                    return acc;
+                }, {});
+
+                // ✅ SORT DONORS
+                const groupedArray = Object.values(grouped).sort(
+                    (a: any, b: any) =>
+                        new Date(b.latestDate).getTime() -
+                        new Date(a.latestDate).getTime()
+                );
+
+                setDonors(groupedArray);
+
             } catch (err) {
-                console.error('Failed to fetch donors', err);
+                console.error('Failed to fetch donors:', err);
+                setDonors([]);
             } finally {
                 setLoading(false);
             }
@@ -82,81 +128,160 @@ export default function DonorsPage() {
         if (token) {
             fetchDonors();
         } else {
-            setLoading(false); // If no token, just stop loading
+            setLoading(false);
         }
     }, [token]);
 
+    // 🔍 SEARCH
+    const filteredDonors = donors.filter((d) =>
+        d.name?.toLowerCase().includes(search.toLowerCase()) ||
+        d.email?.toLowerCase().includes(search.toLowerCase()) ||
+        d.phone?.includes(search)
+    );
+
+    // ✏️ EDIT
+    const handleEdit = (donor: any) => {
+        console.log('Edit donor:', donor);
+    };
+
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6 text-secondary">Donors Directory</h1>
 
+            {/* HEADER */}
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-2xl font-bold text-secondary">
+                    Donors Directory
+                </h1>
+
+                {/* SEARCH */}
+                <div className="relative w-72">
+                    <input
+                        type="text"
+                        placeholder="Search by name, email or phone..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full h-10 px-4 rounded-xl border border-border bg-muted/30 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm shadow-sm"
+                    />
+                </div>
+            </div>
+
+            {/* TABLE */}
             <div className="bg-white rounded-2xl shadow border border-border overflow-hidden">
+
                 {loading ? (
-                    <div className="p-12 flex justify-center items-center">
+                    <div className="p-12 flex justify-center">
                         <div className="h-8 w-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
                     </div>
-                ) : donors.length === 0 ? (
+                ) : filteredDonors.length === 0 ? (
                     <div className="p-12 text-center text-muted-foreground">
                         No donors found.
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
-                            <thead className="bg-gray-50 text-left">
+
+                            {/* HEADER */}
+                            <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="p-4 font-bold text-muted-foreground uppercase text-[11px] tracking-wider">Donor</th>
-                                    <th className="p-4 font-bold text-muted-foreground uppercase text-[11px] tracking-wider">Contact</th>
-                                    <th className="p-4 font-bold text-muted-foreground uppercase text-[11px] tracking-wider">Total Amount</th>
-                                    <th className="p-4 font-bold text-muted-foreground uppercase text-[11px] tracking-wider">Last Occasion</th>
-                                    <th className="p-4 font-bold text-muted-foreground uppercase text-[11px] tracking-wider">Status</th>
-                                    <th className="p-4 font-bold text-muted-foreground uppercase text-[11px] tracking-wider">Last Date</th>
-                                    <th className="p-4 font-bold text-muted-foreground uppercase text-[11px] tracking-wider">Actions</th>
+                                    <th className="p-4">Donor</th>
+                                    <th className="p-4">Contact</th>
+                                    <th className="p-4">Total Amount</th>
+                                    <th className="p-4">Last Occasion</th>
+                                    <th className="p-4">Status</th>
+                                    <th className="p-4">Last Date</th>
+                                    <th className="p-4">Actions</th>
                                 </tr>
                             </thead>
+
+                            {/* BODY */}
                             <tbody className="divide-y divide-border/50">
-                                {donors.map((d, i) => (
-                                    <tr key={i} className="hover:bg-muted/20 transition-colors">
+
+                                {filteredDonors.map((d, i) => (
+
+                                    <tr
+                                        key={i}
+                                        className="hover:bg-muted/20"
+                                    >
+
+                                        {/* DONOR */}
                                         <td className="p-4 flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
-                                                {d.name ? d.name[0].toUpperCase() : 'U'}
+                                                {d.name?.[0]?.toUpperCase() || 'U'}
                                             </div>
-                                            <span className="font-bold text-secondary">{d.name || 'Unknown'}</span>
+
+                                            <span className="font-bold text-secondary">
+                                                {d.name}
+                                            </span>
                                         </td>
-                                        <td className="p-4">
-                                            <div className="text-secondary">{d.email || 'No email'}</div>
-                                            <div className="text-xs text-muted-foreground mt-0.5">{d.phone || 'No phone'}</div>
+
+                                        {/* CONTACT */}
+                                        <td className="p-4 space-y-1 text-xs">
+
+                                            <div className="flex items-center gap-2 text-secondary">
+                                                <Mail className="w-3.5 h-3.5 text-gray-700" />
+                                                {d.email || 'No email'}
+                                            </div>
+
+                                            <div className="flex items-center gap-2 text-muted-foreground">
+                                                <Phone className="w-3.5 h-3.5 text-gray-700" />
+                                                {d.phone || 'No phone'}
+                                            </div>
+
                                         </td>
+
+                                        {/* AMOUNT */}
                                         <td className="p-4 font-black text-primary">
-                                            ₹{d.totalAmount.toLocaleString('en-IN')}
-                                            <div className="text-[10px] text-muted-foreground font-medium mt-0.5">
-                                                {d.donationsCount} {d.donationsCount === 1 ? 'Donation' : 'Donations'}
-                                            </div>
+                                            ₹{Number(d.totalAmount || 0).toLocaleString('en-IN')}
                                         </td>
-                                        <td className="p-4 text-secondary font-medium capitalize">
+
+                                        {/* OCCASION */}
+                                        <td className="p-4">
                                             {d.latestType}
                                         </td>
+
+                                        {/* STATUS */}
                                         <td className="p-4">
-                                            <span className={`px-2.5 py-1 text-[10px] uppercase tracking-wider font-bold rounded-md border ${d.latestStatus === 'completed'
-                                                    ? 'bg-green-50 text-green-700 border-green-200'
-                                                    : d.latestStatus === 'failed'
-                                                        ? 'bg-red-50 text-red-700 border-red-200'
-                                                        : 'bg-amber-50 text-amber-700 border-amber-200'
-                                                }`}>
+                                            <span className="text-green-600 text-xs font-bold">
                                                 {d.latestStatus}
                                             </span>
                                         </td>
-                                        <td className="p-4 text-muted-foreground">
-                                            {d.latestDate ? format(new Date(d.latestDate), 'dd MMM, yyyy') : 'N/A'}
+
+                                        {/* DATE */}
+                                        <td className="p-4">
+                                            {d.latestDate
+                                                ? format(
+                                                    new Date(d.latestDate),
+                                                    'dd MMM yyyy'
+                                                )
+                                                : 'N/A'}
                                         </td>
+
+                                        {/* ACTIONS */}
                                         <td className="p-4 flex gap-3">
-                                            <button 
+
+                                            {/* VIEW */}
+                                            <button
                                                 onClick={() => setSelectedDonor(d)}
-                                                className="text-black hover:text-gray-700 p-1 rounded-full hover:bg-muted/50 transition-colors"
-                                                title="View Details"
+                                                className="text-black hover:text-gray-700 p-1 rounded-full hover:bg-muted/50"
                                             >
                                                 <Eye className="w-4 h-4" />
                                             </button>
-                                            <button className="text-red-500 hover:text-red-600 font-bold text-xs">Delete</button>
+
+                                            {/* EDIT */}
+                                            <button
+                                                onClick={() => handleEdit(d)}
+                                                className="text-blue-500 hover:text-blue-600 p-1 rounded-full hover:bg-blue-50"
+                                            >
+                                                <Pencil className="w-4 h-4" />
+                                            </button>
+
+                                            {/* DELETE */}
+                                            <button
+                                                className="text-red-500 hover:text-red-600 p-1 rounded-full hover:bg-red-50"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+
                                         </td>
                                     </tr>
                                 ))}
@@ -166,94 +291,40 @@ export default function DonorsPage() {
                 )}
             </div>
 
-            {/* Detailed View Modal */}
+            {/* MODAL */}
             <AnimatePresence>
                 {selectedDonor && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                        <motion.div 
-                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden border border-border flex flex-col max-h-[90vh]"
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="bg-white p-6 rounded-2xl w-full max-w-xl"
                         >
-                            {/* Modal Header */}
-                            <div className="px-6 py-4 border-b border-border flex justify-between items-center bg-muted/20">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center font-black text-xl">
-                                        {selectedDonor.name ? selectedDonor.name[0].toUpperCase() : 'U'}
-                                    </div>
-                                    <div>
-                                        <h2 className="text-xl font-black text-secondary">{selectedDonor.name}</h2>
-                                        <p className="text-sm text-muted-foreground">{selectedDonor.email} • {selectedDonor.phone}</p>
-                                    </div>
-                                </div>
-                                <button 
+
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-lg font-bold">
+                                    {selectedDonor.name}
+                                </h2>
+
+                                <button
                                     onClick={() => setSelectedDonor(null)}
-                                    className="p-2 hover:bg-muted rounded-full transition-colors"
                                 >
-                                    <X className="w-5 h-5 text-muted-foreground" />
+                                    <X />
                                 </button>
                             </div>
 
-                            {/* Modal Stats */}
-                            <div className="px-6 py-6 border-b border-border grid grid-cols-2 gap-4 bg-white">
-                                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
-                                    <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Total Contributions</div>
-                                    <div className="text-2xl font-black text-primary">
-                                        ₹{selectedDonor.totalAmount.toLocaleString('en-IN')}
-                                    </div>
-                                </div>
-                                <div className="p-4 rounded-2xl bg-secondary/5 border border-secondary/10">
-                                    <div className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-1">Donation Count</div>
-                                    <div className="text-2xl font-black text-secondary">
-                                        {selectedDonor.donationsCount} Time{selectedDonor.donationsCount !== 1 ? 's' : ''}
-                                    </div>
-                                </div>
-                            </div>
+                            <p className="text-sm text-muted-foreground">
+                                Donation history available below
+                            </p>
 
-                            {/* Modal History List */}
-                            <div className="p-6 overflow-y-auto bg-[#FFFDF9] flex-1">
-                                <h3 className="font-bold text-secondary mb-4 flex items-center gap-2">
-                                    <CalendarDays className="w-4 h-4 text-primary" /> Donation History
-                                </h3>
-                                
-                                <div className="space-y-4">
-                                    {selectedDonor.history.sort((a: any, b: any) => new Date(b.donationDate || b.createdAt).getTime() - new Date(a.donationDate || a.createdAt).getTime()).map((tx: any, idx: number) => (
-                                        <div key={idx} className="bg-white p-4 rounded-2xl border border-border shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <Tag className="w-3.5 h-3.5 text-primary/60" />
-                                                    <span className="font-bold text-secondary capitalize">{tx.reason || tx.purpose || 'General Foundation'}</span>
-                                                </div>
-                                                {tx.occasion && (
-                                                    <div className="text-xs text-muted-foreground mb-1">Occasion: {tx.occasion}</div>
-                                                )}
-                                                <div className="text-[11px] text-muted-foreground font-medium">
-                                                    {format(new Date(tx.donationDate || tx.createdAt), 'dd MMM yyyy, HH:mm a')}
-                                                </div>
-                                            </div>
-                                            
-                                            <div className="flex items-center md:flex-col md:items-end gap-3 md:gap-1">
-                                                <div className="font-black text-lg text-primary">
-                                                    ₹{tx.amount?.toLocaleString('en-IN')}
-                                                </div>
-                                                <span className={`px-2 py-0.5 text-[9px] uppercase tracking-wider font-bold rounded border ${tx.paymentStatus === 'completed'
-                                                        ? 'bg-green-50 text-green-700 border-green-200'
-                                                        : tx.paymentStatus === 'failed'
-                                                            ? 'bg-red-50 text-red-700 border-red-200'
-                                                            : 'bg-amber-50 text-amber-700 border-amber-200'
-                                                    }`}>
-                                                    {tx.paymentStatus}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
                         </motion.div>
+
                     </div>
                 )}
             </AnimatePresence>
+
         </div>
     );
 }

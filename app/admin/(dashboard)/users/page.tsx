@@ -48,27 +48,56 @@ export default function AdminUsersPage() {
   };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch('/api/admin/users', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setUsers(data);
-        }
-      } catch (err) {
-        console.error('Failed to fetch users', err);
-      } finally {
-        setLoading(false);
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+
+      const res = await fetch('/api/admin/users', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // ✅ HANDLE FAILED RESPONSE
+      if (!res.ok) {
+        throw new Error('Failed to fetch users');
       }
-    };
 
+      const data = await res.json();
+
+      console.log('USERS API RESPONSE:', data);
+
+      // ✅ HANDLE DIFFERENT API STRUCTURES
+      let usersArray = [];
+
+      if (Array.isArray(data)) {
+        usersArray = data;
+      } else if (Array.isArray(data.users)) {
+        usersArray = data.users;
+      } else if (Array.isArray(data.data)) {
+        usersArray = data.data;
+      }
+
+      setUsers(usersArray);
+
+    } catch (err) {
+      console.error('Failed to fetch users', err);
+
+      // ✅ PREVENT CRASH
+      setUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (token) {
     fetchUsers();
-  }, [token]);
-
+  } else {
+    setLoading(false);
+  }
+}, [token]);
   // Handlers
   const handleView = (user: any) => {
     setSelectedUser(user);

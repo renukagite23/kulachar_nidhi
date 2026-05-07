@@ -1,37 +1,63 @@
 import { NextResponse } from 'next/server';
-import connectDB from '@/lib/db';
-import Event from '@/models/Event';
-import Notification from '@/models/Notification';
+import dbConnect from '@/lib/db';
+import mongoose from 'mongoose';
 
+const EventSchema = new mongoose.Schema(
+  {
+    title_en: String,
+    title_mr: String,
+    desc_en: String,
+    desc_mr: String,
+    date: String,
+    image: String,
+  },
+  { timestamps: true }
+);
+
+const Event =
+  mongoose.models.Event || mongoose.model('Event', EventSchema);
+
+// ✅ GET EVENTS
 export async function GET() {
-    await connectDB();
+  try {
+    await dbConnect();
 
-    const events = await Event.find().sort({ startDate: 1 });
+    const events = await Event.find().sort({ createdAt: -1 });
 
     return NextResponse.json(events);
+  } catch (error) {
+    console.error('GET EVENTS ERROR:', error);
+
+    return NextResponse.json(
+      { error: 'Failed to fetch events' },
+      { status: 500 }
+    );
+  }
 }
 
+// ✅ CREATE EVENT
 export async function POST(req: Request) {
-    await connectDB();
+  try {
+    await dbConnect();
 
     const body = await req.json();
 
-    const slug = body.name
-        .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]+/g, '');
-
-    const event = await Event.create({
-        ...body,
-        slug,
+    const newEvent = await Event.create({
+      title_en: body.title_en,
+      title_mr: body.title_mr,
+      desc_en: body.desc_en,
+      desc_mr: body.desc_mr,
+      date: body.date,
+      image: body.image || '',
     });
 
-    // Create Notification
-    await Notification.create({
-        title: 'New Event Created',
-        message: `Event "${event.name}" has been added to the calendar.`,
-        type: 'event',
-    });
+    return NextResponse.json(newEvent, { status: 201 });
+  } catch (error) {
+    console.error('POST EVENT ERROR:', error);
 
-    return NextResponse.json(event);
+    return NextResponse.json(
+      { error: 'Failed to create event' },
+      { status: 500 }
+    );
+  }
 }

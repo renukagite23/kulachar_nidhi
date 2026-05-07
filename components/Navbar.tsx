@@ -14,7 +14,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
-  const { language, setLanguage, t } = useLanguage();
+  const { lang, setLang, t } = useLanguage();
   const [isOpen, setIsOpen] = React.useState(false);
   const [showProfileMenu, setShowProfileMenu] = React.useState(false);
   const [showTempleMenu, setShowTempleMenu] = React.useState(false);
@@ -155,17 +155,18 @@ export default function Navbar() {
               </Link>
 
               {/* Actions */}
+
               <div className="flex items-center gap-3 ml-6 border-l border-border/50 pl-6">
                 {/* Highlighted Language Toggle */}
                 <button
-                  onClick={() => setLanguage(language === 'en' ? 'mr' : 'en')}
+                  onClick={() => setLang(lang === 'en' ? 'mr' : 'en')}
                   className="flex items-center gap-2 px-3 py-2 bg-primary/10 hover:bg-primary/20 text-secondary rounded-xl transition-all border border-primary/20 hover:border-primary/40 group relative overflow-hidden"
-                  title={language === 'en' ? 'Switch to Marathi' : 'इंग्रजीमध्ये बदला'}
+                  title={lang === 'en' ? 'Switch to Marathi' : 'इंग्रजीमध्ये बदला'}
                 >
                   <div className="absolute inset-0 bg-primary/5 group-hover:scale-110 transition-transform duration-500" />
                   <Languages className="w-4 h-4 text-primary relative z-10" />
                   <span className="text-[11px] font-black uppercase tracking-tight relative z-10">
-                    {language === 'en' ? 'मराठी' : 'English'}
+                    {lang === 'en' ? 'मराठी' : 'English'}
                   </span>
                   <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-accent/20 rounded-full blur-md group-hover:bg-accent/40 transition-all" />
                 </button>
@@ -258,14 +259,14 @@ export default function Navbar() {
                 {/* Mobile Highlighted Language Toggle */}
                 <button
                   onClick={() => {
-                    setLanguage(language === 'en' ? 'mr' : 'en');
+                    setLang(lang === 'en' ? 'mr' : 'en');
                     setIsOpen(false);
                   }}
                   className="flex items-center justify-center gap-2 w-full py-4 bg-primary/5 border-2 border-primary/20 text-secondary font-black rounded-2xl mb-6 shadow-sm shadow-primary/5 active:scale-95 transition-all"
                 >
                   <Languages className="w-5 h-5 text-primary" />
                   <span className="uppercase tracking-widest text-xs">
-                    {language === 'en' ? 'मराठी मध्ये बदला' : 'Switch to English'}
+                    {lang === 'en' ? 'मराठी मध्ये बदला' : 'Switch to English'}
                   </span>
                 </button>
 

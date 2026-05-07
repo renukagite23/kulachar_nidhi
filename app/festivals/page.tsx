@@ -1,77 +1,156 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useLanguage } from '@/lib/LanguageContext';
 import { motion } from 'framer-motion';
-import { CalendarDays } from 'lucide-react';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 export default function FestivalsPage() {
-    const [festivals, setFestivals] = useState<any[]>([]);
+    const { lang } = useLanguage();
 
+    const [events, setEvents] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    // ✅ FETCH EVENTS
     useEffect(() => {
         const fetchEvents = async () => {
-            const res = await fetch('/api/events');
-            const data = await res.json();
-            setFestivals(data);
+            try {
+                const res = await fetch('/api/events');
+
+                if (!res.ok) {
+                    throw new Error('Failed to fetch events');
+                }
+
+                const data = await res.json();
+
+                if (Array.isArray(data)) {
+                    setEvents(data);
+                } else {
+                    setEvents([]);
+                }
+            } catch (error) {
+                console.error('FETCH EVENTS ERROR:', error);
+                setEvents([]);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchEvents();
     }, []);
 
     return (
-        <div className="flex flex-col min-h-screen bg-[#FFFDF9]">
+        <>
             <Navbar />
 
-            <main className="flex-grow">
-                <section className="py-20">
-                    <div className="max-w-7xl mx-auto px-4">
+            <div className="bg-gradient-to-b from-orange-50 to-white min-h-screen">
 
-                        <h1 className="text-4xl font-black text-center mb-10">
-                            Festivals & Events
-                        </h1>
+                {/* HEADER */}
+                <div className="text-center py-12 px-4">
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
+                        {lang === 'mr'
+                            ? 'सण आणि कार्यक्रम'
+                            : 'Festivals & Events'}
+                    </h1>
 
-                        <div className="flex flex-wrap justify-center gap-6">
-                            {festivals.map((fest) => (
+                    <p className="text-gray-500 mt-2 text-sm">
+                        {lang === 'mr'
+                            ? 'मंदिरातील येणारे आणि चालू कार्यक्रम पहा'
+                            : 'Explore upcoming and ongoing temple events'}
+                    </p>
+                </div>
+
+                {/* LOADING */}
+                {loading && (
+                    <div className="flex justify-center py-20">
+                        <div className="w-10 h-10 border-4 border-orange-300 border-t-orange-600 rounded-full animate-spin"></div>
+                    </div>
+                )}
+
+                {/* EVENTS SECTION */}
+                {!loading && (
+                    <div className="max-w-6xl mx-auto px-4 pb-16">
+
+                        {/* EMPTY STATE */}
+                        {events.length === 0 && (
+                            <p className="text-center text-gray-500 py-10">
+                                {lang === 'mr'
+                                    ? 'कोणतेही कार्यक्रम उपलब्ध नाहीत'
+                                    : 'No events available'}
+                            </p>
+                        )}
+
+                        {/* EVENTS */}
+                        {events.map((event, index) => {
+
+                            if (!event) return null;
+
+                            return (
                                 <motion.div
-                                    key={fest._id}
-                                    className="bg-white rounded-2xl shadow-md overflow-hidden w-[300px]"
+                                    key={event._id || index}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.4 }}
+                                    viewport={{ once: true }}
+                                    className="border-b border-gray-300 py-8"
                                 >
-                                    <img
-                                        src={fest.image}
-                                        className="h-40 w-full object-cover"
-                                    />
 
-                                    <div className="p-4">
-                                        <div className="flex items-center gap-2 text-xs text-primary mb-2">
-                                            <CalendarDays className="w-4 h-4" />
-                                            {new Date(fest.startDate).toLocaleDateString()}
+                                    <div className="flex flex-col md:flex-row gap-6 items-start">
+
+                                        {/* TEXT CONTENT */}
+                                        <div className="flex-1">
+
+                                            {/* TITLE */}
+                                            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3">
+                                                {lang === 'mr'
+                                                    ? event.title_mr || 'कार्यक्रम'
+                                                    : event.title_en || 'Event'}
+                                            </h2>
+
+                                            {/* DESCRIPTION */}
+                                            <p className="text-gray-700 leading-8 text-[15px]">
+                                                {lang === 'mr'
+                                                    ? event.desc_mr || 'वर्णन उपलब्ध नाही'
+                                                    : event.desc_en || 'No description available'}
+                                            </p>
+
+                                            {/* DATE */}
+                                            <p className="mt-4 text-sm text-orange-700 font-semibold">
+                                                📅 {event.date || 'No Date'}
+                                            </p>
+
+                                            {/* BUTTON */}
+                                            {/* <button className="mt-5 px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-semibold transition">
+                                                {lang === 'mr'
+                                                    ? 'तपशील पहा'
+                                                    : 'View Details'}
+                                            </button> */}
+
                                         </div>
 
-                                        <h3 className="font-bold text-secondary">
-                                            {fest.name}
-                                        </h3>
+                                        {/* IMAGE */}
+                                        <div className="w-full md:w-[180px] flex justify-center">
 
-                                        <p className="text-sm text-muted-foreground mt-2">
-                                            {fest.description}
-                                        </p>
+                                            <img
+                                                src={event.image || '/devi.png'}
+                                                alt={event.title_en || 'event'}
+                                                className="w-[180px] h-[180px] object-cover rounded-md shadow-md"
+                                            />
 
-                                        <Link href={`/festivals/${fest.slug}`}>
-                                            <button className="mt-4 spiritual-button w-full text-xs">
-                                                View Details
-                                            </button>
-                                        </Link>
+                                        </div>
+
                                     </div>
+
                                 </motion.div>
-                            ))}
-                        </div>
+                            );
+                        })}
 
                     </div>
-                </section>
-            </main>
+                )}
+            </div>
 
             <Footer />
-        </div>
+        </>
     );
 }

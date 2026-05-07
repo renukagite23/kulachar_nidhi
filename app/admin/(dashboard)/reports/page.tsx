@@ -1,364 +1,368 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-import { format, subMonths } from 'date-fns';
 import {
-    IndianRupee,
-    TrendingUp,
-    TrendingDown,
-} from 'lucide-react';
-
-import {
+    ResponsiveContainer,
     BarChart,
     Bar,
     XAxis,
     YAxis,
     Tooltip,
-    ResponsiveContainer,
     CartesianGrid,
 } from 'recharts';
 
+interface DonationType {
+    amount: number;
+    donorName?: string;
+    createdAt?: string;
+}
+
 export default function ReportsPage() {
-    const { token } = useSelector((state: RootState) => state.auth);
-
-    const [loading, setLoading] = useState(true);
-
-    const [allTime, setAllTime] = useState(0);
-    const [thisMonth, setThisMonth] = useState(0);
-    const [lastMonth, setLastMonth] = useState(0);
-    const [thisYear, setThisYear] = useState(0);
-    const [lastYear, setLastYear] = useState(0);
-    const [topDonor, setTopDonor] = useState<any>(null);
+    const [donations, setDonations] = useState<DonationType[]>([]);
     const [chartData, setChartData] = useState<any[]>([]);
 
-    const currentMonthLabel = format(new Date(), 'MMMM yyyy');
+    const [totalDonations, setTotalDonations] = useState(0);
+    const [monthlyDonations, setMonthlyDonations] = useState(0);
+    const [yearlyDonations, setYearlyDonations] = useState(0);
 
-    const growth = (curr: number, prev: number) => {
-        if (curr === 0 && prev > 0) return -100;
-        if (prev === 0 && curr > 0) return 100;
-        if (prev === 0 && curr === 0) return 0;
-        return Number(((curr - prev) / prev * 100).toFixed(1));
-    };
+    const [topDonorName, setTopDonorName] = useState('No Donor');
+    const [topDonorAmount, setTopDonorAmount] = useState(0);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const res = await fetch('/api/admin/donations', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+        fetchReports();
+    }, []);
 
-            const data = await res.json();
-            const donations = data.data || data;
+    const fetchReports = async () => {
+        try {
+            const res = await fetch('/api/donations');
 
-            const now = new Date();
-            const prevDate = new Date();
-            prevDate.setMonth(prevDate.getMonth() - 1);
-
-            const currentYear = now.getFullYear();
-            const prevYear = currentYear - 1;
-
-            let all = 0,
-                m = 0,
-                lm = 0,
-                y = 0,
-                ly = 0;
-
-            const monthlyMap: Record<string, number> = {};
-            const donorMap: Record<string, any> = {};
-
-            donations.forEach((d: any) => {
-                if (d.paymentStatus !== 'completed') return;
-
-                const rawDate = d.donationDate || d.createdAt;
-                if (!rawDate) return;
-
-                const date = new Date(rawDate);
-                const amount = d.amount || 0;
-
-                all += amount;
-
-                // THIS MONTH
-                if (
-                    date.getMonth() === now.getMonth() &&
-                    date.getFullYear() === now.getFullYear()
-                ) {
-                    m += amount;
-                }
-
-                // LAST MONTH
-                if (
-                    date.getMonth() === prevDate.getMonth() &&
-                    date.getFullYear() === prevDate.getFullYear()
-                ) {
-                    lm += amount;
-                }
-
-                // YEARLY
-                if (date.getFullYear() === currentYear) y += amount;
-                if (date.getFullYear() === prevYear) ly += amount;
-
-                // CHART
-                const monthKey = format(date, 'yyyy-MM');
-                monthlyMap[monthKey] = (monthlyMap[monthKey] || 0) + amount;
-
-                // TOP DONOR
-                const key = d.email || d.mobileNumber || d.donorName;
-                if (!donorMap[key]) {
-                    donorMap[key] = {
-                        name: d.donorName,
-                        total: 0,
-                    };
-                }
-                donorMap[key].total += amount;
-            });
-
-            // FIND TOP DONOR
-            const top = Object.values(donorMap).sort(
-                (a: any, b: any) => b.total - a.total
-            )[0];
-
-            // LAST 6 MONTHS CHART
-            const last6Months = [];
-            for (let i = 5; i >= 0; i--) {
-                const d = new Date();
-                d.setMonth(d.getMonth() - i);
-
-                const key = format(d, 'yyyy-MM');
-
-                last6Months.push({
-                    month: format(d, 'MMM yyyy'),
-                    amount: monthlyMap[key] || 0,
-                });
+            if (!res.ok) {
+                throw new Error('Failed to fetch donations');
             }
 
-            setAllTime(all);
-            setThisMonth(m);
-            setLastMonth(lm);
-            setThisYear(y);
-            setLastYear(ly);
-            setTopDonor(top);
-            setChartData(last6Months);
+            const data = await res.json();
 
-            setLoading(false);
-        };
+            const donationsData = Array.isArray(data)
+                ? data
+                : Array.isArray(data.donations)
+                ? data.donations
+                : [];
 
-        if (token) fetchData();
-    }, [token]);
+            setDonations(donationsData);
 
-    if (loading) {
-        return (
-            <div className="p-12 flex justify-center">
-                <div className="h-10 w-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-            </div>
-        );
-    }
+            // TOTAL DONATIONS
+            const total = donationsData.reduce(
+                (acc: number, curr: DonationType) =>
+                    acc + Number(curr.amount || 0),
+                0
+            );
+
+            setTotalDonations(total);
+
+            // MONTHLY DONATIONS
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            const monthly = donationsData
+                .filter((d: DonationType) => {
+                    const date = new Date(d.createdAt || '');
+
+                    return (
+                        date.getMonth() === currentMonth &&
+                        date.getFullYear() === currentYear
+                    );
+                })
+                .reduce(
+                    (acc: number, curr: DonationType) =>
+                        acc + Number(curr.amount || 0),
+                    0
+                );
+
+            setMonthlyDonations(monthly);
+
+            // YEARLY DONATIONS
+            const yearly = donationsData
+                .filter((d: DonationType) => {
+                    const date = new Date(d.createdAt || '');
+
+                    return date.getFullYear() === currentYear;
+                })
+                .reduce(
+                    (acc: number, curr: DonationType) =>
+                        acc + Number(curr.amount || 0),
+                    0
+                );
+
+            setYearlyDonations(yearly);
+
+            // TOP DONOR
+            const donorMap: Record<string, number> = {};
+
+            donationsData.forEach((d: DonationType) => {
+                const donor = d.donorName || 'Unknown';
+
+                donorMap[donor] =
+                    (donorMap[donor] || 0) + Number(d.amount || 0);
+            });
+
+            let highestAmount = 0;
+            let highestDonor = 'No Donor';
+
+            Object.entries(donorMap).forEach(([name, amount]) => {
+                if (amount > highestAmount) {
+                    highestAmount = amount;
+                    highestDonor = name;
+                }
+            });
+
+            setTopDonorName(highestDonor);
+            setTopDonorAmount(highestAmount);
+
+            // MONTHLY CHART DATA
+            const months = [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec',
+            ];
+
+            const monthlyData = months.map((month, index) => {
+                const total = donationsData
+                    .filter((d: DonationType) => {
+                        const date = new Date(d.createdAt || '');
+
+                        return (
+                            date.getMonth() === index &&
+                            date.getFullYear() === currentYear
+                        );
+                    })
+                    .reduce(
+                        (acc: number, curr: DonationType) =>
+                            acc + Number(curr.amount || 0),
+                        0
+                    );
+
+                return {
+                    month,
+                    amount: total,
+                };
+            });
+
+            setChartData(monthlyData);
+
+        } catch (error) {
+            console.error('REPORT FETCH ERROR:', error);
+        }
+    };
 
     return (
-        <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
+        <div className="p-6 md:p-8 bg-[#f6f4f1] min-h-screen">
 
             {/* HEADER */}
-            <div>
-                <h1 className="text-3xl font-black text-secondary">
+            <div className="mb-8">
+                <h1 className="text-3xl font-black text-[#2d1f1a]">
                     Reports & Analytics
                 </h1>
-                <p className="text-sm text-muted-foreground mt-1">
+
+                <p className="text-sm text-gray-500 mt-1">
                     Financial insights and donation trends
                 </p>
             </div>
 
-            {/* STATS */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* TOP CARDS */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
 
                 {/* ALL TIME */}
-                <div className="spiritual-card bg-white border-border p-5 shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                            All Time Donations
+                <div className="bg-white rounded-2xl border border-[#ece7e2] p-5 shadow-sm hover:shadow-md transition-all">
+
+                    <div className="flex justify-between items-start mb-4">
+
+                        <div>
+                            <p className="text-[11px] uppercase tracking-wider text-gray-400 font-bold">
+                                All Time Donations
+                            </p>
+
+                            <h2 className="text-3xl font-black text-[#ff6b00] mt-3">
+                                ₹{totalDonations}
+                            </h2>
                         </div>
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <IndianRupee className="w-5 h-5 text-primary" />
-                        </div>
-                    </div>
 
-                    <div className="text-2xl font-black text-primary tracking-tight">
-                        ₹{allTime.toLocaleString('en-IN')}
-                    </div>
-
-                    <div className="text-[10px] text-muted-foreground mt-2 font-medium uppercase tracking-wider">
-                        Lifetime Contributions
-                    </div>
-                </div>
-
-
-                {/* THIS MONTH */}
-                <div className="spiritual-card bg-white border-border p-5 shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                            {currentMonthLabel}
-                        </div>
-                        <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
-                            <IndianRupee className="w-5 h-5 text-green-600" />
-                        </div>
-                    </div>
-
-                    <div className="text-2xl font-black text-green-600 tracking-tight">
-                        ₹{thisMonth.toLocaleString('en-IN')}
-                    </div>
-
-                    {thisMonth === 0 ? (
-                        <div className="text-[11px] text-muted-foreground mt-2 font-medium">
-                            No donations this month
-                            <br />
-                            <span className="font-bold text-secondary">
-                                Last month: ₹{lastMonth.toLocaleString('en-IN')}
+                        <div className="w-11 h-11 rounded-xl bg-orange-100 flex items-center justify-center">
+                            <span className="text-orange-600 font-bold text-lg">
+                                ₹
                             </span>
                         </div>
-                    ) : (
-                        <div className="text-[11px] mt-2 flex items-center gap-1 font-bold">
-                            {Number(growth(thisMonth, lastMonth)) >= 0 ? (
-                                <TrendingUp className="w-3 h-3 text-green-600" />
-                            ) : (
-                                <TrendingDown className="w-3 h-3 text-red-600" />
-                            )}
-                            {growth(thisMonth, lastMonth)}% vs last month
-                        </div>
-                    )}
+
+                    </div>
+
+                    <p className="text-xs text-gray-400 font-medium">
+                        Lifetime Contributions
+                    </p>
+
                 </div>
 
+                {/* MONTH */}
+                <div className="bg-white rounded-2xl border border-[#ece7e2] p-5 shadow-sm hover:shadow-md transition-all">
 
-                {/* THIS YEAR */}
-                <div className="spiritual-card bg-white border-border p-5 shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                            This Year
+                    <div className="flex justify-between items-start mb-4">
+
+                        <div>
+                            <p className="text-[11px] uppercase tracking-wider text-gray-400 font-bold">
+                                This Month
+                            </p>
+
+                            <h2 className="text-3xl font-black text-green-600 mt-3">
+                                ₹{monthlyDonations}
+                            </h2>
                         </div>
-                        <div className="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center">
-                            <IndianRupee className="w-5 h-5 text-secondary" />
+
+                        <div className="w-11 h-11 rounded-xl bg-green-100 flex items-center justify-center">
+                            <span className="text-green-600 font-bold text-lg">
+                                ₹
+                            </span>
                         </div>
+
                     </div>
 
-                    <div className="text-2xl font-black text-secondary tracking-tight">
-                        ₹{thisYear.toLocaleString('en-IN')}
-                    </div>
+                    <p className="text-xs text-green-500 font-semibold">
+                        Monthly Contributions
+                    </p>
 
-                    <div className="text-[11px] mt-2 flex items-center gap-1 font-bold">
-                        {Number(growth(thisYear, lastYear)) >= 0 ? (
-                            <TrendingUp className="w-3 h-3 text-green-600" />
-                        ) : (
-                            <TrendingDown className="w-3 h-3 text-red-600" />
-                        )}
-                        {growth(thisYear, lastYear)}% vs last year
-                    </div>
                 </div>
 
+                {/* YEAR */}
+                <div className="bg-white rounded-2xl border border-[#ece7e2] p-5 shadow-sm hover:shadow-md transition-all">
+
+                    <div className="flex justify-between items-start mb-4">
+
+                        <div>
+                            <p className="text-[11px] uppercase tracking-wider text-gray-400 font-bold">
+                                This Year
+                            </p>
+
+                            <h2 className="text-3xl font-black text-[#2d1f1a] mt-3">
+                                ₹{yearlyDonations}
+                            </h2>
+                        </div>
+
+                        <div className="w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
+                            <span className="text-gray-700 font-bold text-lg">
+                                ₹
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <p className="text-xs text-green-500 font-semibold">
+                        Yearly Contributions
+                    </p>
+
+                </div>
 
                 {/* TOP DONOR */}
-                <div className="spiritual-card bg-white border-border p-5 shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                            Top Donor
+                <div className="bg-white rounded-2xl border border-[#ece7e2] p-5 shadow-sm hover:shadow-md transition-all">
+
+                    <div className="flex justify-between items-start mb-4">
+
+                        <div>
+                            <p className="text-[11px] uppercase tracking-wider text-gray-400 font-bold">
+                                Top Donor
+                            </p>
+
+                            <h2 className="text-lg font-black text-[#2d1f1a] mt-3">
+                                {topDonorName}
+                            </h2>
+
+                            <p className="text-2xl font-black text-[#ff6b00] mt-1">
+                                ₹{topDonorAmount}
+                            </p>
                         </div>
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <IndianRupee className="w-5 h-5 text-primary" />
+
+                        <div className="w-11 h-11 rounded-xl bg-orange-100 flex items-center justify-center">
+                            <span className="text-orange-600 font-bold text-lg">
+                                ₹
+                            </span>
                         </div>
+
                     </div>
 
-                    {topDonor ? (
-                        <>
-                            <div className="text-lg font-black text-secondary">
-                                {topDonor.name}
-                            </div>
-                            <div className="text-primary font-black text-xl mt-1">
-                                ₹{topDonor.total.toLocaleString('en-IN')}
-                            </div>
+                    <p className="text-xs text-gray-400 font-medium">
+                        Highest Contribution
+                    </p>
 
-                            <div className="text-[10px] text-muted-foreground mt-2 uppercase tracking-wider font-medium">
-                                Highest Contributor
-                            </div>
-                        </>
-                    ) : (
-                        <div className="text-sm text-muted-foreground">No data</div>
-                    )}
                 </div>
 
             </div>
 
-            {/* CHART */}
-            <div className="spiritual-card bg-white border-border shadow-sm p-6">
+            {/* CHART SECTION */}
+            <div className="bg-white rounded-3xl border border-[#ece7e2] p-6 shadow-sm">
 
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex justify-between items-center mb-8">
+
                     <div>
-                        <h2 className="font-black text-secondary text-lg">
+                        <h2 className="text-xl font-bold text-[#2d1f1a]">
                             Monthly Donation Trend
                         </h2>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            Last 6 months contribution overview
+
+                        <p className="text-sm text-gray-400 mt-1">
+                            Last 12 months contribution overview
                         </p>
                     </div>
 
-                    <div className="text-[10px] uppercase tracking-widest font-black text-primary flex items-center gap-1">
-                        Trend Analysis
-                    </div>
+                    <span className="text-[11px] font-bold tracking-wider text-orange-500 uppercase">
+                        Trend Analytics
+                    </span>
+
                 </div>
 
-                {/* Chart */}
-                <div className="h-80 w-full">
+                {/* CHART */}
+                <div className="h-[350px]">
+
                     <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartData} barSize={40}>
 
-                            {/* Gradient */}
-                            <defs>
-                                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="#E65100" stopOpacity={0.9} />
-                                    <stop offset="100%" stopColor="#E65100" stopOpacity={0.3} />
-                                </linearGradient>
-                            </defs>
+                        <BarChart data={chartData}>
 
-                            {/* Grid */}
                             <CartesianGrid
                                 strokeDasharray="3 3"
-                                stroke="#E5E7EB"
                                 vertical={false}
+                                stroke="#f1f1f1"
                             />
 
-                            {/* X Axis */}
                             <XAxis
                                 dataKey="month"
-                                tick={{ fontSize: 11 }}
-                                axisLine={false}
                                 tickLine={false}
+                                axisLine={false}
                             />
 
-                            {/* Y Axis */}
                             <YAxis
-                                tick={{ fontSize: 11 }}
-                                axisLine={false}
                                 tickLine={false}
+                                axisLine={false}
                             />
 
-                            {/* Tooltip */}
-                            <Tooltip
-                                contentStyle={{
-                                    borderRadius: '12px',
-                                    border: '1px solid #eee',
-                                    fontSize: '12px',
-                                }}
-                                formatter={(value: any) => [`₹${value}`, 'Donations']}
-                            />
+                            <Tooltip />
 
-                            {/* Bars */}
                             <Bar
                                 dataKey="amount"
-                                fill="url(#barGradient)"
-                                radius={[8, 8, 0, 0]}
+                                radius={[10, 10, 0, 0]}
+                                fill="#ff6b00"
                             />
 
                         </BarChart>
+
                     </ResponsiveContainer>
+
                 </div>
+
             </div>
+
         </div>
     );
 }
