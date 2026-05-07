@@ -10,7 +10,7 @@ import {
 import { format } from 'date-fns';
 
 export default function AdminDashboard() {
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 

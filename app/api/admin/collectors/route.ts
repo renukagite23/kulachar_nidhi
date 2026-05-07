@@ -3,13 +3,14 @@ import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import { getDataFromToken } from '@/lib/auth';
+import { hasAdminAccess } from '@/lib/adminAuth';
 import crypto from 'crypto';
 
 export async function GET(req: Request) {
   try {
     const decodedToken = await getDataFromToken();
-    if (!decodedToken || decodedToken.role !== 'admin') {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    if (!hasAdminAccess(decodedToken)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await dbConnect();
@@ -46,8 +47,8 @@ export async function GET(req: Request) {
           from: 'donations',
           let: { referralIds: '$referrals._id' },
           pipeline: [
-            { 
-              $match: { 
+            {
+              $match: {
                 $expr: { $in: ['$userId', '$$referralIds'] },
                 paymentStatus: 'completed'
               }
@@ -93,8 +94,8 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const decodedToken = await getDataFromToken();
-    if (!decodedToken || decodedToken.role !== 'admin') {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    if (!hasAdminAccess(decodedToken)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await dbConnect();

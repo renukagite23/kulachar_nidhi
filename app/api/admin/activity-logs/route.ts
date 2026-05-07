@@ -2,14 +2,15 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import ActivityLog from '@/models/ActivityLog';
 import { getDataFromToken } from '@/lib/auth';
+import { hasAdminAccess } from '@/lib/adminAuth';
 
 export async function GET() {
   try {
     await dbConnect();
     const decoded = await getDataFromToken();
 
-    if (!decoded || (decoded.role !== 'admin' && decoded.role !== 'president')) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    if (!hasAdminAccess(decoded)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const logs = await ActivityLog.find({})

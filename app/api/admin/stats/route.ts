@@ -4,14 +4,15 @@ import User from '@/models/User';
 import Donation from '@/models/Donation';
 import Event from '@/models/Event';
 import { getDataFromToken } from '@/lib/auth';
+import { hasAdminAccess } from '@/lib/adminAuth';
 
 export async function GET() {
   try {
     await dbConnect();
     const decoded = await getDataFromToken();
 
-    if (!decoded || (decoded.role !== 'admin' && decoded.role !== 'president')) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    if (!hasAdminAccess(decoded)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const totalUsers = await User.countDocuments({ role: 'user' });

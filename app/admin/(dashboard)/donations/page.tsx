@@ -26,7 +26,7 @@ const Toast = ({ message, type, onClose }: { message: string, type: 'success' | 
 };
 
 export default function AdminDonationsPage() {
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
   const [donations, setDonations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 

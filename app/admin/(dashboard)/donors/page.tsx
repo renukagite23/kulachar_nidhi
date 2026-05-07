@@ -8,7 +8,7 @@ import { X, CalendarDays, IndianRupee, Tag, CheckCircle2, AlertCircle, Eye } fro
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function DonorsPage() {
-    const { token } = useSelector((state: RootState) => state.auth);
+    const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
     const [donors, setDonors] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedDonor, setSelectedDonor] = useState<any | null>(null);

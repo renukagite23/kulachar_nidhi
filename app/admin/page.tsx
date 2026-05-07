@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
-import { setCredentials } from '@/redux/slices/authSlice';
+
 import { ShieldCheck, Mail, Lock, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { setAdminCredentials } from '@/redux/slices/adminAuthSlice';
 import { motion } from 'framer-motion';
@@ -35,7 +35,7 @@ export default function AdminLoginPage() {
         throw new Error(data.message || 'Login failed');
       }
 
-      if (data.user.role !== 'admin') {
+      if (data.user.role !== 'admin' && data.user.role !== 'president') {
         throw new Error('Access denied. Admin privileges required.');
       }
 

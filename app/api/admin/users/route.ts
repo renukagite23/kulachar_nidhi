@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import Donation from '@/models/Donation';
 import { getDataFromToken } from '@/lib/auth';
+import { hasAdminAccess } from '@/lib/adminAuth';
 import mongoose from 'mongoose';
 
 export async function GET(req: Request) {
@@ -10,8 +11,8 @@ export async function GET(req: Request) {
     await dbConnect();
     const decoded = await getDataFromToken();
 
-    if (!decoded || (decoded.role !== 'admin' && decoded.role !== 'president')) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    if (!hasAdminAccess(decoded)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);

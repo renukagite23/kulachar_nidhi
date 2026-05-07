@@ -26,7 +26,7 @@ const Toast = ({ message, type, onClose }: { message: string, type: 'success' | 
 };
 
 export default function AdminUsersPage() {
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');

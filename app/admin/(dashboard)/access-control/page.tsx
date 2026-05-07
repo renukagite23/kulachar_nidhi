@@ -91,7 +91,7 @@ const Badge = ({ children, color }: { children: React.ReactNode, color: string }
 };
 
 export default function AccessControlPage() {
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
   const [users, setUsers] = useState<User[]>([]);
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);

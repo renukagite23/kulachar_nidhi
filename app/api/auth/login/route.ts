@@ -38,8 +38,8 @@ export async function POST(req: Request) {
       { expiresIn: '30d' }
     );
 
-    const isAdmin = user.role === 'admin';
-    const cookieName = isAdmin ? 'admin_token' : 'token';
+    const isAdminAccess = user.role === 'admin' || user.role === 'president';
+    const cookieName = isAdminAccess ? 'admin_token' : 'token';
 
     const response = NextResponse.json({
       message: 'Logged in successfully',

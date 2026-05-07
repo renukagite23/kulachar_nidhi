@@ -3,10 +3,11 @@ import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import ActivityLog from '@/models/ActivityLog';
 import { getDataFromToken } from '@/lib/auth';
+import { hasAdminAccess } from '@/lib/adminAuth';
 
 async function checkAdmin() {
   const decoded = await getDataFromToken();
-  if (!decoded || (decoded.role !== 'admin' && decoded.role !== 'president')) return null;
+  if (!hasAdminAccess(decoded)) return null;
   return decoded;
 }
 

@@ -3,10 +3,11 @@ import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import { getDataFromToken } from '@/lib/auth';
+import { hasAdminAccess } from '@/lib/adminAuth';
 
 async function checkAdmin() {
   const decoded = await getDataFromToken();
-  if (!decoded || (decoded.role !== 'admin' && decoded.role !== 'president')) return false;
+  if (!hasAdminAccess(decoded)) return false;
   return true;
 }
 

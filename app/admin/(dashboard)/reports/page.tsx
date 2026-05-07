@@ -21,7 +21,7 @@ import {
 } from 'recharts';
 
 export default function ReportsPage() {
-    const { token } = useSelector((state: RootState) => state.auth);
+    const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
 
     const [loading, setLoading] = useState(true);
 
