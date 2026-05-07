@@ -16,17 +16,32 @@ interface ReceiptProps {
 
 export default function Receipt({ donation }: ReceiptProps) {
   return (
-    <div id="receipt-content" className="w-[800px] p-16 bg-[#FFFDF9] border-[1px] border-secondary relative overflow-hidden text-secondary">
+    <div id="receipt-content" className="w-[800px] p-16 bg-[#FFFDF9] border-[1px] border-secondary relative overflow-hidden text-secondary print:shadow-none print:border-secondary">
+      {/* Print-specific styles */}
+      <style jsx global>{`
+        @media print {
+          #receipt-content {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+        }
+      `}</style>
+
       {/* Subtle Background Ornament */}
-      <div className="absolute top-0 right-0 w-80 h-80 opacity-[0.03] pointer-events-none -mr-20 -mt-20">
+      <div className="absolute top-0 right-0 w-80 h-80 opacity-[0.05] pointer-events-none -mr-20 -mt-20">
         <img src="/devi.png" alt="Devi" className="w-full h-full object-contain" />
       </div>
 
+      {/* Central Watermark */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none">
+        <img src="/devi.png" alt="Watermark" className="w-[400px] object-contain" />
+      </div>
+
       {/* Header Section */}
-      <div className="flex justify-between items-start mb-16 border-b border-border pb-10">
+      <div className="flex justify-between items-start mb-16 border-b border-border pb-10 relative z-10">
         <div className="flex gap-6 items-center">
-          <div className="w-20 h-20 bg-primary rounded-2xl flex items-center justify-center p-3 shadow-lg">
-            <img src="/devi.png" alt="Trust Logo" className="w-full h-full object-contain brightness-0 invert" />
+          <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center p-2 shadow-xl border border-primary/20">
+            <img src="/devi.png" alt="Trust Logo" className="w-full h-full object-contain" />
           </div>
           <div className="text-left">
             <h1 className="text-3xl font-black tracking-tight text-secondary">KULDAIVAT TRUST</h1>
@@ -41,7 +56,7 @@ export default function Receipt({ donation }: ReceiptProps) {
       </div>
 
       {/* Info Section */}
-      <div className="grid grid-cols-2 gap-12 mb-16">
+      <div className="grid grid-cols-2 gap-12 mb-16 relative z-10">
         <div className="space-y-6">
           <div>
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Donor Name</p>
@@ -65,7 +80,7 @@ export default function Receipt({ donation }: ReceiptProps) {
       </div>
 
       {/* Amount Section */}
-      <div className="bg-primary/5 border border-primary/10 rounded-3xl p-10 mb-16 flex justify-between items-center">
+      <div className="bg-primary/5 border border-primary/10 rounded-3xl p-10 mb-16 flex justify-between items-center relative z-10">
         <div>
           <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">Total Amount Received</p>
           <p className="text-xs font-bold text-secondary/60 italic">Your contribution supports our spiritual & social initiatives.</p>
@@ -76,7 +91,7 @@ export default function Receipt({ donation }: ReceiptProps) {
       </div>
 
       {/* Signature Section */}
-      <div className="grid grid-cols-2 gap-24 mt-12 items-end">
+      <div className="grid grid-cols-2 gap-24 mt-12 items-end relative z-10">
         <div className="text-center">
           <div className="h-20 flex items-center justify-center italic text-muted-foreground/30 text-[10px] font-bold uppercase tracking-widest">
             [Digitally Verified]
@@ -87,7 +102,7 @@ export default function Receipt({ donation }: ReceiptProps) {
         </div>
         <div className="text-center">
           <div className="h-20 flex items-center justify-center">
-            <img src="/devi.png" alt="Chairman Signature" className="h-12 opacity-40 grayscale" />
+            <img src="/devi.png" alt="Chairman Signature" className="h-16 object-contain opacity-60" />
           </div>
           <div className="border-t border-border pt-3 text-[10px] font-black text-secondary uppercase tracking-widest">
             Chairman / Trustee
@@ -96,7 +111,7 @@ export default function Receipt({ donation }: ReceiptProps) {
       </div>
 
       {/* Footer Disclaimer */}
-      <div className="mt-16 pt-8 border-t border-border text-center">
+      <div className="mt-16 pt-8 border-t border-border text-center relative z-10">
         <p className="text-[10px] text-muted-foreground font-bold tracking-tight leading-relaxed max-w-lg mx-auto">
           This is a computer-generated document and does not require a physical signature.
           All donations to Kuldaivat Trust are eligible for tax benefits under section 80G of the Income Tax Act.

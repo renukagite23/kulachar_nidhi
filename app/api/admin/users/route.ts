@@ -28,22 +28,49 @@ export async function GET(req: Request) {
         { $match: { role: { $ne: 'user' } } }, // Only fetch staff/admins/collectors
         {
           $lookup: {
-            from: 'donations',
+            from: 'users',
             localField: '_id',
-            foreignField: 'collector',
-            as: 'collections'
+            foreignField: 'referredBy',
+            as: 'referrals'
+          }
+        },
+        {
+          $lookup: {
+            from: 'donations',
+            let: { 
+              collectorId: '$_id', 
+              referralIds: '$referrals._id' 
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ['$paymentStatus', 'completed'] },
+                      {
+                        $or: [
+                          { $eq: ['$collector', '$$collectorId'] },
+                          { $in: ['$userId', '$$referralIds'] }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'allCollections'
           }
         },
         {
           $addFields: {
-            totalCollected: { $sum: '$collections.amount' },
-            receiptCount: { $size: '$collections' },
+            totalCollected: { $sum: '$allCollections.amount' },
+            receiptCount: { $size: '$allCollections' },
             monthlyCollection: {
               $sum: {
                 $map: {
                   input: {
                     $filter: {
-                      input: '$collections',
+                      input: '$allCollections',
                       as: 'd',
                       cond: { $gte: ['$$d.createdAt', startOfMonth] }
                     }
@@ -57,7 +84,7 @@ export async function GET(req: Request) {
               $size: {
                 $setUnion: {
                   $map: {
-                    input: '$collections',
+                    input: '$allCollections',
                     as: 'd',
                     in: '$$d.mobileNumber'
                   }
@@ -66,7 +93,7 @@ export async function GET(req: Request) {
             }
           }
         },
-        { $project: { password: 0, collections: 0 } },
+        { $project: { password: 0, allCollections: 0, referrals: 0 } },
         { $sort: { createdAt: -1 } }
       ]);
       return NextResponse.json(users);

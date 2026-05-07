@@ -41,6 +41,7 @@ export async function POST(req: Request) {
       phone,
       role: 'user', // Default role for registration
       referredBy,
+      approvalStatus: 'approved',
     });
 
     return NextResponse.json(

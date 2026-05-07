@@ -8,6 +8,8 @@ import {
   Calendar, CreditCard, Tag, CheckCircle2, AlertCircle, Eye, Trash2, X
 } from 'lucide-react';
 import { format } from 'date-fns';
+import Receipt from '@/components/Receipt';
+import { downloadPDF } from '@/lib/pdf';
 
 // Simple Toast Component
 const Toast = ({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) => {
@@ -376,74 +378,42 @@ export default function AdminDonationsPage() {
 
       {/* ✅ VIEW MODAL */}
       {selectedDonation && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-[2.5rem] w-fit shadow-2xl overflow-hidden flex flex-col my-8">
 
-            <div className="flex justify-between items-center px-6 py-4 border-b shrink-0">
-              <h2 className="text-xl font-bold text-secondary">Donation Details</h2>
+            <div className="flex justify-between items-center px-8 py-6 border-b shrink-0 bg-muted/10">
+              <div>
+                <h2 className="text-xl font-black text-secondary">Donation Receipt</h2>
+                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Preview & Download</p>
+              </div>
               <button
                 onClick={() => setSelectedDonation(null)}
-                className="text-gray-400 hover:text-gray-600 text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+                className="text-muted-foreground hover:text-secondary text-xl w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
               >
                 ✕
               </button>
             </div>
 
-            <div className="p-6 space-y-5 overflow-y-auto">
-              <div className="bg-primary/5 rounded-2xl p-5 text-center border border-primary/10">
-                <p className="text-xs font-bold text-primary uppercase tracking-widest mb-1">Total Amount</p>
-                <div className="text-3xl font-black text-secondary flex items-baseline justify-center gap-1">
-                  <span className="text-xl">₹</span>
-                  {selectedDonation.amount?.toLocaleString('en-IN') || 0}
-                </div>
-                <div className={`mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${selectedDonation.paymentStatus === 'completed' ? 'bg-green-100 text-green-700' : selectedDonation.paymentStatus === 'failed' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
-                  {selectedDonation.paymentStatus}
-                </div>
+            <div className="p-8 overflow-y-auto bg-muted/5 flex flex-col items-center gap-8">
+              <div className="shadow-2xl rounded-3xl overflow-hidden border border-border bg-white transform scale-[0.85] md:scale-100 origin-top">
+                <Receipt donation={{
+                  ...selectedDonation,
+                  donationDate: selectedDonation.donationDate || selectedDonation.createdAt
+                }} />
               </div>
 
-              <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-3 text-sm">
-                <div className="flex justify-between items-center py-1.5 border-b border-gray-200/50 last:border-0">
-                  <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">Receipt Number</span>
-                  <span className="font-bold text-secondary uppercase">{selectedDonation.receiptNumber || '-'}</span>
-                </div>
-                <div className="flex justify-between items-center py-1.5 border-b border-gray-200/50 last:border-0">
-                  <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">Donor Name</span>
-                  <span className="font-bold text-secondary">{selectedDonation.donorName}</span>
-                </div>
-                <div className="flex justify-between items-center py-1.5 border-b border-gray-200/50 last:border-0">
-                  <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">Contact</span>
-                  <span className="font-bold text-secondary">{selectedDonation.email || selectedDonation.mobileNumber || '-'}</span>
-                </div>
-                <div className="flex justify-between items-center py-1.5 border-b border-gray-200/50 last:border-0">
-                  <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">Purpose</span>
-                  <span className="font-bold text-secondary capitalize">{selectedDonation.reason || selectedDonation.purpose || '-'}</span>
-                </div>
-                <div className="flex justify-between items-center py-1.5 border-b border-gray-200/50 last:border-0">
-                  <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">Date</span>
-                  <span className="font-bold text-secondary">
-                    {format(new Date(selectedDonation.donationDate || selectedDonation.createdAt), 'dd MMM yyyy, HH:mm')}
-                  </span>
-                </div>
-                {selectedDonation.panNumber && (
-                  <div className="flex justify-between items-center py-1.5 border-b border-gray-200/50 last:border-0">
-                    <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">PAN Number</span>
-                    <span className="font-bold text-secondary uppercase">{selectedDonation.panNumber}</span>
-                  </div>
-                )}
-                {selectedDonation.address && (
-                  <div className="flex justify-between items-center py-1.5 border-b border-gray-200/50 last:border-0">
-                    <span className="text-gray-500 font-medium text-xs uppercase tracking-wider">Address</span>
-                    <span className="font-bold text-secondary text-right max-w-[200px] truncate" title={selectedDonation.address}>{selectedDonation.address}</span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-3 pt-4 border-t border-gray-100">
+              <div className="flex gap-4 w-full max-w-[800px]">
+                <button
+                  onClick={() => downloadPDF('receipt-content', `Receipt_${selectedDonation.receiptNumber?.replace(/\//g, '_') || 'GEN'}.pdf`)}
+                  className="flex-1 spiritual-button h-14 text-sm gap-3"
+                >
+                  <Download className="w-5 h-5" /> Download PDF Receipt
+                </button>
                 <button
                   onClick={() => setSelectedDonation(null)}
-                  className="flex-1 bg-primary hover:bg-primary/90 text-white py-3 rounded-xl font-bold transition shadow-lg shadow-primary/20 text-sm"
+                  className="px-8 h-14 rounded-2xl bg-muted text-secondary font-black text-sm uppercase tracking-widest hover:bg-muted/80 transition-all"
                 >
-                  Done
+                  Close
                 </button>
               </div>
             </div>

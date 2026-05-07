@@ -22,8 +22,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
-    // Check approval status (exempt admin/president for system access if needed, but usually everyone should be approved)
-    if (user.role !== 'admin' && user.role !== 'president' && user.approvalStatus !== 'approved') {
+    // Check approval status for roles that require manual authorization (collectors, agents, etc.)
+    const rolesRequiringApproval = ['collector', 'agent', 'staff', 'chairman'];
+    if (rolesRequiringApproval.includes(user.role) && user.approvalStatus !== 'approved') {
       return NextResponse.json(
         { message: `Access denied. Your account status is ${user.approvalStatus || 'pending'}.` },
         { status: 403 }

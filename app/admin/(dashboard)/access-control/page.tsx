@@ -450,14 +450,6 @@ export default function AccessControlPage() {
                                   <Edit className="w-4 h-4" />
                                 </button>
                                 <button
-                                  onClick={() => handleUpdateUser(u._id, { approvalStatus: u.approvalStatus === 'rejected' ? 'approved' : 'rejected' })}
-                                  className={`p-2.5 rounded-xl transition-all shadow-sm flex items-center gap-2 text-[10px] font-black uppercase tracking-widest ${u.approvalStatus === 'rejected' ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white' : 'bg-amber-50 text-amber-600 hover:bg-amber-600 hover:text-white'
-                                    }`}
-                                >
-                                  {u.approvalStatus === 'rejected' ? <Unlock className="w-4 h-4" /> : <Ban className="w-4 h-4" />}
-                                  {u.approvalStatus === 'rejected' ? 'Unblock' : 'Block'}
-                                </button>
-                                <button
                                   onClick={() => handleDeleteUser(u._id)}
                                   className="p-2.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-all shadow-sm"
                                 >
@@ -546,7 +538,7 @@ export default function AccessControlPage() {
           </div>
 
           {/* Quick Stats Card */}
-          <div className="bg-secondary rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+          {/* <div className="bg-secondary rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
             <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
             <div className="relative z-10 space-y-6">
               <div>
@@ -566,7 +558,7 @@ export default function AccessControlPage() {
                 Download Full Report
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -650,7 +642,7 @@ export default function AccessControlPage() {
                     </div>
                     <div className="p-6 bg-blue-50 rounded-[2rem] border border-blue-100">
                       <p className="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1">Active Donors</p>
-                      <p className="text-3xl font-black text-secondary tracking-tighter">{(selectedUser.activeDonors || 0)} handled</p>
+                      <p className="text-3xl font-black text-secondary tracking-tighter">{(selectedUser.activeDonors || 0)}</p>
                     </div>
                   </div>
 
