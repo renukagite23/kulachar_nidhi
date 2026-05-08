@@ -3,7 +3,6 @@ import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/LanguageContext";
 import ReduxProvider from "@/redux/provider";
-import ChatWidget from "@/components/ChatWidget";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +29,6 @@ export default function RootLayout({ children }: any) {
         <ReduxProvider>
           <LanguageProvider>
             {children}
-            <ChatWidget />
           </LanguageProvider>
         </ReduxProvider>
       </body>
