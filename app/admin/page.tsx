@@ -75,6 +75,7 @@ export default function AdminLoginPage() {
             <p className="mt-2 text-[10px] text-muted-foreground uppercase tracking-[0.2em] font-black">Secure Personnel Gateway</p>
           </div>
 
+<<<<<<< Updated upstream
           {error && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
@@ -128,6 +129,35 @@ export default function AdminLoginPage() {
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
+=======
+        <div className="spiritual-card p-8 bg-white/80 backdrop-blur-sm border-border shadow-2xl shadow-secondary/10">
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-3">
+              <label className="block text-xs font-bold text-secondary/60 uppercase tracking-wider">Select Role</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setRole('chairman')}
+                  className={`p-3 rounded-xl border text-sm font-bold transition-all ${role === 'chairman'
+                    ? 'border-primary bg-primary/5 text-primary shadow-sm'
+                    : 'border-border text-secondary/40 hover:border-primary/20'
+                    }`}
+                >
+                  <UserCheck className="w-4 h-4 mx-auto mb-1" />
+                  Chairman
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRole('collector')}
+                  className={`p-3 rounded-xl border text-sm font-bold transition-all ${role === 'collector'
+                    ? 'border-primary bg-primary/5 text-primary shadow-sm'
+                    : 'border-border text-secondary/40 hover:border-primary/20'
+                    }`}
+                >
+                  <UserCheck className="w-4 h-4 mx-auto mb-1" />
+                  Collector
+                </button>
+>>>>>>> Stashed changes
               </div>
             </div>
 
@@ -147,11 +177,17 @@ export default function AdminLoginPage() {
           </form>
         </div>
 
+<<<<<<< Updated upstream
         {/* <div className="bg-gray-50 border-t border-gray-100 p-6 text-center">
           <p className="text-[10px] text-gray-400 font-bold leading-relaxed max-w-[250px] mx-auto uppercase tracking-wider">
             Protected by advanced encryption. IP & Access logs are monitored.
           </p>
         </div> */}
+=======
+        <p className="text-center mt-8 text-[11px] font-bold text-secondary/30 uppercase tracking-[0.2em]">
+          Powered by Paarsh Infotech pvt ltd
+        </p>
+>>>>>>> Stashed changes
       </motion.div>
     </div>
   );

@@ -17,6 +17,12 @@ interface Country {
   flag: string;
 }
 
+interface Country {
+  name: string;
+  code: string;
+  flag: string;
+}
+
 export default function DonationForm() {
   const { t, language, setLanguage } = useLanguage();
   const [loading, setLoading] = useState(false);
@@ -24,7 +30,40 @@ export default function DonationForm() {
   const [lastDonation, setLastDonation] = useState<any>(null);
   const [countries, setCountries] = useState<Country[]>([]);
   const [fetchingCountries, setFetchingCountries] = useState(true);
+<<<<<<< Updated upstream
   const { user, token } = useSelector((state: RootState) => state.auth);
+=======
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await axios.get('https://restcountries.com/v3.1/all?fields=name,idd,flags');
+        const formatted = response.data
+          .filter((c: any) => c.idd?.root)
+          .map((c: any) => ({
+            name: c.name.common,
+            code: c.idd.root + (c.idd.suffixes ? c.idd.suffixes[0] : ''),
+            flag: c.flags.png // Using PNG for reliability in small displays
+          }))
+          .sort((a: any, b: any) => a.name.localeCompare(b.name));
+
+        setCountries(formatted);
+        // Ensure India is the default if found
+        const india = formatted.find((c: any) => c.name === 'India');
+        if (india) {
+          setFormData(prev => ({ ...prev, countryCode: india.code }));
+        }
+      } catch (err) {
+        console.error('Failed to fetch countries:', err);
+        // Fallback to India if API fails
+        setCountries([{ name: 'India', code: '+91', flag: 'https://flagcdn.com/w320/in.png' }]);
+      } finally {
+        setFetchingCountries(false);
+      }
+    };
+    fetchCountries();
+  }, []);
+>>>>>>> Stashed changes
 
   const [formData, setFormData] = useState({
     donorType: 'individual',
@@ -39,6 +78,7 @@ export default function DonationForm() {
     address: '',
   });
 
+<<<<<<< Updated upstream
   useEffect(() => {
     if (user) {
       setFormData(prev => ({
@@ -78,6 +118,8 @@ export default function DonationForm() {
     fetchCountries();
   }, []);
 
+=======
+>>>>>>> Stashed changes
   const purposes = [
     t('donation.purposes.general'),
     t('donation.purposes.building'),
@@ -99,6 +141,7 @@ export default function DonationForm() {
     setFormData({
       donorType: 'individual',
       purpose: '',
+<<<<<<< Updated upstream
       donorName: user?.name || '',
       panNumber: '',
       occasion: '',
@@ -106,6 +149,15 @@ export default function DonationForm() {
       email: user?.email || '',
       countryCode: '+91',
       mobileNumber: user?.phone?.slice(-10) || '',
+=======
+      donorName: '',
+      panNumber: '',
+      occasion: '',
+      amount: '',
+      email: '',
+      countryCode: '+91',
+      mobileNumber: '',
+>>>>>>> Stashed changes
       address: '',
     });
   };
@@ -120,16 +172,27 @@ export default function DonationForm() {
     setStep('processing');
 
     try {
+<<<<<<< Updated upstream
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+=======
+>>>>>>> Stashed changes
       const res = await axios.post('/api/donations', {
         ...formData,
         amount: Number(formData.amount),
         reason: formData.purpose || formData.occasion || 'General Donation',
         mobileNumber: formData.countryCode + formData.mobileNumber,
+<<<<<<< Updated upstream
       }, config);
 
       if (res.data.success) {
         setLastDonation(res.data.data);
+=======
+      });
+
+      if (res.data.success) {
+        setLastDonation(res.data.data);
+        // Simulate processing time
+>>>>>>> Stashed changes
         setTimeout(() => {
           setStep('success');
           confetti({
@@ -263,6 +326,10 @@ export default function DonationForm() {
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="bg-white rounded-[2.5rem] border border-border shadow-2xl overflow-hidden">
 
+<<<<<<< Updated upstream
+=======
+        {/* Instructions Section */}
+>>>>>>> Stashed changes
         <div className="bg-amber-50/50 p-6 md:p-8 border-b border-amber-100">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-6">
             <div className="flex items-center gap-3">
@@ -272,6 +339,10 @@ export default function DonationForm() {
               <h2 className="text-lg font-black text-secondary">{t('donation.instructions.title')}</h2>
             </div>
 
+<<<<<<< Updated upstream
+=======
+            {/* Language Toggle */}
+>>>>>>> Stashed changes
             <div className="flex items-center gap-6 bg-white p-2 px-4 rounded-2xl border border-amber-200 shadow-sm">
               <label className="flex items-center gap-2 cursor-pointer group">
                 <input
@@ -308,6 +379,10 @@ export default function DonationForm() {
 
         <form onSubmit={handleDonateClick} className="p-6 md:p-10 space-y-10">
 
+<<<<<<< Updated upstream
+=======
+          {/* Section: Donor Type */}
+>>>>>>> Stashed changes
           <div className="space-y-4">
             <label className="text-xs font-black text-muted-foreground uppercase tracking-widest">{t('donation.donor_type')} :</label>
             <div className="flex items-center gap-8">
@@ -344,8 +419,15 @@ export default function DonationForm() {
 
           <div className="h-px bg-border/50" />
 
+<<<<<<< Updated upstream
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
+=======
+          {/* Section: Main Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+            {/* Purpose */}
+>>>>>>> Stashed changes
             <div className="space-y-2">
               <label className="text-xs font-black text-secondary uppercase tracking-tight">{t('donation.purpose')} <span className="text-primary">*</span></label>
               <select
@@ -359,6 +441,10 @@ export default function DonationForm() {
               </select>
             </div>
 
+<<<<<<< Updated upstream
+=======
+            {/* Name */}
+>>>>>>> Stashed changes
             <div className="space-y-2">
               <label className="text-xs font-black text-secondary uppercase tracking-tight">
                 {formData.donorType === 'organization' ? t('donation.organization_name') : t('donation.name')} <span className="text-primary">*</span>
@@ -373,6 +459,10 @@ export default function DonationForm() {
               />
             </div>
 
+<<<<<<< Updated upstream
+=======
+            {/* PAN / GSTN */}
+>>>>>>> Stashed changes
             <div className="space-y-2">
               <label className="text-xs font-black text-secondary uppercase tracking-tight">
                 {formData.donorType === 'organization' ? t('donation.gstn') : t('donation.pan')}
@@ -389,6 +479,10 @@ export default function DonationForm() {
               )}
             </div>
 
+<<<<<<< Updated upstream
+=======
+            {/* Occasion */}
+>>>>>>> Stashed changes
             <div className="space-y-2">
               <label className="text-xs font-black text-secondary uppercase tracking-tight">{t('donation.occasion')} <span className="text-primary">*</span></label>
               <select
@@ -402,6 +496,10 @@ export default function DonationForm() {
               </select>
             </div>
 
+<<<<<<< Updated upstream
+=======
+            {/* Amount */}
+>>>>>>> Stashed changes
             <div className="space-y-2">
               <label className="text-xs font-black text-secondary uppercase tracking-tight">{t('donation.amount')} (₹) <span className="text-primary">*</span></label>
               <input
@@ -418,8 +516,15 @@ export default function DonationForm() {
 
           <div className="h-px bg-border/50" />
 
+<<<<<<< Updated upstream
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
+=======
+          {/* Section: Contact Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            {/* Email */}
+>>>>>>> Stashed changes
             <div className="space-y-2">
               <label className="text-xs font-black text-secondary uppercase tracking-tight">{t('donation.email')} <span className="text-primary">*</span></label>
               <input
@@ -448,10 +553,19 @@ export default function DonationForm() {
                         onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
                       >
                         {countries.map((c, i) => (
+<<<<<<< Updated upstream
                           <option key={i} value={c.code}>{c.name} ({c.code})</option>
                         ))}
                       </select>
                       <div className="flex items-center gap-1.5 px-4 pointer-events-none">
+=======
+                          <option key={i} value={c.code}>
+                            {c.name} ({c.code})
+                          </option>
+                        ))}
+                      </select>
+                      <div className="flex items-center gap-2 px-4 pointer-events-none">
+>>>>>>> Stashed changes
                         <img
                           src={countries.find(c => c.code === formData.countryCode)?.flag || 'https://flagcdn.com/w320/in.png'}
                           alt="flag"
@@ -464,9 +578,17 @@ export default function DonationForm() {
                 </div>
 
                 <div className="w-px h-6 bg-border self-center" />
+<<<<<<< Updated upstream
                 <div className="flex items-center px-4 font-black text-secondary text-sm bg-muted/5 min-w-[60px] justify-center">
                   {formData.countryCode}
                 </div>
+=======
+
+                <div className="flex items-center px-4 font-black text-secondary text-sm bg-muted/5 min-w-[60px] justify-center">
+                  {formData.countryCode}
+                </div>
+
+>>>>>>> Stashed changes
                 <div className="w-px h-6 bg-border self-center" />
 
                 <input
@@ -482,6 +604,10 @@ export default function DonationForm() {
 
           </div>
 
+<<<<<<< Updated upstream
+=======
+          {/* Actions */}
+>>>>>>> Stashed changes
           <div className="flex flex-col md:flex-row justify-end items-center gap-4 pt-6">
             <button
               type="button"
@@ -509,6 +635,10 @@ export default function DonationForm() {
 
       </div>
 
+<<<<<<< Updated upstream
+=======
+      {/* Footer Disclaimer */}
+>>>>>>> Stashed changes
       <p className="text-center text-[10px] text-muted-foreground mt-8 font-bold uppercase tracking-widest leading-relaxed">
         © {new Date().getFullYear()} {t('hero.title_1')} {t('hero.title_2')}. All Rights Reserved. <br className="md:hidden" />
         Payment processed securely via encrypted gateway.

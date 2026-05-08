@@ -12,6 +12,7 @@ export async function POST(req: Request) {
   try {
     await dbConnect();
     const body = await req.json();
+<<<<<<< Updated upstream
 
     // Get user details from token if authenticated
     const decoded = await getDataFromToken();
@@ -25,14 +26,21 @@ export async function POST(req: Request) {
       userName = decoded.name;
     }
 
+=======
+    console.log('Donation Request Body:', body);
+    
+>>>>>>> Stashed changes
     const donation = await Donation.create({
       ...body,
       receiptNumber: generateReceiptNumber(),
       paymentStatus: 'completed',
+<<<<<<< Updated upstream
       ...(userId && {
         userId,
         collector: userId // Assuming the logged-in user is the collector
       }),
+=======
+>>>>>>> Stashed changes
     });
 
     // Create Notification

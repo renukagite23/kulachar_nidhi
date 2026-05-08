@@ -170,6 +170,7 @@ export default function Navbar() {
                   </span>
                   <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-accent/20 rounded-full blur-md group-hover:bg-accent/40 transition-all" />
                 </button>
+<<<<<<< Updated upstream
 
                 <Link href="/donation" className="spiritual-button !px-6 !py-2.5 text-xs">
                   <HandHeart className="w-4 h-4" /> {t('nav.donate')}
@@ -226,6 +227,11 @@ export default function Navbar() {
                     </Link>
                   )
                 )}
+=======
+                <Link href="/donation" className="spiritual-button !px-4 !py-2 text-xs">
+                  <HandHeart className="w-3.5 h-3.5" /> {t('nav.donate')}
+                </Link>
+>>>>>>> Stashed changes
               </div>
             </div>
 
@@ -247,6 +253,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu */}
+<<<<<<< Updated upstream
         <AnimatePresence>
           {isOpen && (
             <motion.div
@@ -254,6 +261,25 @@ export default function Navbar() {
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               className="md:hidden border-t border-border bg-white overflow-hidden"
+=======
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            className="md:hidden bg-white px-4 pt-2 pb-6 space-y-1 border-t border-border shadow-inner"
+          >
+            <Link href="/" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.home')}</Link>
+            <a href="#about" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.about')}</a>
+            <a href="#darshan" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.darshan')}</a>
+            <Link href="/contact" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-semibold text-secondary hover:bg-muted/30 rounded-lg">{t('nav.contact')}</Link>
+            <Link href="/donation" onClick={() => setIsOpen(false)} className="block py-3 px-2 border-b border-border/50 text-sm font-bold text-primary hover:bg-primary/5 rounded-lg">{t('nav.donate')}</Link>
+            <button
+              onClick={() => {
+                setLanguage(language === 'en' ? 'mr' : 'en');
+                setIsOpen(false);
+              }}
+              className="flex items-center gap-2 py-4 px-2 text-sm font-semibold text-secondary"
+>>>>>>> Stashed changes
             >
               <div className="px-4 py-6 space-y-2">
                 {/* Mobile Highlighted Language Toggle */}

@@ -60,6 +60,7 @@
     "cta": "Read Full History"
   },
   "donation": {
+<<<<<<< Updated upstream
     "badge": "Holy Donation",
     "title": "Online Donation",
     "subtitle": "Your contribution will be used for charitable causes.",
@@ -73,6 +74,37 @@
     "pan": "PAN Number",
     "pan_warning": "PAN card is mandatory for 80G certificate",
     "email": "Email ID",
+=======
+    "title": "Online Donation / Dan",
+    "subtitle": "Your contribution supports our spiritual & social initiatives.",
+    "badge": "Holy Offering",
+    "amount": "Select Amount",
+    "custom": "Enter Other Amount",
+    "reason": "Reason for Donation",
+    "reasons": {
+      "birthday": "Birthday",
+      "navratri": "Navratri",
+      "munji": "Javal (Munji)",
+      "other": "Other"
+    },
+    "purposes": {
+      "general": "General Donation",
+      "building": "Temple Building Fund",
+      "education": "Education Support",
+      "medical": "Medical Aid Fund",
+      "annakshetra": "Annakshetra (Food Fund)",
+      "other": "Other"
+    },
+    "occasions": {
+      "birthday": "Birthday",
+      "anniversary": "Wedding Anniversary",
+      "memorial": "In Memory Of",
+      "navratri": "Navratri Festival",
+      "other": "Other"
+    },
+    "donor_details": "Donor Details",
+    "name": "Full Name",
+>>>>>>> Stashed changes
     "mobile": "Mobile Number",
     "purpose": "Purpose of Donation",
     "purpose_placeholder": "Select Purpose",
@@ -88,6 +120,7 @@
     "another": "Make Another Donation",
     "instructions": {
       "title": "Important Instructions",
+<<<<<<< Updated upstream
       "point1": "No refund will be given after the amount is credited to the Temple Trust account.",
       "point2": "Devotees should complain to the concerned bank for failed transactions.",
       "point3": "All rights are reserved with the Temple Trust.",
@@ -109,6 +142,29 @@
       "navratri": "Navratri Festival",
       "other": "Other"
     }
+=======
+      "point1": "There will be no refunds once the amount is credited to Temple Trust account.",
+      "point2": "For Failed Transactions Devotees Should raise complaints from the payment originating bank.",
+      "point3": "All Rights reserved to Temple Trust.",
+      "point4": "For 80 G certificate PAN number is mandatory.",
+      "point5": "Temple is not responsible for any incorrect information and any failure transactions."
+    },
+    "donor_type": "Donor Type",
+    "individual": "Individual",
+    "organization": "Organization",
+    "purpose": "Purpose Of Donation",
+    "occasion": "Select Occasion",
+    "organization_name": "Full Name of Organization",
+    "organization_placeholder": "Enter Organization Name",
+    "gstn": "GSTN/TAN",
+    "gstn_placeholder": "Enter Donor GSTN/TAN Number",
+    "pan": "Donor PAN Number",
+    "email": "Email ID",
+    "pan_warning": "Pan Card Mandatory for 80G Certificate",
+    "purpose_placeholder": "Select Purpose of Donation",
+    "occasion_placeholder": "Select Occasion",
+    "clear": "Clear"
+>>>>>>> Stashed changes
   },
   "donations": {
     "title": "Support the Temple",

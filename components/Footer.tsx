@@ -18,7 +18,11 @@ export default function Footer() {
               <Link href="/" className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-2 shadow-lg shadow-primary/10">
                 <img src="/devi.png" alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
               </Link>
+<<<<<<< Updated upstream
               <h3 className="text-xl font-black text-white tracking-tight">{t('hero.title_1')} {t('hero.title_2')}</h3>
+=======
+              <h3 className="text-xl font-black text-white tracking-tight">Kuldaivat Trust</h3>
+>>>>>>> Stashed changes
             </div>
             <p className="text-sm leading-relaxed text-white/60">
               {t('footer.about_desc')}
@@ -36,12 +40,19 @@ export default function Footer() {
           <div className="space-y-6">
             <h4 className="text-sm font-bold text-accent uppercase tracking-widest">{t('footer.quick_links')}</h4>
             <ul className="space-y-3 text-sm font-medium">
+<<<<<<< Updated upstream
               <li><Link href="/" className="hover:text-primary transition-colors">{t('nav.home')}</Link></li>
               <li><Link href="/about/history" className="hover:text-primary transition-colors">{t('nav.about_temple')}</Link></li>
               <li><Link href="/donation" className="hover:text-primary transition-colors">{t('nav.donate')}</Link></li>
               <li><Link href="/gallery" className="hover:text-primary transition-colors">{t('nav.gallery')}</Link></li>
               <li><Link href="/about#presidential-message" className="hover:text-primary transition-colors">{t('nav.about_trust') || "About Trust"}</Link></li>
               <li><Link href="/contact" className="hover:text-primary transition-colors">{t('nav.contact')}</Link></li>
+=======
+              <li><a href="#" className="hover:text-primary transition-colors">{t('nav.home')}</a></li>
+              <li><a href="#about" className="hover:text-primary transition-colors">{t('nav.about')}</a></li>
+              <li><Link href="/donation" className="hover:text-primary transition-colors">{t('nav.donate')}</Link></li>
+              <li><a href="#" className="hover:text-primary transition-colors">{t('aarti.title')}</a></li>
+>>>>>>> Stashed changes
             </ul>
           </div>
 

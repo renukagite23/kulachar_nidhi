@@ -66,6 +66,7 @@ export default function Hero() {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
+<<<<<<< Updated upstream
             <Link
               href="/donation"
               className="spiritual-button !px-6 !py-3 text-sm md:text-base w-full sm:w-auto shadow-lg shadow-primary/20 flex items-center justify-center"
@@ -75,6 +76,12 @@ export default function Hero() {
             </Link>
 
             <button className="spiritual-button-outline !px-6 !py-3 text-sm md:text-base w-full sm:w-auto hover:bg-white">
+=======
+            <Link href="/donation" className="spiritual-button !px-8 !py-4 text-base w-full sm:w-auto shadow-lg shadow-primary/20">
+              {t('hero.cta_donate')} <ArrowRight className="w-4 h-4 ml-1" />
+            </Link>
+            <button className="spiritual-button-outline !px-8 !py-4 text-base w-full sm:w-auto hover:bg-white">
+>>>>>>> Stashed changes
               {t('hero.cta_darshan')}
             </button>
           </div>
