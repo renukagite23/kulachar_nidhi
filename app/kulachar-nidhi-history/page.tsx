@@ -11,14 +11,43 @@ import { format } from 'date-fns';
 import Receipt from '@/components/Receipt';
 import { downloadPDF } from '@/lib/pdf';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function KulacharNidhiHistoryPage() {
   const { user, isAuthenticated, token } = useSelector((state: RootState) => state.auth);
+  const { t, lang } = useLanguage();
   const [donations, setDonations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDonation, setSelectedDonation] = useState<any>(null);
   const [downloading, setDownloading] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
+
+  const getTranslatedReason = (reason: string) => {
+    const mapping: { [key: string]: string } = {
+      'साधारण देणगी': 'donation.purposes.general',
+      'मंदिर बांधकाम निधी': 'donation.purposes.building',
+      'शिक्षण सहाय्य': 'donation.purposes.education',
+      'वैद्यकीय मदत निधी': 'donation.purposes.medical',
+      'अन्नक्षेत्र (अन्न निधी)': 'donation.purposes.annakshetra',
+      'इतर': 'donation.purposes.other',
+      'वाढदिवस': 'donation.occasions.birthday',
+      'लग्नाचा वाढदिवस': 'donation.occasions.anniversary',
+      'स्मरणार्थ': 'donation.occasions.memorial',
+      'नवरात्रोत्सव': 'donation.occasions.navratri',
+      'General Donation': 'donation.purposes.general',
+      'Temple Building Fund': 'donation.purposes.building',
+      'Education Support': 'donation.purposes.education',
+      'Medical Aid Fund': 'donation.purposes.medical',
+      'Annakshetra (Food Fund)': 'donation.purposes.annakshetra',
+      'Birthday': 'donation.occasions.birthday',
+      'Wedding Anniversary': 'donation.occasions.anniversary',
+      'In Memory Of': 'donation.occasions.memorial',
+      'Navratri Festival': 'donation.occasions.navratri',
+    };
+
+    return mapping[reason] ? t(mapping[reason]) : reason;
+  };
 
   const handleDownload = async (donation: any) => {
     setDownloading(donation._id);
@@ -63,6 +92,13 @@ export default function KulacharNidhiHistoryPage() {
     fetchDonations();
   }, [isAuthenticated, router, token]);
 
+  const filteredDonations = donations.filter(d => 
+    (d.receiptNumber?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+    (d.reason?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+    (getTranslatedReason(d.reason)?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+    format(new Date(d.donationDate), 'dd MMM, yyyy').toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FFFDF9]">
@@ -89,9 +125,9 @@ export default function KulacharNidhiHistoryPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl md:text-4xl font-black text-secondary uppercase tracking-tight"
           >
-            Kulachar Nidhi History
+            {t('history.title')}
           </motion.h1>
-          <p className="text-muted-foreground mt-2 font-bold uppercase tracking-[0.2em] text-[10px]">A dedicated record of your spiritual offerings</p>
+          <p className="text-muted-foreground mt-2 font-bold uppercase tracking-[0.2em] text-[10px]">{t('history.subtitle')}</p>
         </div>
 
         <motion.div 
@@ -101,10 +137,12 @@ export default function KulacharNidhiHistoryPage() {
         >
           <div className="p-6 md:p-8 bg-muted/20 border-b border-border/50 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-              <h2 className="text-xl font-black text-secondary tracking-tight">All Transactions</h2>
+              <h2 className="text-xl font-black text-secondary tracking-tight">{t('history.transactions')}</h2>
               <div className="flex items-center gap-2 mt-1">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Total: {donations.length} {donations.length === 1 ? 'donation' : 'donations'}</p>
+                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">
+                  {t('history.total')}: {donations.length} {donations.length === 1 ? t('history.donation') : t('history.donations')}
+                </p>
               </div>
             </div>
 
@@ -112,27 +150,29 @@ export default function KulacharNidhiHistoryPage() {
               <Search className="w-4 h-4 text-muted-foreground/60 mr-3" />
               <input
                 type="text"
-                placeholder="Search by receipt or date..."
+                placeholder={t('history.search_placeholder')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full outline-none bg-transparent text-sm placeholder:text-muted-foreground/40 font-medium"
               />
             </div>
           </div>
 
           <div className="overflow-x-auto">
-            {donations.length > 0 ? (
+            {filteredDonations.length > 0 ? (
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-muted/10">
-                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50">Date</th>
-                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50">Receipt No</th>
-                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50">Purpose</th>
-                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50">Status</th>
-                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50 text-right">Amount</th>
-                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50 text-center">Download</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50">{t('history.table.date')}</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50">{t('history.table.receipt')}</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50">{t('history.table.purpose')}</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50">{t('history.table.status')}</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50 text-right">{t('history.table.amount')}</th>
+                    <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest border-b border-border/50 text-center">{t('history.table.download')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/30">
-                  {donations.map((donation) => (
+                  {filteredDonations.map((donation) => (
                     <tr key={donation._id} className="hover:bg-muted/5 transition-colors">
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2.5">
@@ -152,7 +192,7 @@ export default function KulacharNidhiHistoryPage() {
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-2.5">
                           <Tag className="w-3.5 h-3.5 text-primary/40" />
-                          <span className="font-bold text-secondary text-xs">{donation.reason || 'General Donation'}</span>
+                          <span className="font-bold text-secondary text-xs">{getTranslatedReason(donation.reason) || t('history.general_donation')}</span>
                         </div>
                       </td>
                       <td className="px-6 py-5">
@@ -175,7 +215,7 @@ export default function KulacharNidhiHistoryPage() {
                           onClick={() => handleDownload(donation)}
                           disabled={downloading === donation._id}
                           className="p-2.5 rounded-xl bg-primary/5 text-primary hover:bg-primary hover:text-white transition-all shadow-sm border border-primary/10 disabled:opacity-50"
-                          title="Download Receipt"
+                          title={t('history.download_receipt')}
                         >
                           {downloading === donation._id ? (
                             <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
@@ -193,8 +233,8 @@ export default function KulacharNidhiHistoryPage() {
                 <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
                   <History className="w-10 h-10 text-muted-foreground/30" />
                 </div>
-                <h3 className="text-xl font-black text-secondary tracking-tight">No Transactions Found</h3>
-                <p className="text-sm text-muted-foreground mt-2 max-w-xs mx-auto">You haven't made any contributions yet. Your spiritual history will appear here.</p>
+                <h3 className="text-xl font-black text-secondary tracking-tight">{t('history.no_transactions')}</h3>
+                <p className="text-sm text-muted-foreground mt-2 max-w-xs mx-auto">{t('history.no_transactions_desc')}</p>
               </div>
             )}
           </div>

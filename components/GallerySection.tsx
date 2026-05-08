@@ -17,14 +17,12 @@ export default function GallerySection() {
   return (
     <section id="gallery" className="py-12 md:py-20 bg-background">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-end justify-between mb-10">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <span className="text-primary font-bold text-[10px] uppercase tracking-[0.2em]">{t('nav.darshan')}</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-black text-secondary tracking-tight">{t('gallery.title')}</h2>
+        <div className="flex flex-col items-center text-center mb-10">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+            <span className="text-primary font-bold text-[10px] md:text-[11px] uppercase tracking-[0.2em]">{t('gallery.badge')}</span>
           </div>
+          <h2 className="text-3xl md:text-4xl font-black text-secondary tracking-tight mb-4">{t('gallery.title')}</h2>
           <button className="hidden md:flex items-center gap-2 text-[11px] font-bold text-muted-foreground hover:text-primary transition-colors">
             {t('gallery.view_all')} <Maximize2 className="w-3 h-3" />
           </button>

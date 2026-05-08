@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { formatDate } from '@/lib/utils';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface ReceiptProps {
   donation: {
@@ -15,6 +16,34 @@ interface ReceiptProps {
 }
 
 export default function Receipt({ donation }: ReceiptProps) {
+  const { t } = useLanguage();
+
+  const getTranslatedReason = (reason: string) => {
+    const mapping: { [key: string]: string } = {
+      'साधारण देणगी': 'donation.purposes.general',
+      'मंदिर बांधकाम निधी': 'donation.purposes.building',
+      'शिक्षण सहाय्य': 'donation.purposes.education',
+      'वैद्यकीय मदत निधी': 'donation.purposes.medical',
+      'अन्नक्षेत्र (अन्न निधी)': 'donation.purposes.annakshetra',
+      'इतर': 'donation.purposes.other',
+      'वाढदिवस': 'donation.occasions.birthday',
+      'लग्नाचा वाढदिवस': 'donation.occasions.anniversary',
+      'स्मरणार्थ': 'donation.occasions.memorial',
+      'नवरात्रोत्सव': 'donation.occasions.navratri',
+      'General Donation': 'donation.purposes.general',
+      'Temple Building Fund': 'donation.purposes.building',
+      'Education Support': 'donation.purposes.education',
+      'Medical Aid Fund': 'donation.purposes.medical',
+      'Annakshetra (Food Fund)': 'donation.purposes.annakshetra',
+      'Birthday': 'donation.occasions.birthday',
+      'Wedding Anniversary': 'donation.occasions.anniversary',
+      'In Memory Of': 'donation.occasions.memorial',
+      'Navratri Festival': 'donation.occasions.navratri',
+    };
+
+    return mapping[reason] ? t(mapping[reason]) : reason;
+  };
+
   return (
     <div id="receipt-content" className="w-[800px] p-16 bg-[#FFFDF9] border-[1px] border-secondary relative overflow-hidden text-secondary print:shadow-none print:border-secondary">
       {/* Print-specific styles */}
@@ -44,7 +73,7 @@ export default function Receipt({ donation }: ReceiptProps) {
             <img src="/devi.png" alt="Trust Logo" className="w-full h-full object-contain" />
           </div>
           <div className="text-left">
-            <h1 className="text-3xl font-black tracking-tight text-secondary">KULDAIVAT TRUST</h1>
+            <h1 className="text-3xl font-black tracking-tight text-secondary uppercase">{t('nav.logo_title')}</h1>
             <p className="text-primary font-bold text-sm tracking-[0.2em] uppercase mt-1">Digital Donation Receipt</p>
             <p className="text-[10px] text-muted-foreground mt-2 font-black uppercase tracking-wider">Reg: MAH/1234/TRUST | PAN: ABCDT1234E</p>
           </div>
@@ -74,7 +103,7 @@ export default function Receipt({ donation }: ReceiptProps) {
           </div>
           <div>
             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">Purpose of Donation</p>
-            <p className="text-base font-bold text-secondary">{donation.reason}</p>
+            <p className="text-base font-bold text-secondary">{getTranslatedReason(donation.reason)}</p>
           </div>
         </div>
       </div>
@@ -83,10 +112,10 @@ export default function Receipt({ donation }: ReceiptProps) {
       <div className="bg-primary/5 border border-primary/10 rounded-3xl p-10 mb-16 flex justify-between items-center relative z-10">
         <div>
           <p className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2">Total Amount Received</p>
-          <p className="text-xs font-bold text-secondary/60 italic">Your contribution supports our spiritual & social initiatives.</p>
+          <p className="text-xs font-bold text-secondary/60 italic">{t('donation.subtitle')}</p>
         </div>
         <div className="text-right">
-          <p className="text-5xl font-black text-primary">₹{donation.amount}.00</p>
+          <p className="text-5xl font-black text-primary">₹{donation.amount?.toLocaleString('en-IN')}.00</p>
         </div>
       </div>
 
@@ -114,7 +143,7 @@ export default function Receipt({ donation }: ReceiptProps) {
       <div className="mt-16 pt-8 border-t border-border text-center relative z-10">
         <p className="text-[10px] text-muted-foreground font-bold tracking-tight leading-relaxed max-w-lg mx-auto">
           This is a computer-generated document and does not require a physical signature.
-          All donations to Kuldaivat Trust are eligible for tax benefits under section 80G of the Income Tax Act.
+          All donations to {t('nav.logo_title')} are eligible for tax benefits under section 80G of the Income Tax Act.
         </p>
       </div>
     </div>

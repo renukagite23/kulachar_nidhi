@@ -3,6 +3,7 @@
     "home": "Home",
     "about_temple": "About Temple",
     "about_trust": "About Trust",
+    "about": "About",
     "darshan": "Darshan",
     "gallery": "Gallery",
     "contact": "Contact",
@@ -31,6 +32,7 @@
     }
   },
   "aarti": {
+    "badge": "Daily Rituals",
     "title": "Aarti Schedule",
     "subtitle": "Join us in the divine aarti ceremonies and seek the blessings of the Goddess.",
     "morning": "Morning Aarti",
@@ -232,9 +234,9 @@
     "festival": "Festival Celebration"
   },
   "festival": {
-    "badge": "Celebrations",
+    "badge": "Divine Celebrations",
     "title": "Upcoming Events",
-    "subtitle": "The temple comes alive during these major celebrations",
+    "subtitle": "Celebrate culture, traditions, and community gatherings.",
     "view": "View Events Calendar",
     "page_subtitle": "Celebrate the Divine Grace of Goddess Ekavira",
     "tripuri": "Tripuri Pournima Deepotsav",
@@ -319,6 +321,82 @@
         "birthdays": "Birthdays",
         "logout": "Logout"
       }
+    }
+  },
+  "about_history": {
+    "title": "Temple History",
+    "intro_quote": "Shri Kulaswamini Ekavira Devi Temple is an ancient and sacred temple located on a hill in Jaitapur (Taluka Baglan, District Nashik), holding significant historical, religious, and natural importance.",
+    "section1": {
+      "title": "Ancient Context and Background",
+      "p1": "There are two ancient temples located on the hill adjacent to Jaitapur village – the south-facing Shri Ekavira Devi Temple and the east-facing ancient Shiva Temple. Both these temples are estimated to be around 250 to 300 years old.",
+      "p2": "In front of this hill is Salher Fort, the second highest peak in Maharashtra. Also nearby in Mulher is the Samadhi of Shri Uddhav Maharaj, which adds to the religious significance of this area.",
+      "p3": "The natural beauty, peaceful environment, and religious traditions make this area extremely sacred."
+    },
+    "section2": {
+      "title": "Establishment and Development",
+      "list1": "The primary renovation of the Ekavira Devi Temple was carried out in 1991.",
+      "list2": "Stone steps were constructed as the temple is located on a hill.",
+      "list3": "In 2011, 2 hectares (5 acres) of land was sanctioned by the government for the temple.",
+      "list4": "The 'Shri Kulaswamini Ekavira Devi Bhaktagan Mandal' Trust was established."
+    },
+    "cards": {
+      "establishment": "Establishment Period",
+      "establishment_val": "250–300 Years",
+      "renovation": "Renovation",
+      "renovation_val": "Since 1991",
+      "land": "Land",
+      "land_val": "5 Acres",
+      "location": "Location",
+      "location_val": "Jaitapur, Nashik"
+    },
+    "modern": {
+      "title": "Modern Form",
+      "list1": "New stone construction of the ancient Shiva Temple in progress (since 2026)",
+      "list2": "New plan including Sanctum Sanctorum, Darshan Mandap, Sabha Mandap, and Mukhamandap",
+      "list3": "Efforts to make the temple premises more beautiful and convenient for devotees"
+    }
+  },
+  "renovation": {
+    "badge": "🙏 Temple Renovation Campaign",
+    "title": "Support Needed for Shri Kulaswamini <span class=\"text-orange-600\">Ekavira Devi</span> Temple Renovation",
+    "desc": "The grand renovation of the ancient Shiva Temple and Shri Kulaswamini Ekavira Devi Temple at Jaitapur is being carried out entirely in black stone. Spacious areas for Deepmala, Bhaktaniwas, vehicle parking, and various religious programs will be created within the temple premises.",
+    "features": {
+      "plan_title": "Grand Temple Plan",
+      "plan_desc": "Includes Sanctum, Darshan Hall, Assembly Hall, and Entrance Porch.",
+      "stay_title": "Deepmala & Bhaktaniwas",
+      "stay_desc": "Accommodation and facilities for devotees coming from afar.",
+      "support_title": "Your Support is Crucial",
+      "support_desc": "This sacred task will be completed with your donation and cooperation."
+    },
+    "cta_donate": "Donate Now",
+    "cta_more": "More Information",
+    "donor_note": "* Names of donors will be displayed in the form of inscriptions in the temple premises.",
+    "floating": {
+      "title": "Temple Development Campaign",
+      "desc": "Grand renovation of the temple is underway under the guidance of Shri. Tidke.",
+      "target_year": "Target Year",
+      "devotee_support": "Devotee Support"
+    }
+  },
+  "history": {
+    "title": "Kulachar Nidhi History",
+    "subtitle": "A dedicated record of your spiritual offerings",
+    "transactions": "All Transactions",
+    "total": "Total",
+    "donation": "donation",
+    "donations": "donations",
+    "search_placeholder": "Search by receipt or date...",
+    "no_transactions": "No Transactions Found",
+    "no_transactions_desc": "You haven't made any contributions yet. Your spiritual history will appear here.",
+    "download_receipt": "Download Receipt",
+    "general_donation": "General Donation",
+    "table": {
+      "date": "Date",
+      "receipt": "Receipt No",
+      "purpose": "Purpose",
+      "status": "Status",
+      "amount": "Amount",
+      "download": "Download"
     }
   }
 }

@@ -28,11 +28,14 @@ export default function AartiSchedule() {
         <div className="w-full md:w-[45%]">
 
           {/* Header */}
-          <div className="mb-6 text-white">
-            <p className="text-orange-300 text-[11px] font-bold tracking-[0.2em] uppercase">
-              {t('donation.badge')}
-            </p>
-            <h2 className="text-2xl md:text-3xl font-black mt-1">
+          <div className="mb-8 text-center">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-orange-300" />
+              <span className="text-orange-300 font-bold text-[10px] md:text-[11px] uppercase tracking-[0.2em]">
+                {t('aarti.badge')}
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
               {t('aarti.title')}
             </h2>
           </div>

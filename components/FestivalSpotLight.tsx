@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/LanguageContext';
 
 interface EventType {
   _id?: string;
@@ -18,6 +19,7 @@ interface EventType {
 export default function FestivalSpotlight() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t, lang } = useLanguage();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -53,28 +55,29 @@ export default function FestivalSpotlight() {
     <section className="py-20 px-4 md:px-8 bg-gradient-to-b from-orange-50 via-white to-orange-50">
       <div className="max-w-7xl mx-auto">
         {/* Heading */}
-        <div className="flex items-center gap-3 mb-12">
-          <Sparkles className="text-orange-500 w-8 h-8" />
-
-          <div>
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-800">
-              Upcoming Events
-            </h2>
-
-            <p className="text-gray-600 mt-2 text-sm md:text-base">
-              Celebrate culture, traditions, and community gatherings.
-            </p>
+        <div className="mb-12 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+            <span className="text-primary font-bold text-[10px] md:text-[11px] uppercase tracking-[0.2em]">
+              {t('festival.badge')}
+            </span>
           </div>
+          <h2 className="text-3xl md:text-4xl font-black text-secondary tracking-tight">
+            {t('festival.title')}
+          </h2>
+          <p className="text-muted-foreground mt-2 text-sm md:text-base max-w-2xl mx-auto">
+            {t('festival.subtitle')}
+          </p>
         </div>
 
         {/* Loading */}
         {loading ? (
           <div className="text-center py-16 text-gray-500 text-lg">
-            Loading events...
+            {lang === 'mr' ? 'कार्यक्रम लोड होत आहेत...' : 'Loading events...'}
           </div>
         ) : events.length === 0 ? (
           <div className="text-center py-16 text-gray-500 text-lg">
-            No events available.
+            {lang === 'mr' ? 'कोणतेही कार्यक्रम उपलब्ध नाहीत.' : 'No events available.'}
           </div>
         ) : (
           <>
@@ -87,13 +90,13 @@ export default function FestivalSpotlight() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="group bg-white rounded-[28px] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                  className="group bg-white rounded-[28px] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-border"
                 >
                   {/* Image */}
                   <div className="relative h-64 overflow-hidden">
                     <img
                       src={event.image || '/festival-placeholder.jpg'}
-                      alt={event.title_en}
+                      alt={lang === 'mr' ? event.title_mr : event.title_en}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
 
@@ -102,8 +105,8 @@ export default function FestivalSpotlight() {
 
                     {/* Title on Image */}
                     <div className="absolute bottom-5 left-5 right-5">
-                      <h3 className="text-2xl font-bold text-white leading-snug">
-                        {event.title_en}
+                      <h3 className="text-xl font-bold text-white leading-snug">
+                        {lang === 'mr' ? event.title_mr : event.title_en}
                       </h3>
                     </div>
                   </div>
@@ -111,16 +114,18 @@ export default function FestivalSpotlight() {
                   {/* Content */}
                   <div className="p-6">
                     <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-6">
-                      {event.desc_en ||
-                        'Celebrate culture, devotion, and togetherness with this beautiful festival event.'}
+                      {(lang === 'mr' ? event.desc_mr : event.desc_en) ||
+                        (lang === 'mr' 
+                          ? 'या सुंदर उत्सवाच्या कार्यक्रमासह संस्कृती, भक्ती आणि एकत्रपणा साजरा करा.'
+                          : 'Celebrate culture, devotion, and togetherness with this beautiful festival event.')}
                     </p>
 
                     {/* Button */}
                     <Link
                       href="/festivals"
-                      className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-3 rounded-full font-medium transition-all duration-300"
+                      className="inline-flex items-center gap-2 text-primary hover:text-orange-600 font-bold text-sm transition-all duration-300"
                     >
-                      Explore Event
+                      {lang === 'mr' ? 'अधिक माहिती' : 'Explore Event'}
                       <ArrowRight size={18} />
                     </Link>
                   </div>
@@ -132,9 +137,9 @@ export default function FestivalSpotlight() {
             <div className="flex justify-center mt-14">
               <Link
                 href="/festivals"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-full font-semibold shadow-lg transition-all duration-300 hover:scale-105"
+                className="bg-primary hover:bg-orange-600 text-white px-10 py-4 rounded-full font-bold shadow-lg transition-all duration-300 hover:scale-105"
               >
-                Show Events Calendar
+                {t('festival.view')}
               </Link>
             </div>
           </>

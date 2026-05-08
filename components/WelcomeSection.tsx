@@ -16,9 +16,13 @@ export default function WelcomeSection() {
   return (
     <section id="about" className="section-padding bg-white">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="section-title">{t('welcome.main_title')}</h2>
-          <p className="section-subtitle">{t('welcome.main_subtitle')}</p>
+        <div className="mb-16 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+            <span className="text-primary font-bold text-[10px] md:text-[11px] uppercase tracking-[0.2em]">{t('welcome.badge_title')}</span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-black text-secondary tracking-tight mb-4">{t('welcome.main_title')}</h2>
+          <p className="text-muted-foreground mt-2 text-sm md:text-base max-w-2xl mx-auto">{t('welcome.main_subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
