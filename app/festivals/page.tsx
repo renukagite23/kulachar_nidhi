@@ -115,10 +115,6 @@ export default function FestivalsPage() {
                                                     : event.desc_en || 'No description available'}
                                             </p>
 
-                                            {/* DATE */}
-                                            <p className="mt-4 text-sm text-orange-700 font-semibold">
-                                                📅 {event.date || 'No Date'}
-                                            </p>
 
                                             {/* BUTTON */}
                                             {/* <button className="mt-5 px-5 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-semibold transition">

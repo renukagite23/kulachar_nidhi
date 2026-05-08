@@ -7,9 +7,11 @@ import Link from 'next/link';
 
 interface EventType {
   _id?: string;
-  title: string;
+  title_en: string;
+  title_mr: string;
   date?: string;
-  description?: string;
+  desc_en?: string;
+  desc_mr?: string;
   image?: string;
 }
 
@@ -91,22 +93,17 @@ export default function FestivalSpotlight() {
                   <div className="relative h-64 overflow-hidden">
                     <img
                       src={event.image || '/festival-placeholder.jpg'}
-                      alt={event.title}
+                      alt={event.title_en}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
 
                     {/* Dark Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-                    {/* Date Badge */}
-                    <div className="absolute top-4 left-4 bg-white text-orange-600 px-4 py-1.5 rounded-full text-xs font-bold shadow-md">
-                      {event.date || 'Upcoming Festival'}
-                    </div>
-
                     {/* Title on Image */}
                     <div className="absolute bottom-5 left-5 right-5">
                       <h3 className="text-2xl font-bold text-white leading-snug">
-                        {event.title}
+                        {event.title_en}
                       </h3>
                     </div>
                   </div>
@@ -114,7 +111,7 @@ export default function FestivalSpotlight() {
                   {/* Content */}
                   <div className="p-6">
                     <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-6">
-                      {event.description ||
+                      {event.desc_en ||
                         'Celebrate culture, devotion, and togetherness with this beautiful festival event.'}
                     </p>
 

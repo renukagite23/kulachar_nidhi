@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2, Eye, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, Eye, X, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface EventType {
@@ -19,8 +19,10 @@ export default function AdminEventsPage() {
     const [showModal, setShowModal] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
+    const [uploading, setUploading] = useState(false);
 
     const [form, setForm] = useState<EventType>({
         title_en: '',
@@ -42,7 +44,6 @@ export default function AdminEventsPage() {
 
     // FETCH EVENTS
     useEffect(() => {
-<
         const fetchEvents = async () => {
             try {
                 const res = await fetch('/api/events', {
@@ -58,19 +59,47 @@ export default function AdminEventsPage() {
             }
         };
 
-
         fetchEvents();
     }, []);
 
-    const fetchEvents = async () => {
-        try {
-            const res = await fetch('/api/events');
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, isEdit: boolean = false) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
 
-            const res = await fetch(url, {
-                method,
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                if (isEdit) {
+                    setEditEvent({ ...editEvent, image: data.url });
+                } else {
+                    setForm({ ...form, image: data.url });
+                }
+            } else {
+                alert(data.error || 'Upload failed');
+            }
+        } catch (error) {
+            console.error('UPLOAD ERROR:', error);
+            alert('Failed to upload image');
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const res = await fetch('/api/events', {
+                method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-
                 body: JSON.stringify(form),
             });
 
@@ -416,17 +445,57 @@ export default function AdminEventsPage() {
                                     className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500"
                                 />
 
-                                <input
-                                    placeholder="Image URL"
-                                    value={form.image}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            image: e.target.value,
-                                        })
-                                    }
-                                    className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500"
-                                />
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-gray-500 ml-1 uppercase">Event Image</label>
+                                    <div className="flex flex-col gap-3">
+                                        {form.image && (
+                                            <div className="relative w-full h-32 rounded-xl overflow-hidden border border-orange-100">
+                                                <img src={form.image} alt="Preview" className="w-full h-full object-cover" />
+                                                <button 
+                                                    onClick={() => setForm({ ...form, image: '' })}
+                                                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        )}
+                                        <div className="relative">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleImageUpload(e, false)}
+                                                className="hidden"
+                                                id="event-image-upload"
+                                            />
+                                            <label
+                                                htmlFor="event-image-upload"
+                                                className={`flex items-center justify-center gap-2 w-full p-3 border-2 border-dashed border-orange-200 rounded-xl cursor-pointer hover:bg-orange-50 transition ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+                                            >
+                                                {uploading ? (
+                                                    <Loader2 className="w-5 h-5 animate-spin text-orange-500" />
+                                                ) : (
+                                                    <>
+                                                        <Plus className="w-4 h-4 text-orange-500" />
+                                                        <span className="text-sm font-bold text-orange-700">
+                                                            {form.image ? 'Change Image' : 'Upload Image'}
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </label>
+                                        </div>
+                                        <input
+                                            placeholder="Or enter Image URL"
+                                            value={form.image}
+                                            onChange={(e) =>
+                                                setForm({
+                                                    ...form,
+                                                    image: e.target.value,
+                                                })
+                                            }
+                                            className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500 text-sm"
+                                        />
+                                    </div>
+                                </div>
 
                             </div>
 
@@ -580,16 +649,57 @@ export default function AdminEventsPage() {
                                     className="w-full border border-orange-200 p-3 rounded-xl"
                                 />
 
-                                <input
-                                    value={editEvent.image || ''}
-                                    onChange={(e) =>
-                                        setEditEvent({
-                                            ...editEvent,
-                                            image: e.target.value,
-                                        })
-                                    }
-                                    className="w-full border border-orange-200 p-3 rounded-xl"
-                                />
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-gray-500 ml-1 uppercase">Event Image</label>
+                                    <div className="flex flex-col gap-3">
+                                        {editEvent.image && (
+                                            <div className="relative w-full h-32 rounded-xl overflow-hidden border border-orange-100">
+                                                <img src={editEvent.image} alt="Preview" className="w-full h-full object-cover" />
+                                                <button 
+                                                    onClick={() => setEditEvent({ ...editEvent, image: '' })}
+                                                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition"
+                                                >
+                                                    <X className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        )}
+                                        <div className="relative">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={(e) => handleImageUpload(e, true)}
+                                                className="hidden"
+                                                id="edit-event-image-upload"
+                                            />
+                                            <label
+                                                htmlFor="edit-event-image-upload"
+                                                className={`flex items-center justify-center gap-2 w-full p-3 border-2 border-dashed border-orange-200 rounded-xl cursor-pointer hover:bg-orange-50 transition ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+                                            >
+                                                {uploading ? (
+                                                    <Loader2 className="w-5 h-5 animate-spin text-orange-500" />
+                                                ) : (
+                                                    <>
+                                                        <Plus className="w-4 h-4 text-orange-500" />
+                                                        <span className="text-sm font-bold text-orange-700">
+                                                            {editEvent.image ? 'Change Image' : 'Upload Image'}
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </label>
+                                        </div>
+                                        <input
+                                            placeholder="Or enter Image URL"
+                                            value={editEvent.image || ''}
+                                            onChange={(e) =>
+                                                setEditEvent({
+                                                    ...editEvent,
+                                                    image: e.target.value,
+                                                })
+                                            }
+                                            className="w-full border border-orange-200 p-3 rounded-xl outline-none focus:border-orange-500 text-sm"
+                                        />
+                                    </div>
+                                </div>
 
                             </div>
 
