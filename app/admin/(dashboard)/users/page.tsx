@@ -59,7 +59,7 @@ export default function AdminUsersPage() {
         });
         const data = await res.json();
         if (res.ok) {
-          setUsers(data);
+          setUsers(Array.isArray(data) ? data : data.users || data.data || []);
         }
       } catch (err) {
         console.error('Failed to fetch users', err);
@@ -68,38 +68,13 @@ export default function AdminUsersPage() {
 
       }
 
-      const data = await res.json();
-
-      console.log('USERS API RESPONSE:', data);
-
-      // ✅ HANDLE DIFFERENT API STRUCTURES
-      let usersArray = [];
-
-      if (Array.isArray(data)) {
-        usersArray = data;
-      } else if (Array.isArray(data.users)) {
-        usersArray = data.users;
-      } else if (Array.isArray(data.data)) {
-        usersArray = data.data;
-      }
-
-      setUsers(usersArray);
-
-    } catch (err) {
-      console.error('Failed to fetch users', err);
-
-      // ✅ PREVENT CRASH
-      setUsers([]);
-    } finally {
+    };
+    
+    if (token) {
+      fetchUsers();
+    } else {
       setLoading(false);
     }
-  };
-
-  if (token) {
-    fetchUsers();
-  } else {
-    setLoading(false);
-  }
 }, [token]);
   // Handlers
   const handleView = (user: any) => {

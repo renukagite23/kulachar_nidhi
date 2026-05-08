@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      'secret_key',
+      process.env.JWT_SECRET || 'fallback_secret_key',
       { expiresIn: '1d' }
     );
 

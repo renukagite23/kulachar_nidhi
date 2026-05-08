@@ -46,8 +46,6 @@ export default function DonorsPage() {
 
                 }
 
-                const data = await res.json();
-
                 console.log('DONATIONS API:', data);
 
                 // ✅ SAFE ARRAY FIX

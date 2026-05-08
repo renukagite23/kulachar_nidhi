@@ -15,7 +15,9 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const totalUsers = await User.countDocuments({ role: 'user' });
+    const totalUsers = await User.countDocuments({ 
+      role: { $nin: ['admin', 'president'] } 
+    });
     const totalDonationsArray = await Donation.aggregate([
       { $match: { paymentStatus: 'completed' } },
       { $group: { _id: null, total: { $sum: '$amount' } } }
