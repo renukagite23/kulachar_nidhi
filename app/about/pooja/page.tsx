@@ -6,7 +6,7 @@ import { Heart, Sparkles, User, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function PoojaPage() {
-  const { t, language } = useLanguage();
+  const { t, lang: language } = useLanguage();
 
   const content = {
     en: {

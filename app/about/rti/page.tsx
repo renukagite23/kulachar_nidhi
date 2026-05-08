@@ -6,7 +6,7 @@ import { FileText, Download, Info, Gavel } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function RTIPage() {
-  const { t, language } = useLanguage();
+  const { t, lang: language } = useLanguage();
 
   const content = {
     en: {

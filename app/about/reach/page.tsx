@@ -6,7 +6,7 @@ import { MapPin, Train, Bus, Plane, Map } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function ReachPage() {
-  const { t, language } = useLanguage();
+  const { t, lang: language } = useLanguage();
 
   const content = {
     en: {

@@ -6,7 +6,7 @@ import { Coffee, Shield, Trash, Users, Zap, Heart } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function FacilitiesPage() {
-  const { t, language } = useLanguage();
+  const { t, lang: language } = useLanguage();
 
   const content = {
     en: {

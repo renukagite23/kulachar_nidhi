@@ -6,7 +6,7 @@ import { Clock, Sun, Moon, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function SchedulePage() {
-  const { t, language } = useLanguage();
+  const { t, lang: language } = useLanguage();
 
   const content = {
     en: {
