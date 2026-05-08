@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function ChatWidget() {
-  const { language } = useLanguage();
+  const { lang } = useLanguage();
 
   return (
     <motion.div
@@ -21,7 +21,7 @@ export default function ChatWidget() {
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-primary animate-pulse" />
           <span className="text-[10px] font-black uppercase tracking-[0.2em] whitespace-nowrap">
-            {language === 'mr' ? 'जय भवानी' : 'JAI BHAVANI'}
+            {lang === 'mr' ? 'जय भवानी' : 'JAI BHAVANI'}
           </span>
           <Sparkles className="w-4 h-4 text-primary animate-pulse" />
         </div>
@@ -29,7 +29,7 @@ export default function ChatWidget() {
         <div className="flex items-center gap-2 mt-1">
           <MessageCircle className="w-5 h-5 fill-white/20" />
           <span className="text-xs font-black uppercase tracking-widest">
-            {language === 'mr' ? 'चॅट करा' : 'CHAT NOW'}
+            {lang === 'mr' ? 'चॅट करा' : 'CHAT NOW'}
           </span>
         </div>
       </button>
