@@ -25,7 +25,10 @@ import {
     Clock,
     ExternalLink,
     MapPin,
-    RefreshCw
+    RefreshCw,
+    TrendingUp,
+    AlertCircle,
+    Activity
 } from 'lucide-react';
 import { format, startOfDay, endOfDay, startOfMonth, endOfMonth } from 'date-fns';
 import * as XLSX from 'xlsx';
@@ -49,7 +52,7 @@ const THEME = {
     warning: '#F2994A'
 };
 
-type TabType = 'all' | 'collector' | 'festival' | 'audit' | 'failed';
+type TabType = 'all' | 'collector' | 'festival' | 'failed';
 
 export default function ReportsPage() {
     const { adminToken: token } = useSelector((state: RootState) => state.adminAuth);
@@ -195,11 +198,8 @@ export default function ReportsPage() {
         } else if (type === 'collector') {
             reportTitle = "Collector Performance Report";
             dataToExport = donations.filter(d => d.collector);
-        } else if (type === 'audit') {
-            reportTitle = "Audit Trail Report";
-            dataToExport = donations; // Full audit
         } else if (type === 'security') {
-            reportTitle = "Security & Failed Payments Report";
+            reportTitle = "Failed Transactions Report";
             dataToExport = donations.filter(d => d.paymentStatus === 'failed');
         }
 
@@ -256,9 +256,20 @@ export default function ReportsPage() {
         }, 300);
     };
 
-    const totalAmount = filteredDonations
-        .filter(d => d.paymentStatus === 'completed' || !d.paymentStatus)
-        .reduce((sum, d) => sum + (d.amount || 0), 0);
+    const stats = {
+        totalAmount: filteredDonations
+            .filter(d => d.paymentStatus === 'completed' || !d.paymentStatus)
+            .reduce((sum, d) => sum + (Number(d.amount) || 0), 0),
+        completed: filteredDonations.filter(d => d.paymentStatus === 'completed' || !d.paymentStatus).length,
+        pending: filteredDonations.filter(d => d.paymentStatus === 'pending').length,
+        failed: filteredDonations.filter(d => d.paymentStatus === 'failed').length,
+        todayCollection: donations
+            .filter(d => {
+                const date = new Date(d.donationDate || d.createdAt);
+                return format(date, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') && (d.paymentStatus === 'completed' || !d.paymentStatus);
+            })
+            .reduce((sum, d) => sum + (Number(d.amount) || 0), 0)
+    };
 
     const totalPages = Math.ceil(filteredDonations.length / itemsPerPage);
     const paginatedData = filteredDonations.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -268,8 +279,8 @@ export default function ReportsPage() {
             <div className="max-w-7xl mx-auto mb-8">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
-                        <h1 className="text-3xl font-black text-secondary tracking-tight">Generate Report </h1>
-                        <p className="text-muted text-sm mt-1 font-medium italic">Certified ledger & donation analytics for Kulachar Nidhi Trust</p>
+                        <h1 className="text-3xl font-black text-secondary tracking-tight">Reports & Analytics</h1>
+                        <p className="text-muted text-sm mt-1 font-medium">Detailed financial ledger and activity logs for Kulachar Nidhi Trust</p>
                     </div>
                     <div className="flex items-center gap-3">
                         <button onClick={() => window.print()} className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold text-secondary hover:bg-gray-50 transition-all shadow-sm">
@@ -285,26 +296,45 @@ export default function ReportsPage() {
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div className="lg:col-span-3 space-y-6">
                     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                        <h3 className="text-xs font-black text-secondary uppercase tracking-widest mb-4 px-2">Live Insights</h3>
-                        <div className="space-y-4">
-                            <div className="p-4 bg-gray-50 rounded-2xl">
-                                <p className="text-[10px] font-black text-secondary/60 uppercase tracking-widest">Total Amount</p>
-                                <h4 className="text-xl font-black text-secondary">₹{totalAmount.toLocaleString('en-IN')}</h4>
+                        <h3 className="text-xs font-black text-secondary uppercase tracking-widest mb-4 px-2">Live Summary</h3>
+                        <div className="grid grid-cols-1 gap-3">
+                            <div className="p-4 bg-orange-50/50 rounded-2xl border border-orange-100/50">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <TrendingUp className="w-3 h-3 text-primary" />
+                                    <p className="text-[9px] font-black text-secondary/60 uppercase tracking-widest">Today's Collection</p>
+                                </div>
+                                <h4 className="text-xl font-black text-secondary">₹{stats.todayCollection.toLocaleString('en-IN')}</h4>
                             </div>
-                            <div className="p-4 bg-gray-50 rounded-2xl">
-                                <p className="text-[10px] font-black text-secondary/60 uppercase tracking-widest">Selected Entries</p>
-                                <h4 className="text-xl font-black text-secondary">{filteredDonations.length} Records</h4>
+                            <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <IndianRupee className="w-3 h-3 text-secondary/40" />
+                                    <p className="text-[9px] font-black text-secondary/60 uppercase tracking-widest">Total Amount</p>
+                                </div>
+                                <h4 className="text-xl font-black text-secondary">₹{stats.totalAmount.toLocaleString('en-IN')}</h4>
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="p-3 bg-green-50/50 rounded-xl border border-green-100/50">
+                                    <p className="text-[8px] font-black text-green-600/60 uppercase tracking-widest mb-1">Completed</p>
+                                    <p className="text-sm font-black text-green-700">{stats.completed}</p>
+                                </div>
+                                <div className="p-3 bg-red-50/50 rounded-xl border border-red-100/50">
+                                    <p className="text-[8px] font-black text-red-600/60 uppercase tracking-widest mb-1">Failed</p>
+                                    <p className="text-sm font-black text-red-700">{stats.failed}</p>
+                                </div>
+                            </div>
+                            <div className="p-3 bg-amber-50/50 rounded-xl border border-amber-100/50">
+                                <p className="text-[8px] font-black text-amber-600/60 uppercase tracking-widest mb-1">Pending Transactions</p>
+                                <p className="text-sm font-black text-amber-700">{stats.pending}</p>
                             </div>
                         </div>
                     </div>
                     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
-                        <h3 className="text-xs font-black text-secondary uppercase tracking-widest mb-6 px-2">Report Types</h3>
+                        <h3 className="text-xs font-black text-secondary uppercase tracking-widest mb-6 px-2">Report Categories</h3>
                         <nav className="space-y-1">
-                            <TabButton active={activeTab === 'all'} onClick={() => setActiveTab('all')} icon={FileText} label="Master History" />
-                            <TabButton active={activeTab === 'collector'} onClick={() => setActiveTab('collector')} icon={Users} label="Collector Summary" />
-                            <TabButton active={activeTab === 'festival'} onClick={() => setActiveTab('festival')} icon={Calendar} label="Festival Funds" />
-                            <TabButton active={activeTab === 'audit'} onClick={() => setActiveTab('audit')} icon={ShieldCheck} label="Security Trail" />
-                            <TabButton active={activeTab === 'failed'} onClick={() => setActiveTab('failed')} icon={XCircle} label="Failed Payments" />
+                            <TabButton active={activeTab === 'all'} onClick={() => setActiveTab('all')} icon={FileText} label="All Donations" />
+                            <TabButton active={activeTab === 'collector'} onClick={() => setActiveTab('collector')} icon={TrendingUp} label="Collector Performance" />
+                            <TabButton active={activeTab === 'festival'} onClick={() => setActiveTab('festival')} icon={Calendar} label="Festival Donations" />
+                            <TabButton active={activeTab === 'failed'} onClick={() => setActiveTab('failed')} icon={AlertCircle} label="Failed Transactions" />
                         </nav>
                     </div>
                 </div>
@@ -314,7 +344,7 @@ export default function ReportsPage() {
                         <div className="flex flex-col md:flex-row gap-4">
                             <div className="flex-1 relative">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
-                                <input type="text" placeholder="Search by Donor, Receipt or Phone..." className="w-full bg-gray-50 border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                                <input type="text" placeholder="Search donor name, receipt number, or mobile..." className="w-full bg-gray-50 border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                             </div>
                             <div className="flex items-center gap-3">
                                 <input type="date" className="bg-gray-50 border-none rounded-2xl py-3 px-4 text-xs font-bold text-secondary focus:ring-2 focus:ring-primary/20" onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))} />
@@ -333,14 +363,13 @@ export default function ReportsPage() {
                                 <p className="text-xs text-secondary/60 font-bold uppercase tracking-widest">Generate and download custom reports</p>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                             <ExportCard icon={FileText} label="Daily Report" onClick={() => handleExportPDF('daily')} color="blue" />
                             <ExportCard icon={Calendar} label="Monthly Report" onClick={() => handleExportPDF('monthly')} color="purple" />
                             <ExportCard icon={MapPin} label="Festival Report" onClick={() => handleExportPDF('festival')} color="green" />
-                            <ExportCard icon={Users} label="Collector Report" onClick={() => handleExportPDF('collector')} color="orange" />
-                            <ExportCard icon={History} label="Donor Report" onClick={() => handleExportPDF('all')} color="indigo" />
-                            <ExportCard icon={ShieldCheck} label="Audit Report" onClick={() => handleExportPDF('audit')} color="amber" />
-                            <ExportCard icon={ShieldCheck} label="Security Report" onClick={() => handleExportPDF('security')} color="red" />
+                            <ExportCard icon={TrendingUp} label="Collector Report" onClick={() => handleExportPDF('collector')} color="orange" />
+                            <ExportCard icon={AlertCircle} label="Failed Payments" onClick={() => handleExportPDF('security')} color="red" />
+                            <ExportCard icon={FileDown} label="Full Donations" onClick={() => handleExport()} color="indigo" />
                         </div>
                     </div>
 
@@ -348,20 +377,25 @@ export default function ReportsPage() {
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="bg-gray-50/50 border-b border-gray-100">
-                                        <th className="px-6 py-5 text-[10px] font-black text-secondary uppercase tracking-widest">Date</th>
-                                        <th className="px-6 py-5 text-[10px] font-black text-secondary uppercase tracking-widest">Donor Details</th>
-                                        <th className="px-6 py-5 text-[10px] font-black text-secondary uppercase tracking-widest">Receipt #</th>
-                                        <th className="px-6 py-5 text-[10px] font-black text-secondary uppercase tracking-widest text-right">Amount</th>
-                                        <th className="px-6 py-5 text-[10px] font-black text-secondary uppercase tracking-widest">Status</th>
-                                        <th className="px-6 py-5 text-[10px] font-black text-secondary uppercase tracking-widest">Action</th>
+                                    <tr className="bg-gray-50/80 border-b border-gray-100">
+                                        <th className="px-6 py-5 text-[10px] font-black text-secondary/50 uppercase tracking-widest">Date & Time</th>
+                                        <th className="px-6 py-5 text-[10px] font-black text-secondary/50 uppercase tracking-widest">Donor Details</th>
+                                        <th className="px-6 py-5 text-[10px] font-black text-secondary/50 uppercase tracking-widest">Receipt No.</th>
+                                        <th className="px-6 py-5 text-[10px] font-black text-secondary/50 uppercase tracking-widest text-right">Amount</th>
+                                        <th className="px-6 py-5 text-[10px] font-black text-secondary/50 uppercase tracking-widest">Status</th>
+                                        <th className="px-6 py-5 text-[10px] font-black text-secondary/50 uppercase tracking-widest">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-50">
                                     {loading ? (
                                         <tr><td colSpan={6} className="px-6 py-20 text-center"><div className="flex flex-col items-center gap-4"><div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" /><p className="text-xs font-black text-secondary uppercase tracking-widest">Fetching Nidhi Records...</p></div></td></tr>
                                     ) : paginatedData.length === 0 ? (
-                                        <tr><td colSpan={6} className="px-6 py-20 text-center text-muted font-medium italic">No records found for the selected criteria.</td></tr>
+                                        <tr><td colSpan={6} className="px-6 py-24 text-center">
+                                            <div className="flex flex-col items-center justify-center gap-3 opacity-50">
+                                                <Search className="w-8 h-8 text-secondary" />
+                                                <p className="text-sm font-bold text-secondary">No donation records found for selected filters.</p>
+                                            </div>
+                                        </td></tr>
                                     ) : paginatedData.map((d, i) => (
                                         <tr key={i} className="hover:bg-gray-50/50 transition-colors group">
                                             <td className="px-6 py-5"><p className="text-sm font-bold text-secondary">{format(new Date(d.donationDate || d.createdAt), 'dd MMM yyyy')}</p><p className="text-[10px] text-secondary/60 font-bold">{format(new Date(d.donationDate || d.createdAt), 'hh:mm a')}</p></td>
@@ -385,15 +419,6 @@ export default function ReportsPage() {
                         </div>
                     </div>
 
-                    {activeTab === 'audit' && (
-                        <div className="bg-secondary rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-12 opacity-10"><ShieldCheck className="w-64 h-64" /></div>
-                            <div className="relative z-10 space-y-6">
-                                <div className="flex items-center gap-3"><div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center"><History className="w-6 h-6 text-primary" /></div><div><h2 className="text-xl font-black">Audit Compliance Report</h2><p className="text-white/70 text-xs font-bold uppercase tracking-widest">Strict traceability for all Nidhi transactions</p></div></div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6"><div className="bg-white/5 border border-white/10 p-5 rounded-2xl"><p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Edited Records</p><p className="text-2xl font-black">04 <span className="text-xs text-white/30">Last 30 Days</span></p></div><div className="bg-white/5 border border-white/10 p-5 rounded-2xl"><p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">Receipt Re-prints</p><p className="text-2xl font-black">12 <span className="text-xs text-white/30">Total History</span></p></div><div className="bg-white/5 border border-white/10 p-5 rounded-2xl"><p className="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1">System Integrity</p><p className="text-2xl font-black text-success">Verified</p></div></div>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </div>
 
@@ -410,9 +435,9 @@ function TabButton({ active, onClick, icon: Icon, label }: any) {
             onClick={onClick}
             className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group ${active ? 'bg-secondary text-white shadow-xl shadow-secondary/20' : 'text-secondary/50 hover:bg-gray-50'}`}
         >
-            <Icon className={`w-5 h-5 ${active ? 'text-primary' : 'text-secondary/30 group-hover:text-secondary'}`} />
-            <span className={`text-sm font-black tracking-tight ${active ? 'text-white' : 'text-secondary/70'}`}>{label}</span>
-            {active && <ChevronRight className="w-4 h-4 ml-auto opacity-50" />}
+            <Icon className={`w-5 h-5 flex-shrink-0 ${active ? 'text-primary' : 'text-secondary/30 group-hover:text-secondary'}`} />
+            <span className={`text-sm font-black tracking-tight text-left leading-tight ${active ? 'text-white' : 'text-secondary/70'}`}>{label}</span>
+            {active && <ChevronRight className="w-4 h-4 ml-auto opacity-50 flex-shrink-0" />}
         </button>
     );
 }
