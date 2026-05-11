@@ -74,9 +74,12 @@ export default function Hero() {
               <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
 
-            <button className="spiritual-button-outline !px-6 !py-3 text-sm md:text-base w-full sm:w-auto hover:bg-white">
+            <Link
+              href="/about/schedule"
+              className="spiritual-button-outline !px-6 !py-3 text-sm md:text-base w-full sm:w-auto hover:bg-white flex items-center justify-center"
+            >
               {t('hero.cta_darshan')}
-            </button>
+            </Link>
           </div>
         </motion.div>
       </div>

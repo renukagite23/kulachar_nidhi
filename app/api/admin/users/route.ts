@@ -96,14 +96,23 @@ export async function GET(req: Request) {
         { $project: { password: 0, allCollections: 0, referrals: 0 } },
         { $sort: { createdAt: -1 } }
       ]);
-      return NextResponse.json(users);
+      return new Response(JSON.stringify(users || []), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
     } else {
       // Default: Return normal users (devotees)
-      const users = await User.find({ role: 'user' }, '-password').sort({ createdAt: -1 });
-      return NextResponse.json(users);
+      const users = await User.find({ role: 'user' }, '-password').sort({ createdAt: -1 }).lean();
+      return new Response(JSON.stringify(users || []), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
   } catch (error: any) {
     console.error('Admin users fetch error:', error);
-    return NextResponse.json({ message: 'Server error' }, { status: 500 });
+    return new Response(JSON.stringify({ message: 'Server error', error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }

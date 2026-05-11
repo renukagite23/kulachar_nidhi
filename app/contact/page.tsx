@@ -134,41 +134,41 @@ export default function ContactPage() {
 
         {/* FULL WIDTH MAP SECTION */}
         <section className="relative h-[600px] w-full bg-muted overflow-hidden border-t border-border">
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3773.5133611849156!2d72.80209267520448!3d18.9750130827055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7ce7464003291%3A0x6b7ce7464003291!2sMahalakshmi%20Temple!5e0!3m2!1sen!2sin!4v1714392000000!5m2!1sen!2sin"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Mahalakshmi Temple Location"
-            ></iframe>
-            
-            {/* Map Overlay Card */}
-            <div className="absolute top-10 left-4 md:left-20 z-10 max-w-xs w-full pointer-events-none">
-                <motion.div 
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    className="bg-white p-6 rounded-3xl shadow-2xl border border-border pointer-events-auto"
-                >
-                    <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest mb-3">
-                        <MapPin className="w-3 h-3" /> Visit Us
-                    </div>
-                    <h4 className="text-lg font-black text-secondary mb-2">Shri Mahalakshmi Temple</h4>
-                    <p className="text-[10px] text-muted-foreground font-bold leading-relaxed mb-4 italic">
-                        Bhulabhai Desai Road, Mahalaxmi West, <br/>Mumbai - 400 026
-                    </p>
-                    <a 
-                        href="https://maps.app.goo.gl/MahalaxmiTemple" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-2 w-full py-3 bg-secondary text-white text-[10px] font-black uppercase rounded-xl hover:bg-primary transition-colors"
-                    >
-                        Open In Google Maps
-                    </a>
-                </motion.div>
-            </div>
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3731.8415774163456!2d74.0583333!3d20.5666667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdd87f94e63f539%3A0x6b7ce7464003291!2sShri%20Ekvira%20Devi%20Temple%2C%20Jaitapur!5e0!3m2!1sen!2sin!4v1714392000000!5m2!1sen!2sin"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Ekavira Devi Temple Location"
+          ></iframe>
+
+          {/* Map Overlay Card */}
+          <div className="absolute top-10 left-4 md:left-20 z-10 max-w-xs w-full pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              className="bg-white p-6 rounded-3xl shadow-2xl border border-border pointer-events-auto"
+            >
+              <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest mb-3">
+                <MapPin className="w-3 h-3" /> Visit Us
+              </div>
+              <h4 className="text-lg font-black text-secondary mb-2">Shri Ekvira Devi Temple</h4>
+              <p className="text-[10px] text-muted-foreground font-bold leading-relaxed mb-4 italic">
+                Jaitapur, Taluka Baglan, <br />District Nashik - 423301
+              </p>
+              <a
+                href="https://maps.app.goo.gl/MahalaxmiTemple"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 bg-secondary text-white text-[10px] font-black uppercase rounded-xl hover:bg-primary transition-colors"
+              >
+                Open In Google Maps
+              </a>
+            </motion.div>
+          </div>
         </section>
       </main>
 

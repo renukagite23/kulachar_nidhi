@@ -13,7 +13,7 @@ export default function TermsPage() {
         <h1 className="text-4xl font-black text-secondary mb-8">Terms of Service</h1>
         <div className="prose prose-slate max-w-none space-y-6 text-gray-600 font-medium leading-relaxed">
           <p>
-            By using the website of Shri Mahalakshmi Temple Trust, you agree to comply with and be bound by the following terms and conditions.
+            By using the website of Shri Kulaswamini Ekavira Devi Mandir Trust, you agree to comply with and be bound by the following terms and conditions.
           </p>
           
           <h2 className="text-2xl font-black text-secondary pt-4">1. Acceptance of Terms</h2>
@@ -28,7 +28,7 @@ export default function TermsPage() {
 
           <h2 className="text-2xl font-black text-secondary pt-4">3. Intellectual Property</h2>
           <p>
-            All content on this website, including text, images, logos, and design, is the property of Shri Mahalakshmi Temple Trust and is protected by copyright laws. Unauthorized use of any content is prohibited.
+            All content on this website, including text, images, logos, and design, is the property of Shri Kulaswamini Ekavira Devi Mandir Trust and is protected by copyright laws. Unauthorized use of any content is prohibited.
           </p>
 
           <h2 className="text-2xl font-black text-secondary pt-4">4. Code of Conduct</h2>

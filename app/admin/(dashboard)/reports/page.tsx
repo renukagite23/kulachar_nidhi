@@ -78,19 +78,38 @@ export default function ReportsPage() {
     const fetchDonations = async () => {
         try {
             setLoading(true);
+
             const res = await fetch('/api/admin/donations', {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
+
             const data = await res.json();
-            setDonations(data);
+
+            console.log("API RESPONSE:", data);
+
+            const donationsArray =
+                Array.isArray(data)
+                    ? data
+                    : data?.donations || data?.data || [];
+
+            setDonations(
+                Array.isArray(donationsArray) ? donationsArray : []
+            );
+
         } catch (err) {
             console.error('Fetch error:', err);
+            setDonations([]);
         } finally {
             setLoading(false);
         }
     };
-
     const filterData = () => {
+        if (!Array.isArray(donations)) {
+            setFilteredDonations([]);
+            return;
+        }
         let filtered = [...donations];
 
         // Search

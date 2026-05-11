@@ -16,11 +16,18 @@ export async function GET() {
     const logs = await ActivityLog.find({})
       .populate('user', 'name role')
       .sort({ createdAt: -1 })
-      .limit(50);
+      .limit(50)
+      .lean();
 
-    return NextResponse.json(logs);
+    return new Response(JSON.stringify(logs || []), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error: any) {
     console.error('Activity logs fetch error:', error);
-    return NextResponse.json({ message: 'Server error' }, { status: 500 });
+    return new Response(JSON.stringify({ message: 'Server error', error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }

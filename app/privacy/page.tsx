@@ -16,7 +16,7 @@ export default function PrivacyPage() {
         <h1 className="text-4xl font-black text-secondary mb-8">Privacy Policy</h1>
         <div className="prose prose-slate max-w-none space-y-6 text-gray-600 font-medium leading-relaxed">
           <p>
-            Shri Mahalakshmi Temple Trust ("we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and disclose your personal information.
+            Shri Kulaswamini Ekavira Devi Mandir Trust ("we", "us", or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and disclose your personal information.
           </p>
 
           <h2 className="text-2xl font-black text-secondary pt-4">1. Information Collection</h2>

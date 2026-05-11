@@ -79,7 +79,7 @@ export async function GET(req: Request) {
 
     const total = await User.countDocuments(query);
 
-    return NextResponse.json({
+    return new Response(JSON.stringify({
       collectors,
       pagination: {
         total,
@@ -87,10 +87,16 @@ export async function GET(req: Request) {
         limit,
         totalPages: Math.ceil(total / limit),
       },
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
     });
   } catch (error: any) {
     console.error('Error fetching collectors:', error);
-    return NextResponse.json({ message: 'Server error' }, { status: 500 });
+    return new Response(JSON.stringify({ message: 'Server error', error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
 

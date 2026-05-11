@@ -167,7 +167,7 @@ export async function GET(req: Request) {
       .limit(20)
       .lean();
 
-    return NextResponse.json({
+    return new Response(JSON.stringify({
       summary: {
         todayTotal,
         monthlyTotal,
@@ -187,10 +187,16 @@ export async function GET(req: Request) {
       topDonors,
       donations, // full list for the table
       recentLogs,
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (error: any) {
     console.error('Reports API error:', error);
-    return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
+    return new Response(JSON.stringify({ message: 'Server error', error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }

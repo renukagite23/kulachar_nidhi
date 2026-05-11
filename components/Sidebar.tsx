@@ -7,9 +7,9 @@ export default function Sidebar() {
   const { t } = useLanguage();
 
   const services = [
-    { name: t('about.online_darshan'), icon: Monitor, href: '/online-darshan' },
-    { name: t('about.news'), icon: Newspaper, href: '/news' },
-    { name: t('about.videos'), icon: Video, href: '/videos' },
+    { name: t('common.online_darshan'), icon: Monitor, href: '/about/schedule' },
+    { name: t('common.news'), icon: Newspaper, href: '/festivals' },
+    { name: t('common.videos'), icon: Video, href: '/gallery' },
   ];
 
   return (
@@ -39,7 +39,7 @@ export default function Sidebar() {
       <div className="rounded-2xl overflow-hidden shadow-md border border-border group">
         <div className="relative h-48">
           <img
-            src="/images/devi3.png"
+            src="/devi.png"
             alt="Temple"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
@@ -61,7 +61,7 @@ export default function Sidebar() {
           <div className="flex gap-3">
             <MapPin className="w-5 h-5 text-accent shrink-0" />
             <p className="text-xs text-white/80 leading-relaxed font-medium">
-              {t('about.mumbai_address')}
+              {t('common.mumbai_address')}
             </p>
           </div>
           <div className="flex gap-3">
@@ -70,7 +70,7 @@ export default function Sidebar() {
           </div>
           <div className="flex gap-3">
             <Mail className="w-5 h-5 text-accent shrink-0" />
-            <p className="text-xs text-white/80 font-bold">contact@mahalakshmitemple.in</p>
+            <p className="text-xs text-white/80 font-bold">info@kuldaivattrust.org</p>
           </div>
         </div>
       </div>

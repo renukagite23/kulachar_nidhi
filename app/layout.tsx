@@ -16,8 +16,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Shri Mahalakshmi Temple Trust",
-  description: "Official portal for Shri Mahalakshmi Temple Trust",
+  title: "Shri Kulaswamini Ekavira Devi Mandir Trust",
+  description: "Official portal for Shri Kulaswamini Ekavira Devi Mandir Trust, Jaitapur",
 };
 export default function RootLayout({ children }: any) {
   return (

@@ -17,8 +17,12 @@ export async function GET() {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const donations = await Donation.find({}).sort({ createdAt: -1 });
-    return NextResponse.json(donations);
+    const donations = await Donation.find({}).sort({ createdAt: -1 }).lean();
+    console.log("Admin API returning donations type:", typeof donations, Array.isArray(donations), donations.length);
+    return new Response(JSON.stringify(donations || []), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
   } catch (error: any) {
     console.error('Admin donations fetch error:', error);
     return NextResponse.json({ message: 'Server error' }, { status: 500 });

@@ -15,8 +15,8 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const totalUsers = await User.countDocuments({ 
-      role: { $nin: ['admin', 'president'] } 
+    const totalUsers = await User.countDocuments({
+      role: { $nin: ['admin', 'president'] }
     });
     const totalDonationsArray = await Donation.aggregate([
       { $match: { paymentStatus: 'completed' } },
@@ -29,7 +29,8 @@ export async function GET() {
 
     const recentTransactions = await Donation.find()
       .sort({ createdAt: -1 })
-      .limit(5);
+      .limit(5)
+      .lean();
 
     const stats = {
       totalUsers,
@@ -39,9 +40,15 @@ export async function GET() {
       recentTransactions,
     };
 
-    return NextResponse.json(stats);
+    return new Response(JSON.stringify(stats), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
   } catch (error: any) {
     console.error('Admin stats error:', error);
-    return NextResponse.json({ message: 'Server error' }, { status: 500 });
+    return new Response(JSON.stringify({ message: 'Server error', error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }
