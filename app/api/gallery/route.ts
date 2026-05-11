@@ -1,25 +1,14 @@
 import { NextResponse } from 'next/server';
-import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
-
-const GallerySchema = new mongoose.Schema(
-  {
-    title: String,
-    image: String,
-  },
-  { timestamps: true }
-);
-
-const Gallery =
-  mongoose.models.Gallery ||
-  mongoose.model('Gallery', GallerySchema);
+import GalleryAsset from '@/models/Gallery';
 
 // ✅ GET IMAGES
 export async function GET() {
   try {
     await dbConnect();
 
-    const images = await Gallery.find().sort({ createdAt: -1 });
+    const images = await GalleryAsset.find().sort({ createdAt: -1 });
+    console.log(`[GALLERY API] Fetched ${images.length} images`);
 
     return NextResponse.json(images);
   } catch (error) {
@@ -39,10 +28,18 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const newImage = await Gallery.create({
-      title: body.title,
-      image: body.image,
+    if (!body.imageUrl) {
+        return NextResponse.json({ error: 'Image URL is required' }, { status: 400 });
+    }
+
+    console.log('[GALLERY API] Creating new image with body:', body);
+
+    const newImage = await GalleryAsset.create({
+      imageUrl: body.imageUrl,
+      caption: body.caption || '',
     });
+
+    console.log('[GALLERY API] Successfully created image:', newImage._id);
 
     return NextResponse.json(newImage, { status: 201 });
   } catch (error) {

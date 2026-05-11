@@ -39,6 +39,7 @@ export default function AdminGalleryPage() {
         try {
             const res = await fetch('/api/gallery', {
                 credentials: 'include',
+                cache: 'no-store'
             });
             const data = await res.json();
             setImages(data);

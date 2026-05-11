@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
-import Gallery from '@/models/Gallery';
+import GalleryAsset from '@/models/Gallery';
 
 export async function DELETE(
     req: Request,
@@ -9,7 +9,7 @@ export async function DELETE(
     await dbConnect();
     const { id } = await params;
 
-    await Gallery.findByIdAndDelete(id);
+    await GalleryAsset.findByIdAndDelete(id);
 
     return NextResponse.json({ success: true });
 }
