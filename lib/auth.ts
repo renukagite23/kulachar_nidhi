@@ -22,10 +22,10 @@ export async function getDataFromToken() {
     }
 
     const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_key');
-    console.log('AUTH DEBUG: Token verified successfully for role:', decodedToken?.role);
+    console.log('AUTH SUCCESS: Token verified for role:', decodedToken?.role);
     return decodedToken;
   } catch (error: any) {
-    console.error('AUTH DEBUG: Token verification failed:', error.message);
+    console.error('AUTH ERROR: Token verification failed:', error.message);
     return null;
   }
 }

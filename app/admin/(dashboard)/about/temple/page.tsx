@@ -1,18 +1,48 @@
 'use client';
 
-import React from 'react';
-import { Construction, Info } from 'lucide-react';
+import React, { useState } from 'react';
+import { History, MapPin } from 'lucide-react';
+import HistoryForm from './HistoryForm';
+import ReachForm from './ReachForm';
 
 export default function AboutTemplePage() {
+    const [activeSection, setActiveSection] = useState<'history' | 'reach'>('history');
+
     return (
-        <div className="p-8 max-w-7xl mx-auto h-full flex flex-col items-center justify-center text-center">
-            <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center text-primary mb-6 animate-pulse">
-                <Construction className="w-10 h-10" />
+        <div className="space-y-8">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-black text-secondary tracking-tight">ABOUT TEMPLE</h1>
+                    <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em] mt-1">Global Information Management</p>
+                </div>
+
+                <div className="flex bg-white p-1.5 rounded-2xl border border-gray-100 shadow-sm">
+                    <button
+                        onClick={() => setActiveSection('history')}
+                        className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeSection === 'history'
+                            ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                            : 'text-muted-foreground hover:bg-gray-50'
+                            }`}
+                    >
+                        <History className="w-3 h-3" />
+                        Temple History
+                    </button>
+                    <button
+                        onClick={() => setActiveSection('reach')}
+                        className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeSection === 'reach'
+                            ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                            : 'text-muted-foreground hover:bg-gray-50'
+                            }`}
+                    >
+                        <MapPin className="w-3 h-3" />
+                        How to Reach
+                    </button>
+                </div>
             </div>
-            <h1 className="text-3xl font-black text-secondary tracking-tight">About Temple Module</h1>
-            <p className="text-muted-foreground text-sm mt-2 font-medium max-w-md">
-                This module is under development and will allow you to manage the temple's history, architecture, and religious significance.
-            </p>
+
+            {/* Form Rendering */}
+            {activeSection === 'history' ? <HistoryForm /> : <ReachForm />}
         </div>
     );
 }

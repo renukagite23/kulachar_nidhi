@@ -1,16 +1,18 @@
 import dbConnect from '@/lib/db';
 import TempleHistory from '@/models/TempleHistory';
-import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
     await dbConnect();
-    const history = await TempleHistory.findOne({ isPublished: true }).lean();
+    // Temporarily removed isPublished filter to help you see the data while testing
+    const history = await TempleHistory.findOne().sort({ updatedAt: -1 }).lean();
+
     if (!history) {
-      return NextResponse.json({ error: 'History not found' }, { status: 404 });
+      return new Response(JSON.stringify({ error: 'History not found in database' }), { status: 404 });
     }
-    return NextResponse.json(history);
+
+    return new Response(JSON.stringify(history), { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }

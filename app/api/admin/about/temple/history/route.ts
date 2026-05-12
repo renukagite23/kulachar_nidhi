@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import dbConnect from '@/lib/db';
 import TempleHistory from '@/models/TempleHistory';
 import { getDataFromToken } from '@/lib/auth';
@@ -9,13 +9,13 @@ export async function GET(req: NextRequest) {
     await dbConnect();
     const user = await getDataFromToken();
     if (!user || !hasAdminAccess(user)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
 
     const history = await TempleHistory.findOne().lean();
-    return NextResponse.json(history || {});
+    return new Response(JSON.stringify(history || {}), { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     await dbConnect();
     const user = await getDataFromToken();
     if (!user || !hasAdminAccess(user)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     }
 
     const body = await req.json();
@@ -37,8 +37,8 @@ export async function POST(req: NextRequest) {
       history = await TempleHistory.create(body);
     }
 
-    return NextResponse.json(history);
+    return new Response(JSON.stringify(history), { status: 200 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }
