@@ -7,106 +7,156 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function TrusteesPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const [trustees, setTrustees] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
 
-  const trustees = [
-    {
-      name: t('trustees.names.gokhale'),
-      role: t('trustees.roles.president_judge'),
-      image: '/images/dummy1.png',
-      large: true
-    },
-    {
-      name: t('trustees.names.deshpande'),
-      role: t('trustees.roles.vice_president_judge'),
-      image: '/images/dummy2.png',
-      large: true
-    },
-    {
-      name: t('trustees.names.kulkarni_r'),
-      role: t('trustees.roles.trustee'),
-      image: '/images/dummy1.png'
-    },
-    {
-      name: t('trustees.names.joshi'),
-      role: t('trustees.roles.trustee'),
-      image: '/images/dummy1.png'
-    },
-    {
-      name: t('trustees.names.patwardhan'),
-      role: t('trustees.roles.trustee'),
-      image: '/images/dummy1.png'
+  React.useEffect(() => {
+    fetchTrustees();
+  }, []);
+
+  const fetchTrustees = async () => {
+    try {
+      const res = await fetch('/api/about/trustees');
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setTrustees(data);
+      }
+    } catch (error) {
+      console.error('Error fetching trustees:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
-
-  const trusteesRow3 = [
-    {
-      name: t('trustees.names.kulkarni_s'),
-      role: t('trustees.roles.trustee'),
-      image: '/images/dummy2.png'
-    },
-    {
-      name: t('trustees.names.bhave'),
-      role: t('trustees.roles.trustee'),
-      image: '/images/dummy1.png'
-    },
-    {
-      name: t('trustees.names.ranade'),
-      role: t('trustees.roles.trustee'),
-      image: '/images/dummy1.png'
-    }
-  ];
-
-  const administrator = {
-    name: t('trustees.names.sane'),
-    role: t('trustees.roles.executive_officer'),
-    image: '/images/dummy1.png'
   };
 
+  const getLocalized = (item: any) => {
+    const langKey = lang === 'en' ? 'english' : 'marathi';
+    return item[langKey] || item.english;
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-white">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="animate-pulse flex flex-col items-center gap-4">
+            <div className="w-16 h-16 bg-gray-100 rounded-full" />
+            <div className="h-4 w-32 bg-gray-100 rounded" />
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Row logic: 2, 3, 3, 1
+  const row1 = trustees.slice(0, 2);
+  const row2 = trustees.slice(2, 5);
+  const row3 = trustees.slice(5, 8);
+  const row4 = trustees.slice(8, 9);
+  const remaining = trustees.slice(9);
+
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-[#FFFDF9]">
       <Navbar />
 
-      <main className="flex-grow py-16 md:py-24">
+      <main className="flex-grow py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <motion.h1 
+
+          {/* Header */}
+          <div className="text-center mb-24">
+            <motion.h1
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-3xl md:text-4xl font-black text-[#A02020] mb-4"
+              className="text-2xl md:text-4xl font-black text-[#A02020] mb-4 tracking-tight"
             >
-              {t('trustees.title')}
+              {lang === 'mr' ? 'अध्यक्ष व विश्वस्त मंडळ' : 'President & Board of Trustees'}
             </motion.h1>
-            <div className="h-1 w-24 bg-[#A02020]/20 mx-auto rounded-full" />
-          </div>
-
-          <div className="space-y-20">
-            {/* Row 1 - 2 Trustees */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 max-w-4xl mx-auto">
-              {trustees.slice(0, 2).map((item, idx) => (
-                <TrusteeCard key={idx} {...item} />
-              ))}
-            </div>
-
-            {/* Row 2 - 3 Trustees */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto pb-12 border-b border-gray-100">
-              {trustees.slice(2, 5).map((item, idx) => (
-                <TrusteeCard key={idx} {...item} />
-              ))}
-            </div>
-
-            {/* Row 3 - 3 Trustees */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto pb-12 border-b border-gray-100">
-              {trusteesRow3.map((item, idx) => (
-                <TrusteeCard key={idx} {...item} />
-              ))}
-            </div>
-
-            {/* Row 4 - 1 Administrator */}
-            <div className="max-w-xs mx-auto">
-              <TrusteeCard {...administrator} />
+            <div className="h-[3px] w-32 bg-[#A02020]/20 mx-auto rounded-full relative">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-12 bg-[#A02020]/40 rounded-full" />
             </div>
           </div>
+
+          {trustees.length > 0 ? (
+            <div className="space-y-16">
+
+              {/* Row 1: 2 items (Large) */}
+              {row1.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-16 md:gap-32">
+                  {row1.map((trustee, idx) => (
+                    <TrusteeCard
+                      key={trustee._id}
+                      data={getLocalized(trustee)}
+                      image={trustee.image}
+                      large
+                      index={idx}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Row 2: 3 items */}
+              {row2.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-12 md:gap-24">
+                  {row2.map((trustee, idx) => (
+                    <TrusteeCard
+                      key={trustee._id}
+                      data={getLocalized(trustee)}
+                      image={trustee.image}
+                      index={idx + 2}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Row 3: 3 items */}
+              {row3.length > 0 && (
+                <div className="flex flex-wrap justify-center gap-12 md:gap-24">
+                  {row3.map((trustee, idx) => (
+                    <TrusteeCard
+                      key={trustee._id}
+                      data={getLocalized(trustee)}
+                      image={trustee.image}
+                      index={idx + 5}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Row 4: 1 item (Center) */}
+              {row4.length > 0 && (
+                <div className="flex justify-center">
+                  {row4.map((trustee, idx) => (
+                    <TrusteeCard
+                      key={trustee._id}
+                      data={getLocalized(trustee)}
+                      image={trustee.image}
+                      index={idx + 8}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Remaining items in a grid */}
+              {remaining.length > 0 && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 pt-16 border-t border-gray-100">
+                  {remaining.map((trustee, idx) => (
+                    <TrusteeCard
+                      key={trustee._id}
+                      data={getLocalized(trustee)}
+                      image={trustee.image}
+                      index={idx + 9}
+                    />
+                  ))}
+                </div>
+              )}
+
+            </div>
+          ) : (
+            <div className="text-center py-20">
+              <p className="text-gray-400 font-medium italic">No trustee information available.</p>
+            </div>
+          )}
         </div>
       </main>
 
@@ -115,28 +165,30 @@ export default function TrusteesPage() {
   );
 }
 
-function TrusteeCard({ name, role, image, large = false }: any) {
+function TrusteeCard({ data, image, large = false, index }: any) {
   return (
-    <motion.div 
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
       className="text-center group"
     >
-      <div className={`relative mx-auto mb-6 ${large ? 'w-48 h-48 md:w-56 md:h-56' : 'w-40 h-40 md:w-44 md:h-44'}`}>
-        <div className="absolute inset-0 rounded-full border-4 border-white shadow-xl overflow-hidden ring-1 ring-gray-200 bg-muted">
-          <img 
-            src={image} 
-            alt={name} 
-            className="w-full h-full object-cover transition-all duration-500 hover:scale-110"
+      <div className={`relative mx-auto mb-4 ${large ? 'w-40 h-40 md:w-52 md:h-52' : 'w-32 h-32 md:w-40 md:h-40'}`}>
+        <div className="absolute inset-0 rounded-full border-[4px] border-white shadow-lg overflow-hidden ring-1 ring-gray-100 bg-muted">
+          <img
+            src={image || '/images/dummy1.png'}
+            alt={data.name}
+            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
           />
         </div>
       </div>
-      <div className="space-y-2">
-        <h3 className="text-lg md:text-xl font-bold text-gray-900 leading-tight">
-          {name}
+      <div className="space-y-1">
+        <h3 className={`font-bold text-gray-900 leading-tight ${large ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'}`}>
+          {data.name}
         </h3>
-        <p className="text-xs md:text-sm text-gray-500 font-medium whitespace-pre-line max-w-[200px] mx-auto">
-          {role}
+        <p className={`text-gray-500 font-medium whitespace-pre-line max-w-[220px] mx-auto ${large ? 'text-sm md:text-base' : 'text-[10px] md:text-xs'}`}>
+          {data.designation}
         </p>
       </div>
     </motion.div>

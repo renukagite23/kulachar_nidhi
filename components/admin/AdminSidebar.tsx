@@ -11,6 +11,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   ShieldCheck,
   Bell,
   User,
@@ -35,6 +36,15 @@ export default function AdminSidebar() {
       title: 'Dashboard',
       icon: LayoutDashboard,
       href: '/admin/dashboard',
+    },
+    {
+      title: 'About',
+      icon: User,
+      isExpandable: true,
+      subItems: [
+        { title: 'About Temple', href: '/admin/about/temple' },
+        { title: 'About Trust', href: '/admin/about/trust' },
+      ],
     },
     {
       title: 'Registered Users',
@@ -94,6 +104,14 @@ export default function AdminSidebar() {
     router.push('/admin');
   };
 
+  const [expandedMenus, setExpandedMenus] = React.useState<string[]>(['About']);
+
+  const toggleMenu = (title: string) => {
+    setExpandedMenus(prev =>
+      prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title]
+    );
+  };
+
   return (
     <div
       className={`h-screen flex flex-col bg-secondary text-white transition-all duration-300 relative border-r border-white/5 ${isCollapsed ? 'w-20' : 'w-72'
@@ -115,13 +133,60 @@ export default function AdminSidebar() {
       {/* Profile Section Removed as requested */}
 
       {/* Navigation */}
-      <nav className="flex-grow overflow-y-auto overflow-x-hidden p-4 mt-4 space-y-2 scrollbar-thin">
+      <nav className="flex-grow overflow-y-auto overflow-x-hidden p-4 mt-4 space-y-1 scrollbar-thin">
         {menuItems.map((item) => {
+          if (item.isExpandable) {
+            const isExpanded = expandedMenus.includes(item.title);
+            const isAnySubActive = item.subItems?.some(sub => pathname === sub.href);
+
+            return (
+              <div key={item.title} className="space-y-1">
+                <button
+                  onClick={() => toggleMenu(item.title)}
+                  className={`flex items-center gap-4 w-full px-4 py-3.5 rounded-xl transition-all group ${isAnySubActive && !isExpanded
+                    ? 'bg-primary/20 text-white'
+                    : 'text-white/60 hover:bg-white/5 hover:text-white'
+                    }`}
+                >
+                  <item.icon className={`w-5 h-5 shrink-0 ${isAnySubActive ? 'text-white' : 'text-primary'}`} />
+                  {!isCollapsed && (
+                    <>
+                      <span className="font-bold text-sm tracking-wide">{item.title}</span>
+                      <div className="ml-auto">
+                        {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                      </div>
+                    </>
+                  )}
+                </button>
+
+                {!isCollapsed && isExpanded && (
+                  <div className="ml-9 space-y-1 mt-1">
+                    {item.subItems?.map((sub) => {
+                      const isSubActive = pathname === sub.href;
+                      return (
+                        <Link
+                          key={sub.href}
+                          href={sub.href}
+                          className={`flex items-center gap-4 px-4 py-2.5 rounded-lg transition-all ${isSubActive
+                            ? 'bg-primary text-white shadow-lg shadow-primary/10'
+                            : 'text-white/40 hover:text-white hover:bg-white/5'
+                            }`}
+                        >
+                          <span className="font-bold text-xs">{sub.title}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          }
+
           const isActive = pathname === item.href;
           return (
             <Link
-              key={item.href}
-              href={item.href}
+              key={item.href || item.title}
+              href={item.href || '#'}
               className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all group ${isActive
                 ? 'bg-primary text-white shadow-xl shadow-primary/20'
                 : 'text-white/60 hover:bg-white/5 hover:text-white'
