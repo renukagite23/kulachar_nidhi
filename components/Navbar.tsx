@@ -9,7 +9,8 @@ import { logout } from '@/redux/slices/authSlice';
 import { useLanguage } from '@/lib/LanguageContext';
 import {
   Languages, Phone, Clock, MapPin, Menu, X,
-  HandHeart, Sparkles, User, History, LogOut, LayoutDashboard, Users2, ChevronDown
+  HandHeart, Sparkles, User, History, LogOut, LayoutDashboard, Users2, ChevronDown,
+  Flame, Building2, Info, Receipt
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -37,6 +38,16 @@ export default function Navbar() {
     router.push('/');
     setShowProfileMenu(false);
   };
+
+  const templeItems = [
+    { key: 'history', href: '/about/history', icon: History },
+    { key: 'schedule', href: '/about/schedule', icon: Clock },
+    { key: 'pooja', href: '/about/pooja', icon: Flame },
+    { key: 'reach', href: '/about/reach', icon: MapPin },
+    { key: 'facilities', href: '/about/facilities', icon: Building2 },
+    { key: 'rti', href: '/about/rti', icon: Info },
+    { key: 'charges', href: '/about/charges', icon: Receipt }
+  ];
 
   return (
     <header className="w-full relative z-[100]">
@@ -96,16 +107,9 @@ export default function Navbar() {
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       className="absolute left-0 mt-1 w-64 bg-white rounded-2xl shadow-2xl border border-border py-3 z-[110] overflow-hidden"
                     >
-                      {[
-                        { key: 'history', href: '/about/history' },
-                        { key: 'schedule', href: '/about/schedule' },
-                        { key: 'pooja', href: '/about/pooja' },
-                        { key: 'reach', href: '/about/reach' },
-                        { key: 'facilities', href: '/about/facilities' },
-                        { key: 'rti', href: '/about/rti' },
-                        { key: 'charges', href: '/about/charges' }
-                      ].map(item => (
-                        <Link key={item.key} href={item.href} className="block px-4 py-2 text-sm text-secondary hover:bg-primary/5 hover:text-primary font-bold transition-colors">
+                      {templeItems.map(item => (
+                        <Link key={item.key} href={item.href} className="flex items-center gap-3 px-4 py-2 text-sm text-secondary hover:bg-primary/5 hover:text-primary font-bold transition-colors">
+                          <item.icon className="w-4 h-4 text-primary" />
                           {t(`about.${item.key}`)}
                         </Link>
                       ))}
@@ -322,16 +326,9 @@ export default function Navbar() {
                         exit={{ height: 0, opacity: 0 }}
                         className="pl-6 space-y-1 overflow-hidden"
                       >
-                        {[
-                          { key: 'history', href: '/about/history' },
-                          { key: 'schedule', href: '/about/schedule' },
-                          { key: 'pooja', href: '/about/pooja' },
-                          { key: 'reach', href: '/about/reach' },
-                          { key: 'facilities', href: '/about/facilities' },
-                          { key: 'rti', href: '/about/rti' },
-                          { key: 'charges', href: '/about/charges' }
-                        ].map(item => (
-                          <Link key={item.key} href={item.href} onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs font-bold text-secondary/60">
+                        {templeItems.map(item => (
+                          <Link key={item.key} href={item.href} onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-2 text-xs font-bold text-secondary/60">
+                            <item.icon className="w-3.5 h-3.5 text-primary" />
                             {t(`about.${item.key}`)}
                           </Link>
                         ))}
