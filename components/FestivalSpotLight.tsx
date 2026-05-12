@@ -125,7 +125,7 @@ export default function FestivalSpotlight() {
                       href="/festivals"
                       className="inline-flex items-center gap-2 text-primary hover:text-orange-600 font-bold text-sm transition-all duration-300"
                     >
-                      {lang === 'mr' ? 'अधिक माहिती' : 'Explore Event'}
+                      {t('festival.explore')}
                       <ArrowRight size={18} />
                     </Link>
                   </div>

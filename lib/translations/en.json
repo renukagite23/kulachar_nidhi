@@ -239,9 +239,10 @@
   },
   "festival": {
     "badge": "Divine Celebrations",
-    "title": "Upcoming Events",
+    "title": "Temple Festivals & Events",
     "subtitle": "Celebrate culture, traditions, and community gatherings.",
-    "view": "View Events Calendar",
+    "view": "Explore More",
+    "explore": "Explore Event",
     "page_subtitle": "Celebrate the Divine Grace of Goddess Ekavira",
     "tripuri": "Tripuri Pournima Deepotsav",
     "tripuri_subtitle": "Celebration of lights and devotion since 2017",
