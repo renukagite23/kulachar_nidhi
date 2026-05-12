@@ -1,46 +1,18 @@
 import React from 'react';
-import { Monitor, Newspaper, Video, MapPin, Phone, Mail } from 'lucide-react';
-import Link from 'next/link';
+import { MapPin, Phone, Mail } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function Sidebar() {
   const { t } = useLanguage();
 
-  const services = [
-    { name: t('common.online_darshan'), icon: Monitor, href: '/about/schedule' },
-    { name: t('common.news'), icon: Newspaper, href: '/festivals' },
-    { name: t('common.videos'), icon: Video, href: '/gallery' },
-  ];
-
   return (
     <aside className="space-y-8">
-      {/* Quick Services */}
-      <div className="bg-white rounded-2xl shadow-sm border border-border p-6">
-        <h3 className="text-sm font-black text-secondary uppercase tracking-wider mb-6 pb-2 border-b-2 border-primary w-fit">
-          {t('about.sidebar_title')}
-        </h3>
-        <div className="space-y-3">
-          {services.map((service, index) => (
-            <Link
-              key={index}
-              href={service.href}
-              className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-primary/30 hover:bg-muted transition-all group"
-            >
-              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <service.icon className="w-5 h-5 text-primary" />
-              </div>
-              <span className="font-bold text-secondary text-sm">{service.name}</span>
-            </Link>
-          ))}
-        </div>
-      </div>
-
       {/* Temple Image Card */}
       <div className="rounded-2xl overflow-hidden shadow-md border border-border group">
-        <div className="relative h-48">
+        <div className="relative aspect-[3/4]">
           <img
             src="/devi.png"
-            alt="Temple"
+            alt="Shri Ekavira Devi"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -77,4 +49,3 @@ export default function Sidebar() {
     </aside>
   );
 }
-
