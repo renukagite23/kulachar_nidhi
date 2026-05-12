@@ -9,7 +9,7 @@ export default function RenovationCampaign() {
   const { t } = useLanguage();
 
   return (
-    <section className="relative py-20 bg-gradient-to-b from-orange-50 to-white overflow-hidden">
+    <section className="relative pt-20 pb-12 bg-gradient-to-b from-orange-50 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
         <div className="grid lg:grid-cols-2 gap-14 items-center">
           {/* LEFT CONTENT */}

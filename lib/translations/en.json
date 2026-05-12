@@ -11,7 +11,10 @@
     "donate": "Donate",
     "book_pooja": "Book Pooja",
     "logo_title": "Shri Kulaswamini Ekavira Devi Mandir",
-    "logo_subtitle": "Jaitapur, Maharashtra"
+    "logo_subtitle": "Jaitapur, Maharashtra",
+    "login": "Login",
+    "photos": "Photos",
+    "videos": "Videos"
   },
   "hero": {
     "mantra": "|| Om Shri Ekvira Devyai Namah ||",
@@ -224,6 +227,7 @@
     }
   },
   "gallery": {
+    "badge": "Temple Gallery",
     "title": "Photo Gallery",
     "subtitle": "Experience the divine beauty and sacred moments of Shri Ekavira Devi Temple.",
     "festival_desc": "Snapshots of tradition, devotion, and the architectural splendor of Goddess Ekavira's abode.",

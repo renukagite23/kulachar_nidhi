@@ -57,23 +57,17 @@ export default function GallerySection() {
   }, [t]);
 
   return (
-    <section id="gallery" className="py-20 md:py-32 bg-white overflow-hidden">
+    <section id="gallery" className="pt-12 md:pt-16 pb-12 md:pb-16 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="flex flex-col items-center text-center mb-16">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-primary font-bold text-xs uppercase tracking-[0.3em]">{t('gallery.badge')}</span>
+        <div className="flex flex-col items-center text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest mb-4 shadow-sm">
+             ✨ {t('gallery.badge') || "Sacred Vision"}
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-secondary tracking-tight mb-6">{t('gallery.title')}</h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-transparent via-primary to-transparent mb-8" />
-          
-          <Link href="/gallery" className="group flex items-center gap-2 text-xs font-black text-muted-foreground hover:text-primary transition-all duration-300">
-            {t('gallery.view_all')} 
-            <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center group-hover:border-primary group-hover:bg-primary group-hover:text-white transition-all">
-               <ArrowRight className="w-4 h-4" />
-            </div>
-          </Link>
+          <h2 className="text-2xl md:text-3xl font-black text-secondary tracking-tight">
+            {t('gallery.title')}
+          </h2>
+          <div className="h-1 w-12 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-full mt-4" />
         </div>
 
         {/* Dynamic Staggered Grid Layout */}
@@ -132,10 +126,11 @@ export default function GallerySection() {
           ))}
         </div>
 
-        {/* Mobile View All */}
-        <div className="mt-12 md:hidden">
-          <Link href="/gallery" className="w-full spiritual-button !py-5 text-sm flex justify-center items-center gap-2">
-            {t('gallery.view_all')} <ArrowRight className="w-4 h-4" />
+        {/* View More Button - Centered below grid */}
+        <div className="mt-16 flex justify-center">
+          <Link href="/gallery" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3.5 rounded-2xl text-sm font-black uppercase tracking-widest shadow-xl shadow-orange-200 transition-all duration-300 flex items-center gap-3 group">
+            {t('gallery.view_all') || "View Full Gallery"}
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>

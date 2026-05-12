@@ -19,8 +19,10 @@ export default function Navbar() {
   const [showProfileMenu, setShowProfileMenu] = React.useState(false);
   const [showTempleMenu, setShowTempleMenu] = React.useState(false);
   const [showTrustMenu, setShowTrustMenu] = React.useState(false);
+  const [showGalleryMenu, setShowGalleryMenu] = React.useState(false);
   const [isTempleOpen, setIsTempleOpen] = React.useState(false);
   const [isTrustOpen, setIsTrustOpen] = React.useState(false);
+  const [isGalleryOpen, setIsGalleryOpen] = React.useState(false);
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
   const [mounted, setMounted] = React.useState(false);
   const dispatch = useDispatch();
@@ -70,7 +72,7 @@ export default function Navbar() {
             </div>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="hidden md:flex items-center space-x-2 ml-auto">
               <Link href="/" className="text-secondary/80 hover:text-primary font-bold transition-colors px-4 py-2 text-sm rounded-xl hover:bg-muted/50">
                 {t('nav.home')}
               </Link>
@@ -142,9 +144,35 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
 
-              <Link href="/gallery" className="text-secondary/80 hover:text-primary font-bold transition-colors px-4 py-2 text-sm rounded-xl hover:bg-muted/50">
-                {t('nav.gallery')}
-              </Link>
+              {/* Gallery Dropdown */}
+              <div
+                className="relative"
+                onMouseEnter={() => setShowGalleryMenu(true)}
+                onMouseLeave={() => setShowGalleryMenu(false)}
+              >
+                <button className="text-secondary/80 hover:text-primary font-bold transition-colors px-4 py-2 text-sm rounded-xl hover:bg-muted/50 flex items-center gap-1">
+                  {t('nav.gallery')}
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${showGalleryMenu ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {showGalleryMenu && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute left-0 mt-1 w-48 bg-white rounded-2xl shadow-2xl border border-border py-3 z-[110] overflow-hidden"
+                    >
+                      <Link href="/gallery" className="block px-4 py-2 text-sm text-secondary hover:bg-primary/5 hover:text-primary font-bold transition-colors">
+                        {t('nav.photos')}
+                      </Link>
+                      <Link href="/gallery/videos" className="block px-4 py-2 text-sm text-secondary hover:bg-primary/5 hover:text-primary font-bold transition-colors">
+                        {t('nav.videos')}
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               <Link href="/festivals" className="text-secondary/80 hover:text-primary font-bold transition-colors px-4 py-2 text-sm rounded-xl hover:bg-muted/50">
                 {t('nav.festivals')}
@@ -156,7 +184,7 @@ export default function Navbar() {
 
               {/* Actions */}
 
-              <div className="flex items-center gap-3 ml-6 border-l border-border/50 pl-6">
+              <div className="flex items-center gap-4 ml-8 border-l border-border/50 pl-8">
                 {/* Highlighted Language Toggle */}
                 <button
                   onClick={() => setLang(lang === 'en' ? 'mr' : 'en')}
@@ -220,8 +248,12 @@ export default function Navbar() {
                       </AnimatePresence>
                     </div>
                   ) : (
-                    <Link href="/login" className="spiritual-button-outline !px-6 !py-2.5 text-xs">
-                      <User className="w-4 h-4" /> Login
+                    <Link
+                      href="/login"
+                      className="w-10 h-10 rounded-full bg-muted flex items-center justify-center border-2 border-border hover:border-primary transition-all overflow-hidden group"
+                      title={t('nav.login') || 'Login'}
+                    >
+                      <User className="w-5 h-5 text-secondary group-hover:text-primary transition-colors" />
                     </Link>
                   )
                 )}
@@ -332,9 +364,29 @@ export default function Navbar() {
                   </AnimatePresence>
                 </div>
 
-                <Link href="/gallery" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-sm font-bold text-secondary hover:bg-muted rounded-xl transition-colors">
-                  {t('nav.gallery')}
-                </Link>
+                {/* Mobile Gallery Dropdown */}
+                <div className="space-y-1">
+                  <button
+                    onClick={() => setIsGalleryOpen(!isGalleryOpen)}
+                    className="w-full flex justify-between items-center px-4 py-3 text-sm font-bold text-secondary hover:bg-muted rounded-xl transition-colors"
+                  >
+                    {t('nav.gallery')}
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isGalleryOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  <AnimatePresence>
+                    {isGalleryOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="pl-6 space-y-1 overflow-hidden"
+                      >
+                        <Link href="/gallery" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs font-bold text-secondary/60">{t('nav.photos')}</Link>
+                        <Link href="/gallery/videos" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs font-bold text-secondary/60">{t('nav.videos')}</Link>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
 
                 <Link href="/festivals" onClick={() => setIsOpen(false)} className="block px-4 py-3 text-sm font-bold text-secondary hover:bg-muted rounded-xl transition-colors">
                   {t('nav.festivals')}

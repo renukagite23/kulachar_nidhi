@@ -17,7 +17,8 @@ import {
   User,
   FileText,
   Calendar,
-  GalleryHorizontal
+  GalleryHorizontal,
+  Video as VideoIcon
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminLogout } from '@/redux/slices/adminAuthSlice';
@@ -90,6 +91,11 @@ export default function AdminSidebar() {
       title: 'Gallery',
       icon: GalleryHorizontal,
       href: '/admin/gallery'
+    },
+    {
+      title: 'Videos',
+      icon: VideoIcon,
+      href: '/admin/videos'
     },
 
     {

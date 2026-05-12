@@ -32,74 +32,161 @@ export default function Home() {
         {/* Gallery Section */}
         <GallerySection />
 
-        <section className="py-14 md:py-16 bg-gradient-to-b from-white via-orange-50 to-amber-50 relative overflow-hidden">
-          {/* Glow */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,153,0,0.15),_transparent_70%)] pointer-events-none"></div>
 
-          {/* Floating Blur Shapes */}
-          <div className="absolute top-10 left-10 w-40 h-40 bg-orange-200 rounded-full blur-3xl opacity-20"></div>
-          <div className="absolute bottom-10 left-1/3 w-32 h-32 bg-amber-300 rounded-full blur-2xl opacity-20"></div>
-          <div className="absolute top-1/2 right-10 w-36 h-36 bg-orange-300 rounded-full blur-3xl opacity-20"></div>
 
-          {/* Samai */}
-          <img
-            src="/images/samai.png"
-            alt="samai"
-            className="absolute bottom-0 right-10 w-40 opacity-10 pointer-events-none"
-          />
+        <FestivalSpotLight />
 
-          <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
-            {/* Heading */}
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-              <span className="text-primary font-bold text-[10px] md:text-[11px] uppercase tracking-[0.2em]">
-                {t('donation.badge')}
-              </span>
-            </div>
+        <section className="relative py-12 overflow-hidden bg-gradient-to-br from-orange-50 via-white to-yellow-50">
 
-            <h2 className="text-3xl md:text-4xl font-black text-secondary tracking-tight mb-4">
-              {t('donations.title')}
-            </h2>
+          {/* Background Glow */}
+          <div className="absolute top-0 left-0 w-60 h-60 bg-orange-200/20 blur-3xl rounded-full"></div>
+          <div className="absolute bottom-0 right-0 w-60 h-60 bg-yellow-100/30 blur-3xl rounded-full"></div>
 
-            <p className="text-gray-600 max-w-2xl mx-auto mb-8 text-sm md:text-base">
-              {t('donations.subtitle')}
-            </p>
+          <div className="max-w-7xl mx-auto px-56 lg:px-6 relative z-10">
 
-            {/* Donation Card */}
-            <div className="bg-white/80 backdrop-blur-md border border-orange-100 rounded-xl shadow-md p-6 md:p-7 hover:shadow-lg transition">
-              {/* Amount Buttons */}
-              <div className="flex flex-wrap justify-center gap-2 mb-4">
-                {["₹101", "₹501", "₹1100", "₹2100"].map((amt) => (
-                  <button
-                    key={amt}
-                    className="px-4 py-1.5 text-sm rounded-full border border-primary text-primary hover:bg-primary hover:text-white transition"
-                  >
-                    {amt}
-                  </button>
-                ))}
-              </div>
+            {/* MAIN CARD */}
+            <div className="relative bg-white rounded-[28px] shadow-[0_15px_45px_rgba(0,0,0,0.08)] overflow-hidden border border-orange-100">
 
-              {/* CTA */}
-              <a
-                href="/donation"
-                className="inline-block bg-primary text-white px-6 py-2.5 rounded-md text-sm font-semibold hover:bg-orange-600 transition transform hover:scale-105"
-              >
-                {t('donations.cta')} →
-              </a>
+              {/* TOP STRIP */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400"></div>
 
-              {/* Trust Indicators */}
-              <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs text-gray-500">
-                <span>✔ {t('common.secured_payment')}</span>
-                <span>✔ {t('footer.80g_desc').split('.')[0]}</span>
-                <span>✔ {t('nav.logo_title')}</span>
+              <div className="grid lg:grid-cols-2 items-center">
+
+                {/* LEFT SIDE */}
+                <div className="p-6 lg:p-7">
+
+                  {/* Badge */}
+                  <div className="inline-flex items-center gap-2 bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-[11px] font-semibold mb-3">
+                    🙏 पवित्र देणगी अभियान
+                  </div>
+
+                  {/* Heading */}
+                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-3">
+                    आपल्या देणगीतून
+                    <span className="block text-orange-600">
+                      मंदिर विकासाला सहकार्य
+                    </span>
+                  </h2>
+
+                  {/* Description */}
+                  <p className="text-sm text-gray-600 leading-6 mb-5">
+                    श्री कुलस्वामिनी एकवीरा देवी मंदिराच्या जीर्णोद्धार,
+                    भक्तनिवास आणि धार्मिक कार्यांसाठी आपले सहकार्य आवश्यक आहे.
+                  </p>
+
+                  {/* Donation Amounts */}
+                  <div className="flex flex-wrap gap-2.5 mb-5">
+
+                    {["₹101", "₹501", "₹1100", "₹2100"].map((amount) => (
+                      <button
+                        key={amount}
+                        className="px-4 py-2 rounded-lg border border-orange-200 text-orange-600 text-sm font-medium hover:bg-orange-500 hover:text-white transition-all duration-300"
+                      >
+                        {amount}
+                      </button>
+                    ))}
+
+                  </div>
+
+                  {/* CTA Buttons */}
+                  <div className="flex flex-wrap gap-3">
+
+                    <button className="bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all duration-300 flex items-center gap-2">
+                      🙏 देणगी द्या
+                    </button>
+
+                    <button className="border border-orange-200 hover:bg-orange-50 text-orange-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300">
+                      अधिक माहिती
+                    </button>
+
+                  </div>
+
+                  {/* Bottom Info */}
+                  <div className="flex flex-wrap gap-4 mt-5 text-[11px] text-gray-500">
+
+                    <div className="flex items-center gap-1.5">
+                      ✅ सुरक्षित देयक
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      🛕 मंदिर ट्रस्ट
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      💠 आध्यात्मिक सेवा
+                    </div>
+
+                  </div>
+                </div>
+
+                {/* RIGHT SIDE */}
+                <div className="relative h-full min-h-[340px] bg-gradient-to-br from-orange-100 to-yellow-50 flex items-center justify-center p-5 overflow-hidden">
+
+                  {/* Decorative Circle */}
+                  <div className="absolute w-[250px] h-[250px] rounded-full border border-orange-200/40"></div>
+
+                  {/* QR CARD */}
+                  <div className="relative bg-white rounded-[24px] shadow-xl p-5 w-full max-w-[270px] border border-orange-100 text-center z-10">
+
+                    {/* Temple Icon */}
+                    <div className="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center text-2xl mx-auto mb-3">
+                      🛕
+                    </div>
+
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      Scan & Donate
+                    </h3>
+
+                    <p className="text-xs text-gray-600 leading-5 mb-4">
+                      QR स्कॅन करून मंदिर विकासासाठी देणगी अर्पण करा.
+                    </p>
+
+                    {/* QR CODE */}
+                    <div className="bg-gray-50 rounded-xl p-3 border border-dashed border-orange-200 mb-4">
+
+                      <img
+                        src="/qr.png"
+                        alt="Donation QR"
+                        className="w-36 h-36 object-contain mx-auto"
+                      />
+
+                    </div>
+
+                    {/* UPI */}
+                    <div className="bg-orange-50 rounded-lg py-2.5 px-3 mb-3">
+
+                      <p className="text-[10px] text-gray-500 mb-1">
+                        UPI ID
+                      </p>
+
+                      <p className="text-sm font-bold text-orange-700">
+                        ekveeradevi@upi
+                      </p>
+
+                    </div>
+
+                    {/* Note */}
+                    <p className="text-[10px] text-gray-500 leading-4">
+                      * सर्व देणग्या सुरक्षितपणे मंदिर ट्रस्टमार्फत नोंदवल्या जातील.
+                    </p>
+
+                  </div>
+
+                  {/* Decorative Elements */}
+                  <div className="absolute top-5 right-5 text-4xl opacity-10">
+                    ✨
+                  </div>
+
+                  <div className="absolute bottom-5 left-5 text-4xl opacity-10">
+                    🪔
+                  </div>
+
+                </div>
+
               </div>
             </div>
           </div>
         </section>
-
-        <FestivalSpotLight />
-
-
 
         <section className="relative py-8 md:py-10 bg-gradient-to-br from-orange-200 via-orange-100 to-amber-100 overflow-hidden">
           {/* Decorative Pattern */}
