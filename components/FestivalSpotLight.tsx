@@ -137,9 +137,10 @@ export default function FestivalSpotlight() {
             <div className="flex justify-center mt-14">
               <Link
                 href="/festivals"
-                className="bg-primary hover:bg-orange-600 text-white px-10 py-4 rounded-full font-bold shadow-lg transition-all duration-300 hover:scale-105"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-10 py-4 rounded-2xl text-sm font-black uppercase tracking-widest shadow-xl shadow-orange-200 transition-all duration-300 flex items-center gap-3 group"
               >
                 {t('festival.view')}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </>

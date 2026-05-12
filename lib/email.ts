@@ -67,3 +67,30 @@ export const sendDonationReceipt = async (donation: any) => {
     return false;
   }
 };
+export const sendContactEmail = async (data: { name: string; email: string; subject: string; message: string }) => {
+  const mailOptions = {
+    from: `"Temple Website Contact" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_USER, // Send to temple office
+    replyTo: data.email,
+    subject: `New Contact Form Submission: ${data.subject}`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+        <h2 style="color: #e65100;">New Message from Contact Form</h2>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Subject:</strong> ${data.subject}</p>
+        <hr style="border: 0; border-top: 1px solid #eee;">
+        <p><strong>Message:</strong></p>
+        <p style="white-space: pre-wrap;">${data.message}</p>
+      </div>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('Contact email sending failed:', error);
+    return false;
+  }
+};

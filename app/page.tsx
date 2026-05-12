@@ -14,7 +14,7 @@ import RenovationCampaign from '@/components/RenovationCampaign';
 import Link from 'next/link';
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
@@ -94,9 +94,9 @@ export default function Home() {
 
                     <Link
                       href="/donation"
-                      className="bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all duration-300 flex items-center gap-2 w-fit"
+                      className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-2xl text-[12px] font-black uppercase tracking-widest shadow-xl shadow-orange-200 transition-all duration-300 flex items-center gap-2 w-fit"
                     >
-                      🙏 देणगी द्या
+                      🙏 {lang === 'mr' ? 'देणगी द्या' : 'Donate Now'}
                     </Link>
 
                     {/* <button className="border border-orange-200 hover:bg-orange-50 text-orange-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300">

@@ -1,128 +1,145 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AboutLayout from '@/components/AboutLayout';
-import { Train, Bus, Plane, Map } from 'lucide-react';
+import { MapPin, Train, Bus, Plane, Map, Loader2, Phone, Copy, Navigation } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
+import axios from 'axios';
+import { motion } from 'framer-motion';
 
 export default function ReachPage() {
-    const { t, lang } = useLanguage();
+  const { t, lang } = useLanguage();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-    const content = {
-        en: {
-            modes: [
-                {
-                    title: 'Railway Service',
-                    desc: 'From Chhatrapati Shivaji Maharaj Terminus (CSMT) or Churchgate, you can come by taxi or bus.',
-                    icon: Train,
-                    color: 'bg-blue-500'
-                },
-                {
-                    title: 'Bus Service',
-                    desc: 'Several BEST buses stop near the temple. Direct buses are available from Colaba and South Mumbai.',
-                    icon: Bus,
-                    color: 'bg-green-500'
-                },
-                {
-                    title: 'Air Service',
-                    desc: 'From Chhatrapati Shivaji Maharaj International Airport, it takes about 1 hour by taxi.',
-                    icon: Plane,
-                    color: 'bg-purple-500'
-                }
-            ],
-            landmarks: [
-                { name: 'Jaitapur Bus Stop (500 m)' },
-                { name: 'Baglan Taluka Area' },
-                { name: 'Nashik District Highway Road' },
-                { name: 'Nearby Village Market Area' }
-            ]
-        },
-        mr: {
-            modes: [
-                {
-                    title: 'रेल्वे सेवा',
-                    desc: 'छत्रपती शिवाजी महाराज टर्मिनस (CSMT) किंवा चर्चगेट येथून आपण टॅक्सी किंवा बसने येऊ शकता.',
-                    icon: Train,
-                    color: 'bg-blue-500'
-                },
-                {
-                    title: 'बस सेवा',
-                    desc: 'बेस्ट (BEST) च्या अनेक बसेस मंदिराच्या जवळ थांबतात. कुलाबा आणि दक्षिण मुंबईतून थेट बसेस उपलब्ध आहेत.',
-                    icon: Bus,
-                    color: 'bg-green-500'
-                },
-                {
-                    title: 'विमान सेवा',
-                    desc: 'छत्रपती शिवाजी महाराज आंतरराष्ट्रीय विमानतळावरून टॅक्सीने साधारण १ तासात पोहोचता येते.',
-                    icon: Plane,
-                    color: 'bg-purple-500'
-                }
-            ],
-            landmarks: [
-                { name: 'जैतापूर बस स्टॉप (५०० मी)' },
-                { name: 'बागलाण तालुका परिसर' },
-                { name: 'नाशिक जिल्हा महामार्ग मार्ग' },
-                { name: 'जवळील गाव बाजार परिसर' }
-            ]
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get('/api/about/temple/reach');
+        if (res.data) {
+          setData(res.data);
         }
+      } catch (error) {
+        console.error('Error fetching reach details:', error);
+      } finally {
+        setLoading(false);
+      }
     };
+    fetchData();
+  }, []);
 
-    const activeContent = content[lang as 'en' | 'mr'] || content.en;
+  const localized = data?.[lang === 'mr' ? 'marathi' : 'english'] || data?.english;
 
+  if (loading) {
     return (
-        <AboutLayout title={t('about.reach')}>
-            <div className="space-y-10">
-                {/* Map Section */}
-                <div className="rounded-3xl overflow-hidden h-80 border-4 border-white shadow-xl">
-                    <iframe
-                        src="https://www.google.com/maps?q=Shri%20Kulaswamini%20Ekavira%20Devi%20Mandir%20Trust,%20Jaitapur,%20Taluka%20Baglan,%20District%20Nashik,%20Maharashtra%20423301&output=embed"
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allowFullScreen={true}
-                        loading="lazy"
-                    />
-                </div>
-
-                {/* Transportation Modes */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {activeContent.modes.map((mode, index) => (
-                        <div key={index} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
-                            <div className={`w-12 h-12 rounded-2xl ${mode.color}/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                                <mode.icon className="w-6 h-6 text-primary" />
-                            </div>
-                            <h3 className="text-lg font-black text-secondary mb-2 uppercase tracking-tight">{mode.title}</h3>
-                            <p className="text-xs text-gray-500 leading-relaxed font-medium">{mode.desc}</p>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Landmarks Section */}
-                <section className="bg-gray-50 p-8 rounded-[2.5rem] space-y-6 border border-gray-100">
-                    <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white shadow-lg">
-                            <Map className="w-5 h-5" />
-                        </div>
-                        <h3 className="text-xl font-black text-secondary uppercase tracking-tight">
-                            {t('common.landmarks')}
-                        </h3>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {activeContent.landmarks.map((landmark, index) => (
-                            <div
-                                key={index}
-                                className="bg-white p-4 rounded-2xl border border-gray-100 flex items-center gap-3 shadow-sm hover:translate-x-1 transition-transform"
-                            >
-                                <div className="w-2 h-2 rounded-full bg-accent" />
-                                <p className="text-sm font-bold text-gray-600">
-                                    {landmark.name}
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-            </div>
-        </AboutLayout>
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
     );
+  }
+
+  if (!localized) {
+    return (
+      <AboutLayout title={t('about.reach')}>
+        <div className="text-center py-20 text-gray-400 font-medium italic">
+          Reach details not available.
+        </div>
+      </AboutLayout>
+    );
+  }
+
+  return (
+    <AboutLayout title={t('about.reach')}>
+      <div className="space-y-12">
+        {/* Map Section */}
+        {data.mapEmbedUrl && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="rounded-[2.5rem] overflow-hidden h-[450px] border-8 border-white shadow-2xl relative group"
+          >
+            <iframe
+              src={data.mapEmbedUrl}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen={true}
+              loading="lazy"
+            />
+            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(localized.address)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-primary px-4 py-2 rounded-full font-bold text-xs shadow-lg flex items-center gap-2 hover:bg-primary hover:text-white transition-all"
+              >
+                <Navigation className="w-3.5 h-3.5" />
+                {lang === 'mr' ? 'दिशा मिळवा' : 'Get Directions'}
+              </a>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Info Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="space-y-6">
+            <section className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-4">
+              <div className="flex items-center gap-4 text-primary">
+                <MapPin className="w-6 h-6" />
+                <h3 className="text-xl font-black text-secondary tracking-tight">{lang === 'mr' ? 'मंदिराचा पत्ता' : 'Temple Address'}</h3>
+              </div>
+              <p className="text-gray-600 font-medium leading-relaxed">
+                {localized.address}
+              </p>
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-50">
+                <div>
+                  <p className="text-[10px] font-black text-primary uppercase tracking-widest">{lang === 'mr' ? 'सीमाचिन्ह' : 'Landmark'}</p>
+                  <p className="text-sm font-bold text-secondary">{localized.landmark || '-'}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-primary uppercase tracking-widest">{lang === 'mr' ? 'जिल्हा' : 'District'}</p>
+                  <p className="text-sm font-bold text-secondary">{localized.district || '-'}</p>
+                </div>
+              </div>
+            </section>
+
+            {data.english.contactInfo && (
+              <section className="bg-secondary text-white p-8 rounded-[2rem] shadow-xl relative overflow-hidden group">
+                <div className="relative z-10 space-y-4">
+                  <h3 className="text-lg font-black text-accent flex items-center gap-3">
+                    <Phone className="w-5 h-5" />
+                    {lang === 'mr' ? 'संपर्क माहिती' : 'Contact Support'}
+                  </h3>
+                  <p className="text-white/90 font-bold text-xl tracking-tight">
+                    {data.english.contactInfo}
+                  </p>
+                </div>
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-all" />
+              </section>
+            )}
+          </div>
+
+          <div className="space-y-6">
+            <section className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm space-y-6">
+              <div className="flex items-center gap-4 text-primary">
+                <Bus className="w-6 h-6" />
+                <h3 className="text-xl font-black text-secondary tracking-tight">{lang === 'mr' ? 'प्रवास मार्गदर्शक' : 'Travel Guide'}</h3>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                  <h4 className="text-xs font-black text-primary uppercase tracking-widest mb-2">{lang === 'mr' ? 'वाहतूक सेवा' : 'Transportation'}</h4>
+                  <p className="text-sm text-gray-600 font-medium leading-relaxed whitespace-pre-line">{localized.transportation}</p>
+                </div>
+                <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                  <h4 className="text-xs font-black text-primary uppercase tracking-widest mb-2">{lang === 'mr' ? 'प्रवास सूचना' : 'Travel Instructions'}</h4>
+                  <p className="text-sm text-gray-600 font-medium leading-relaxed whitespace-pre-line">{localized.travelInstructions}</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </AboutLayout>
+  );
 }

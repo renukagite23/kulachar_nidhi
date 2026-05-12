@@ -4,6 +4,7 @@ import React from 'react';
 import { useLanguage } from '@/lib/LanguageContext';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 export default function RenovationCampaign() {
   const { t } = useLanguage();
@@ -79,14 +80,15 @@ export default function RenovationCampaign() {
             <div className="flex flex-wrap gap-4">
               <Link
                 href="/donation"
-                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg transition-all duration-300 inline-block"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-widest shadow-xl shadow-orange-200 transition-all duration-300 flex items-center gap-3 group"
               >
                 {t('renovation.cta_donate')}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <Link
                 href="/about/history"
-                className="border border-orange-300 text-orange-700 hover:bg-orange-50 px-8 py-4 rounded-xl font-semibold transition-all duration-300 inline-block"
+                className="border-2 border-orange-200 text-orange-700 hover:bg-orange-50 px-8 py-4 rounded-2xl text-sm font-black uppercase tracking-widest transition-all duration-300"
               >
                 {t('renovation.cta_more')}
               </Link>
