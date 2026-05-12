@@ -11,6 +11,7 @@ import { Sparkles } from 'lucide-react';
 import FestivalSpotLight from '@/components/FestivalSpotLight';
 import { useLanguage } from '@/lib/LanguageContext';
 import RenovationCampaign from '@/components/RenovationCampaign';
+import Link from 'next/link';
 
 export default function Home() {
   const { t } = useLanguage();
@@ -91,13 +92,16 @@ export default function Home() {
                   {/* CTA Buttons */}
                   <div className="flex flex-wrap gap-3">
 
-                    <button className="bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all duration-300 flex items-center gap-2">
+                    <Link
+                      href="/donation"
+                      className="bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md transition-all duration-300 flex items-center gap-2 w-fit"
+                    >
                       🙏 देणगी द्या
-                    </button>
+                    </Link>
 
-                    <button className="border border-orange-200 hover:bg-orange-50 text-orange-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300">
+                    {/* <button className="border border-orange-200 hover:bg-orange-50 text-orange-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300">
                       अधिक माहिती
-                    </button>
+                    </button> */}
 
                   </div>
 
