@@ -112,7 +112,8 @@ export default function ReachPage() {
 
                 <div>
                   <h4 className="text-sm font-black text-secondary">
-                    {t('common.landmarks')}
+                    {/* {t('common.landmarks')} */}
+
                   </h4>
 
                   <p className="text-xs text-gray-600">
