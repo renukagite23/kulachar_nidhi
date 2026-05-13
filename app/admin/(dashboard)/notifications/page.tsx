@@ -109,12 +109,58 @@ export default function AdminNotificationsPage() {
         }
     };
 
+    // MARK ALL READ
+    const markAllRead = async () => {
+        try {
+            const res = await fetch('/api/notifications', {
+                method: 'PATCH',
+                credentials: 'include',
+            });
+            if (!res.ok) throw new Error('Failed');
+            setToast({ message: 'All marked as read', type: 'success' });
+            fetchData();
+        } catch {
+            setToast({ message: 'Action failed', type: 'error' });
+        }
+    };
+
+    // CLEAR ALL
+    const clearAll = async () => {
+        if (!confirm('Are you sure you want to delete all notifications? This cannot be undone.')) return;
+        try {
+            const res = await fetch('/api/notifications', {
+                method: 'DELETE',
+                credentials: 'include',
+            });
+            if (!res.ok) throw new Error('Failed');
+            setToast({ message: 'All notifications cleared', type: 'success' });
+            fetchData();
+        } catch {
+            setToast({ message: 'Action failed', type: 'error' });
+        }
+    };
+
     const getTypeIcon = (type: string) => {
         switch (type) {
             case 'event': return <Calendar className="w-4 h-4 text-orange-600" />;
             case 'donation': return <Heart className="w-4 h-4 text-red-600" />;
             default: return <Info className="w-4 h-4 text-blue-600" />;
         }
+    };
+
+    const formatTimeAgo = (date: string) => {
+        const now = new Date();
+        const past = new Date(date);
+        const diffInMs = now.getTime() - past.getTime();
+        const diffInMins = Math.floor(diffInMs / (1000 * 60));
+        const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+        if (diffInMins < 1) return 'Just now';
+        if (diffInMins < 60) return `${diffInMins}m ago`;
+        if (diffInHours < 24) return `${diffInHours}h ago`;
+        if (diffInDays < 7) return `${diffInDays}d ago`;
+        return past.toLocaleDateString();
     };
 
     if (loading) {
@@ -130,7 +176,7 @@ export default function AdminNotificationsPage() {
             {toast && <Toast {...toast} onClose={() => setToast(null)} />}
 
             {/* HEADER */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
                 <div>
                     <div className="text-[10px] uppercase font-black tracking-[0.2em] text-primary mb-1 flex items-center gap-2">
                         <Megaphone className="w-3 h-3" /> System Announcements
@@ -140,23 +186,46 @@ export default function AdminNotificationsPage() {
                     </h1>
                 </div>
 
-                <button
-                    onClick={() => setShowCreate(true)}
-                    className="spiritual-button flex items-center gap-2 shadow-xl shadow-primary/20"
-                >
-                    <Plus className="w-4 h-4" />
-                    Create New Broadcast
-                </button>
+                <div className="flex flex-wrap items-center gap-3">
+                    {notifications.length > 0 && (
+                        <>
+                            <button
+                                onClick={markAllRead}
+                                className="spiritual-button-outline px-4 py-2.5 text-xs flex items-center gap-2"
+                            >
+                                <CheckCircle2 className="w-4 h-4" />
+                                Mark All Read
+                            </button>
+                            <button
+                                onClick={clearAll}
+                                className="spiritual-button-outline px-4 py-2.5 text-xs text-red-600 hover:bg-red-50 border-red-100 flex items-center gap-2"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                Clear All
+                            </button>
+                        </>
+                    )}
+                    <button
+                        onClick={() => setShowCreate(true)}
+                        className="spiritual-button flex items-center gap-2 shadow-xl shadow-primary/20"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Create New Broadcast
+                    </button>
+                </div>
             </div>
 
             {/* MAIN CONTENT CARD */}
             <div className="spiritual-card bg-white border-border shadow-sm p-6 min-h-[500px]">
-                <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-border/50">
                     <h2 className="text-lg font-black text-secondary flex items-center gap-2 italic">
                         <Bell className="w-5 h-5 text-primary" /> Active Alerts
                     </h2>
-                    <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                        Live updates enabled
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                            Live updates enabled
+                        </div>
                     </div>
                 </div>
 
@@ -187,7 +256,7 @@ export default function AdminNotificationsPage() {
                                                 <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
                                             )}
                                         </div>
-                                        <p className="text-sm text-muted-foreground leading-relaxed">{n.message}</p>
+                                        <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">{n.message}</p>
                                         <div className="mt-2 flex items-center gap-3">
                                             <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded ${n.type === 'event' ? 'bg-orange-100 text-orange-600' :
                                                 n.type === 'donation' ? 'bg-red-100 text-red-600' :
@@ -195,8 +264,9 @@ export default function AdminNotificationsPage() {
                                                 }`}>
                                                 {n.type}
                                             </span>
-                                            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
-                                                {new Date(n.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1">
+                                                <Sparkles className="w-2.5 h-2.5" />
+                                                {formatTimeAgo(n.createdAt)}
                                             </span>
                                         </div>
                                     </div>

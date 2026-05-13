@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
+import Notification from '@/models/Notification';
 
 export async function POST(req: Request) {
   try {
@@ -43,6 +44,17 @@ export async function POST(req: Request) {
       referredBy,
       approvalStatus: 'approved',
     });
+
+    // Create Notification
+    try {
+      await Notification.create({
+        title: 'New Devotee Registered',
+        message: `${user.name} (${user.email}) has joined the Kulachar Nidhi community.`,
+        type: 'general',
+      });
+    } catch (notifError) {
+      console.error('Failed to create registration notification:', notifError);
+    }
 
     return NextResponse.json(
       {

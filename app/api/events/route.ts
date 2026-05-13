@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import mongoose from 'mongoose';
+import Notification from '@/models/Notification';
 
 const EventSchema = new mongoose.Schema(
   {
@@ -50,6 +51,17 @@ export async function POST(req: Request) {
       date: body.date,
       image: body.image || '',
     });
+
+    // Create Notification
+    try {
+      await Notification.create({
+        title: 'New Event Broadcasted',
+        message: `A new temple event "${newEvent.title_en}" has been announced for ${newEvent.date}.`,
+        type: 'event',
+      });
+    } catch (notifError) {
+      console.error('Failed to create event notification:', notifError);
+    }
 
     return NextResponse.json(newEvent, { status: 201 });
   } catch (error) {
