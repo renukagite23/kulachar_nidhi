@@ -8,8 +8,9 @@ export async function DELETE(
 ) {
   try {
     await dbConnect();
-    const deletedVideo = await Video.findByIdAndDelete(params.id);
-    
+    const { id } = await params;
+    const deletedVideo = await Video.findByIdAndDelete(id);
+
     if (!deletedVideo) {
       return NextResponse.json({ error: 'Video not found' }, { status: 404 });
     }

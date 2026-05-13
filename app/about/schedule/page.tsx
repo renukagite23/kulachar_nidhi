@@ -1,85 +1,116 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import AboutLayout from '@/components/AboutLayout';
-import { Clock, Sun, Moon, Sparkles } from 'lucide-react';
+import {
+  Clock, Sparkles, Loader2, Calendar,
+  Sun, Moon, Sunrise, Sunset, Flame, Bell, Monitor
+} from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+
+const IconMap: any = {
+  Clock, Sparkles, Calendar, Sun, Moon, Sunrise, Sunset, Flame, Bell, Monitor
+};
 
 export default function SchedulePage() {
-  const { t, lang: language } = useLanguage();
+  const { t, lang } = useLanguage();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const content = {
-    en: {
-      desc: "The daily temple schedule is vital for the worship of the Goddess. Devotees should take advantage of darshan according to these timings.",
-      special_title: "Special Note",
-      special_1: "Timings may change on festival days.",
-      special_2: "The temple remains open 24 hours during Navratri.",
-      schedules: [
-        { time: '6:00 AM', event: 'Temple Opening & Abhishek', icon: Sun },
-        { time: '8:30 AM', event: 'Morning Maha Aarti', icon: Sparkles },
-        { time: '12:30 PM', event: 'Midday Naivedya & Aarti', icon: Sun },
-        { time: '7:00 PM', event: 'Evening Dhoop Aarti', icon: Moon },
-        { time: '9:30 PM', event: 'Shej Aarti & Temple Closing', icon: Moon },
-      ]
-    },
-    mr: {
-      desc: "मंदिरातील दैनंदिन कार्यक्रम देवीच्या उपासनेसाठी अत्यंत महत्त्वाचे आहेत. भक्तांनी या वेळेनुसार दर्शनाचा लाभ घ्यावा.",
-      special_title: "विशेष सूचना",
-      special_1: "सण आणि उत्सवाच्या दिवशी वेळेत बदल होऊ शकतो.",
-      special_2: "नवरात्रीच्या काळात मंदिर २४ तास उघडे राहते.",
-      schedules: [
-        { time: 'सकाळी ६:००', event: 'मंदिर उघडणे आणि अभिषेक', icon: Sun },
-        { time: 'सकाळी ८:३०', event: 'सकाळची महाआरती', icon: Sparkles },
-        { time: 'दुपारी १२:३०', event: 'मध्यान्ह नैवेद्य आणि आरती', icon: Sun },
-        { time: 'संध्याकाळी ७:००', event: 'सायंकाळची धूप आरती', icon: Moon },
-        { time: 'रात्री ९:३०', event: 'शेजारती आणि मंदिर बंद', icon: Moon },
-      ]
-    }
-  }[language === 'mr' ? 'mr' : 'en'];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get('/api/about/temple/daily-schedule');
+        if (res.data) {
+          setData(res.data);
+        }
+      } catch (error) {
+        console.error('Error fetching schedule:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const localized = data?.[lang === 'mr' ? 'marathi' : 'english'];
+  const activeSchedules = localized?.schedules?.filter((s: any) => s.isActive).sort((a: any, b: any) => a.order - b.order) || [];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
-    <AboutLayout title={t('about.schedule')}>
-      <div className="space-y-8">
+    <AboutLayout
+      title={localized?.title || t('about.schedule')}
+      subtitle={localized?.subtitle}
+    >
+      <div className="space-y-10">
+        {/* Intro Text */}
         <p className="text-gray-600 leading-relaxed font-medium">
-          {content.desc}
+          {lang === 'mr'
+            ? 'मंदिरातील दैनंदिन कार्यक्रम देवीच्या उपासनेसाठी अत्यंत महत्त्वाचे आहेत. भक्तांनी या वेळेनुसार दर्शनाचा लाभ घ्यावा.'
+            : 'The daily temple schedule is vital for the worship of the Goddess. Devotees should take advantage of darshan according to these timings.'}
         </p>
 
+        {/* Schedule List */}
         <div className="space-y-4">
-          {content.schedules.map((item, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-6 p-5 rounded-2xl border border-border bg-white hover:border-primary/30 hover:shadow-md transition-all group"
-            >
-              <div className="w-14 h-14 rounded-xl bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <item.icon className="w-6 h-6 text-primary" />
-              </div>
-              <div className="flex-grow">
-                <p className="text-accent font-black text-xs uppercase tracking-wider mb-1">{item.time}</p>
-                <p className="text-secondary font-bold text-lg">{item.event}</p>
-              </div>
-              <Clock className="w-5 h-5 text-muted-foreground opacity-20" />
+          {activeSchedules.length === 0 ? (
+            <div className="text-center py-10 text-gray-400 font-medium italic border-2 border-dashed border-gray-50 rounded-2xl">
+              {lang === 'mr' ? 'वेळापत्रक उपलब्ध नाही.' : 'Daily schedule not available.'}
             </div>
-          ))}
+          ) : (
+            activeSchedules.map((item: any, index: number) => {
+              const IconComponent = IconMap[item.icon] || Clock;
+              return (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  key={index}
+                  className="flex items-center gap-6 p-5 rounded-2xl border border-gray-100 bg-white hover:border-primary/30 transition-all group"
+                >
+                  <div className="w-14 h-14 rounded-xl bg-orange-50/50 flex items-center justify-center group-hover:bg-primary/10 transition-colors shrink-0">
+                    <IconComponent className="w-6 h-6 text-primary" />
+                  </div>
+                  <div className="flex-grow">
+                    <p className="text-accent font-black text-[10px] uppercase tracking-[0.2em] mb-1">{item.time}</p>
+                    <h4 className="text-secondary font-bold text-lg leading-tight">{item.heading}</h4>
+                    {item.description && (
+                      <p className="text-xs text-gray-400 font-medium mt-1">{item.description}</p>
+                    )}
+                  </div>
+                  <Clock className="w-5 h-5 text-gray-200 hidden md:block" />
+                </motion.div>
+              );
+            })
+          )}
         </div>
 
-        <section className="bg-primary/5 p-8 rounded-3xl border border-primary/20">
-          <h3 className="text-lg font-black text-secondary mb-4 flex items-center gap-2">
+        {/* Special Note Box */}
+        <div className="p-8 rounded-3xl bg-orange-50/30 border border-orange-100/50">
+          <h3 className="text-base font-black text-secondary flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
-            {content.special_title}
+            {lang === 'mr' ? 'विशेष सूचना' : 'Special Note'}
           </h3>
           <ul className="space-y-3">
-            <li className="text-sm text-gray-600 flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-              {content.special_1}
+            <li className="text-sm text-gray-600 font-medium flex items-start gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+              {lang === 'mr' ? 'सण आणि उत्सवाच्या दिवशी वेळेत बदल होऊ शकतो.' : 'Timings may change on festival days.'}
             </li>
-            <li className="text-sm text-gray-600 flex items-start gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-              {content.special_2}
+            <li className="text-sm text-gray-600 font-medium flex items-start gap-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+              {lang === 'mr' ? 'नवरात्रीच्या काळात मंदिर २४ तास उघडे राहते.' : 'The temple remains open 24 hours during Navratri.'}
             </li>
           </ul>
-        </section>
+        </div>
       </div>
     </AboutLayout>
   );
 }
-
