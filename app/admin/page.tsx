@@ -30,7 +30,15 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      let data;
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.error('Non-JSON response received:', text);
+        throw new Error(`Server returned non-JSON response (${res.status}). Please check server logs.`);
+      }
 
       if (!res.ok) {
         throw new Error(data.message || 'Login failed');
