@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { sendContactEmail } from '@/lib/email';
+import dbConnect from '@/lib/db';
+import Contact from '@/models/Contact';
 
 export async function POST(req: Request) {
   try {
@@ -10,13 +12,25 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
-    const success = await sendContactEmail({ name, email, subject, message });
+    await dbConnect();
 
-    if (success) {
-      return NextResponse.json({ message: 'Message sent successfully' });
-    } else {
-      return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
-    }
+    // 1. Save to Database
+    const newContact = await Contact.create({
+      name,
+      email,
+      subject,
+      message
+    });
+
+    // 2. Send Email
+    const emailSuccess = await sendContactEmail({ name, email, subject, message });
+
+    return NextResponse.json({ 
+      message: 'Message sent successfully',
+      id: newContact._id,
+      emailSent: emailSuccess
+    });
+    
   } catch (error) {
     console.error('Contact API error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

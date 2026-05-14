@@ -18,7 +18,8 @@ import {
   FileText,
   Calendar,
   GalleryHorizontal,
-  Video as VideoIcon
+  Video as VideoIcon,
+  MessageCircle
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminLogout } from '@/redux/slices/adminAuthSlice';
@@ -76,6 +77,11 @@ export default function AdminSidebar() {
       title: 'Notifications',
       icon: Bell,
       href: '/admin/notifications',
+    },
+    {
+      title: 'Contact Messages',
+      icon: MessageCircle,
+      href: '/admin/contacts',
     },
     {
       title: 'Reports',
