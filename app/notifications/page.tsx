@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Sparkles, Calendar, Heart, Info, Loader2 } from 'lucide-react';
+import { Bell, Sparkles, Calendar, Heart, Info, Loader2, ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/lib/LanguageContext';
 
 export default function UserNotificationsPage() {
-    const { t } = useLanguage();
+    const { lang, t } = useLanguage();
     const [notifications, setNotifications] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -34,9 +34,9 @@ export default function UserNotificationsPage() {
 
     const getTypeIcon = (type: string) => {
         switch (type) {
-            case 'event': return <Calendar className="w-5 h-5 text-orange-500" />;
-            case 'donation': return <Heart className="w-5 h-5 text-red-500" />;
-            default: return <Info className="w-5 h-5 text-blue-500" />;
+            case 'event': return <Calendar className="w-5 h-5" />;
+            case 'donation': return <Heart className="w-5 h-5" />;
+            default: return <Info className="w-5 h-5" />;
         }
     };
 
@@ -65,7 +65,7 @@ export default function UserNotificationsPage() {
                 </section>
 
                 <section className="py-20 bg-[#FFFDF9] relative min-h-[60vh]">
-                    <div className="max-w-4xl mx-auto px-4 relative z-10">
+                    <div className="max-w-7xl mx-auto px-4 relative z-10">
                         
                         <div className="text-center mb-16">
                             <div className="flex justify-center items-center gap-2 mb-4">
@@ -74,7 +74,7 @@ export default function UserNotificationsPage() {
                                     Latest Alerts
                                 </span>
                             </div>
-                            <h2 className="text-4xl font-black text-secondary tracking-tight italic">
+                            <h2 className="text-4xl font-black text-secondary tracking-tight">
                                 Divine Announcements
                             </h2>
                         </div>
@@ -84,47 +84,57 @@ export default function UserNotificationsPage() {
                                 <Loader2 className="w-10 h-10 text-primary animate-spin" />
                             </div>
                         ) : notifications.length > 0 ? (
-                            <div className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {notifications.map((n, i) => (
                                     <motion.div
                                         key={n._id}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: i * 0.1 }}
-                                        className="spiritual-card bg-white p-6 border-l-4 border-l-primary shadow-lg hover:shadow-xl transition-all"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: i * 0.05 }}
+                                        className="spiritual-card spiritual-card-hover group h-full flex flex-col p-6 hover:translate-y-[-4px]"
                                     >
-                                        <div className="flex gap-4">
-                                            <div className="mt-1 flex-shrink-0 w-10 h-10 rounded-2xl bg-muted/50 flex items-center justify-center">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${
+                                                n.type === 'event' ? 'bg-orange-50 text-orange-600' :
+                                                n.type === 'donation' ? 'bg-red-50 text-red-600' :
+                                                'bg-blue-50 text-blue-600'
+                                            }`}>
                                                 {getTypeIcon(n.type)}
                                             </div>
-                                            <div className="flex-grow">
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <h3 className="text-lg font-black text-secondary italic">{n.title}</h3>
-                                                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest bg-muted/50 px-2 py-1 rounded-lg">
-                                                        {new Date(n.createdAt).toLocaleDateString()}
-                                                    </span>
-                                                </div>
-                                                <p className="text-muted-foreground leading-relaxed">
-                                                    {n.message}
-                                                </p>
-                                                <div className="mt-4 flex items-center gap-2">
-                                                    <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${
-                                                        n.type === 'event' ? 'bg-orange-100 text-orange-600' :
-                                                        n.type === 'donation' ? 'bg-red-100 text-red-600' :
-                                                        'bg-blue-100 text-blue-600'
-                                                    }`}>
-                                                        {n.type}
-                                                    </span>
-                                                </div>
+                                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest bg-muted/50 px-3 py-1 rounded-full">
+                                                {new Date(n.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex-grow">
+                                            <h3 className="text-xl font-black text-secondary mb-3 leading-tight group-hover:text-primary transition-colors">
+                                                {lang === 'mr' && n.titleMr ? n.titleMr : n.title}
+                                            </h3>
+                                            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-4">
+                                                {lang === 'mr' && n.messageMr ? n.messageMr : n.message}
+                                            </p>
+                                        </div>
+
+                                        <div className="mt-8 pt-4 border-t border-border/50 flex items-center justify-between">
+                                            <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-2.5 py-1 rounded-lg ${
+                                                n.type === 'event' ? 'bg-orange-100 text-orange-700' :
+                                                n.type === 'donation' ? 'bg-red-100 text-red-700' :
+                                                'bg-blue-100 text-blue-700'
+                                            }`}>
+                                                {n.type}
+                                            </span>
+                                            <div className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+                                                <span>Details</span>
+                                                <ChevronRight className="w-3.5 h-3.5" />
                                             </div>
                                         </div>
                                     </motion.div>
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-20 bg-white rounded-[2rem] border-2 border-dashed border-border">
+                            <div className="text-center py-20 bg-white rounded-[2rem] border-2 border-dashed border-border max-w-2xl mx-auto">
                                 <Bell className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
-                                <p className="text-muted-foreground font-bold italic">No active notifications at this moment.</p>
+                                <p className="text-muted-foreground font-bold">No active notifications at this moment.</p>
                             </div>
                         )}
                     </div>

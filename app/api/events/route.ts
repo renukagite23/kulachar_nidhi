@@ -56,7 +56,9 @@ export async function POST(req: Request) {
     try {
       await Notification.create({
         title: 'New Event Broadcasted',
+        titleMr: 'नवीन कार्यक्रम प्रसारित झाला',
         message: `A new temple event "${newEvent.title_en}" has been announced for ${newEvent.date}.`,
+        messageMr: `नवीन मंदिर कार्यक्रम "${newEvent.title_mr}" ${newEvent.date} साठी जाहीर करण्यात आला आहे.`,
         type: 'event',
       });
     } catch (notifError) {

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Bell, Trash2, CheckCircle2, Plus, Sparkles, Megaphone, Info, Calendar, Heart, Loader2, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '@/lib/LanguageContext';
 
 // Toast Component
 const Toast = ({ message, type, onClose }: any) => {
@@ -24,6 +25,7 @@ const Toast = ({ message, type, onClose }: any) => {
 };
 
 export default function AdminNotificationsPage() {
+    const { lang } = useLanguage();
     const [notifications, setNotifications] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showCreate, setShowCreate] = useState(false);
@@ -31,7 +33,9 @@ export default function AdminNotificationsPage() {
 
     const [form, setForm] = useState({
         title: '',
+        titleMr: '',
         message: '',
+        messageMr: '',
         type: 'general',
     });
 
@@ -73,7 +77,7 @@ export default function AdminNotificationsPage() {
 
             setToast({ message: 'Notification broadcasted', type: 'success' });
             setShowCreate(false);
-            setForm({ title: '', message: '', type: 'general' });
+            setForm({ title: '', titleMr: '', message: '', messageMr: '', type: 'general' });
             fetchData();
         } catch {
             setToast({ message: 'Failed to create', type: 'error' });
@@ -251,12 +255,16 @@ export default function AdminNotificationsPage() {
                                     </div>
                                     <div>
                                         <div className="flex items-center gap-2 mb-1">
-                                            <h3 className="font-black text-secondary italic tracking-tight">{n.title}</h3>
+                                            <h3 className="font-black text-secondary italic tracking-tight">
+                                                {lang === 'mr' && n.titleMr ? n.titleMr : n.title}
+                                            </h3>
                                             {!n.isRead && (
                                                 <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
                                             )}
                                         </div>
-                                        <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">{n.message}</p>
+                                        <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+                                            {lang === 'mr' && n.messageMr ? n.messageMr : n.message}
+                                        </p>
                                         <div className="mt-2 flex items-center gap-3">
                                             <span className={`text-[9px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded ${n.type === 'event' ? 'bg-orange-100 text-orange-600' :
                                                 n.type === 'donation' ? 'bg-red-100 text-red-600' :
@@ -337,7 +345,7 @@ export default function AdminNotificationsPage() {
 
                             <div className="space-y-4">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Broadcast Title</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Broadcast Title (English)</label>
                                     <input
                                         placeholder="Announcement Header"
                                         className="spiritual-input w-full"
@@ -347,12 +355,32 @@ export default function AdminNotificationsPage() {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Message Body</label>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Broadcast Title (Marathi)</label>
+                                    <input
+                                        placeholder="घोषणा शीर्षक"
+                                        className="spiritual-input w-full"
+                                        value={form.titleMr}
+                                        onChange={(e) => setForm({ ...form, titleMr: e.target.value })}
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Message Body (English)</label>
                                     <textarea
                                         placeholder="Type the detailed announcement here..."
-                                        className="spiritual-input w-full min-h-[120px] py-4"
+                                        className="spiritual-input w-full min-h-[80px] py-4"
                                         value={form.message}
                                         onChange={(e) => setForm({ ...form, message: e.target.value })}
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Message Body (Marathi)</label>
+                                    <textarea
+                                        placeholder="येथे सविस्तर घोषणा टाईप करा..."
+                                        className="spiritual-input w-full min-h-[80px] py-4"
+                                        value={form.messageMr}
+                                        onChange={(e) => setForm({ ...form, messageMr: e.target.value })}
                                     />
                                 </div>
 
