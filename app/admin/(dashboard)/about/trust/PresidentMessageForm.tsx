@@ -15,8 +15,7 @@ export default function PresidentMessageForm() {
     const [message, setMessage] = useState<any>({
         english: { name: '', designation: '', title: '', description: '', majorWorksTitle: '', majorWorks: '', staffQuartersTitle: '', staffQuarters: '', donorRemembrance: '', legacyText: '', heroTitle: '', heroSubtitle: '', stats: [{ label: '', value: '' }, { label: '', value: '' }, { label: '', value: '' }, { label: '', value: '' }] },
         marathi: { name: '', designation: '', title: '', description: '', majorWorksTitle: '', majorWorks: '', staffQuartersTitle: '', staffQuarters: '', donorRemembrance: '', legacyText: '', heroTitle: '', heroSubtitle: '', stats: [{ label: '', value: '' }, { label: '', value: '' }, { label: '', value: '' }, { label: '', value: '' }] },
-        image: '',
-        isPublished: false
+        image: ''
     });
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -132,13 +131,6 @@ export default function PresidentMessageForm() {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button
-                        onClick={() => setMessage({ ...message, isPublished: !message.isPublished })}
-                        className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${message.isPublished ? 'bg-green-500/10 text-green-600 border border-green-500/20' : 'bg-gray-100 text-gray-500 border border-gray-200'
-                            }`}
-                    >
-                        {message.isPublished ? 'Published' : 'Draft'}
-                    </button>
                     <button
                         onClick={handleSave}
                         disabled={saving}

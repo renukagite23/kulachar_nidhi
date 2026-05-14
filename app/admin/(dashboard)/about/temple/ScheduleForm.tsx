@@ -391,13 +391,13 @@ export default function ScheduleForm() {
                             </button>
                           </div>
                           <div className="flex md:flex-col gap-2">
-                            <button
+                            {/* <button
                               onClick={() => updateScheduleItem(idx, 'isActive', !item.isActive)}
                               className={`p-2 rounded-lg transition-all ${item.isActive ? 'bg-green-50 text-green-600 hover:bg-green-100' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
                                 }`}
                             >
                               {item.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                            </button>
+                            </button> */}
                             <button
                               onClick={() => removeScheduleItem(idx)}
                               className="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-500 hover:text-white transition-all"

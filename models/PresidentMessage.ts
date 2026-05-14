@@ -32,7 +32,6 @@ export interface IPresidentMessage extends Document {
     heroSubtitle: string;
   };
   image: string;
-  isPublished: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -80,7 +79,6 @@ const PresidentMessageSchema: Schema = new Schema(
       ],
     },
     image: { type: String },
-    isPublished: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

@@ -12,8 +12,7 @@ export default function ReachForm() {
     const [data, setData] = useState<any>({
         english: { address: '', landmark: '', district: '', state: '', transportation: '', travelInstructions: '', contactInfo: '' },
         marathi: { address: '', landmark: '', district: '', state: '', transportation: '', travelInstructions: '' },
-        mapEmbedUrl: '',
-        isPublished: false
+        mapEmbedUrl: ''
     });
     const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
@@ -68,13 +67,6 @@ export default function ReachForm() {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button
-                        onClick={() => setData({ ...data, isPublished: !data.isPublished })}
-                        className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${data.isPublished ? 'bg-green-500/10 text-green-600 border border-green-500/20' : 'bg-gray-100 text-gray-500 border border-gray-200'
-                            }`}
-                    >
-                        {data.isPublished ? 'Published' : 'Draft'}
-                    </button>
                     <button
                         onClick={handleSave}
                         disabled={saving}

@@ -26,8 +26,6 @@ export interface ITempleHistory extends Document {
     modernContent: string;
   };
   image: string;
-  gallery: string[];
-  isPublished: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -59,8 +57,6 @@ const TempleHistorySchema: Schema = new Schema(
       modernContent: { type: String },
     },
     image: { type: String },
-    gallery: [{ type: String }],
-    isPublished: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

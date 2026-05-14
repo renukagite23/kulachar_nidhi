@@ -6,15 +6,16 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '@/redux/slices/authSlice';
 import { useLoginMutation } from '@/redux/api/authApiSlice';
-import { LogIn, Mail, Lock, AlertCircle } from 'lucide-react';
+import { LogIn, Mail, Lock, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-  
+
   const [login, { isLoading }] = useLoginMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -55,33 +56,40 @@ export default function LoginPage() {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
-             <div>
-               <label className="block text-xs font-black text-[#4E342E] uppercase tracking-wider mb-2">Email Address</label>
-               <div className="relative">
-                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#8B7361]/50" />
-                 <input
-                   type="email"
-                   required
-                   className="spiritual-input !pl-12"
-                   placeholder="name@example.com"
-                   value={email}
-                   onChange={(e) => setEmail(e.target.value)}
-                 />
-               </div>
-             </div>
- 
-             <div>
-               <label className="block text-xs font-black text-[#4E342E] uppercase tracking-wider mb-2">Password</label>
-               <div className="relative">
-                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#8B7361]/50" />
-                 <input
-                   type="password"
-                   required
-                   className="spiritual-input !pl-12"
-                   placeholder="••••••••"
+            <div>
+              <label className="block text-xs font-black text-[#4E342E] uppercase tracking-wider mb-2">Email Address</label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#8B7361]/50" />
+                <input
+                  type="email"
+                  required
+                  className="spiritual-input !pl-12"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-black text-[#4E342E] uppercase tracking-wider mb-2">Password</label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#8B7361]/50" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  className="spiritual-input !pl-12 !pr-12"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <button
+                  type="button"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#8B7361]/50 hover:text-[#E65100] transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
               </div>
             </div>
           </div>
