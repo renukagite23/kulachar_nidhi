@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { UserPlus, Mail, Lock, User, Phone, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { UserPlus, Mail, Lock, User, Phone, AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 
 function RegisterForm() {
   const router = useRouter();
@@ -19,6 +19,7 @@ function RegisterForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -145,13 +146,20 @@ function RegisterForm() {
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#8B7361]/50" />
                   <input
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     required
-                    className="spiritual-input !pl-12"
+                    className="spiritual-input !pl-12 !pr-12"
                     placeholder="Minimum 6 characters"
                     value={formData.password}
                     onChange={handleChange}
                   />
+                  <button
+                    type="button"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-[#8B7361]/50 hover:text-[#E65100] transition-colors"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
                 </div>
               </div>
             </div>

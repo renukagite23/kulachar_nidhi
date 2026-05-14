@@ -19,7 +19,6 @@ export interface ITempleReach extends Document {
     travelInstructions: string;
   };
   mapEmbedUrl: string;
-  isPublished: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -44,7 +43,6 @@ const TempleReachSchema: Schema = new Schema(
       travelInstructions: { type: String },
     },
     mapEmbedUrl: { type: String },
-    isPublished: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

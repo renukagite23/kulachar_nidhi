@@ -34,13 +34,10 @@ export default function HistoryForm() {
             modernTitle: '',
             modernContent: ''
         },
-        image: '',
-        gallery: [],
-        isPublished: false
+        image: ''
     });
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
     const [notification, setNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
 
     useEffect(() => {
@@ -61,7 +58,6 @@ export default function HistoryForm() {
                 });
                 setData(fetchedData);
                 if (res.data.image) setImagePreview(res.data.image);
-                if (res.data.gallery) setGalleryPreviews(res.data.gallery);
             }
         } catch (error) {
             console.error('Error fetching history:', error);
@@ -80,21 +76,6 @@ export default function HistoryForm() {
         }
     };
 
-    const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            const files = Array.from(e.target.files);
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onloadend = () => setGalleryPreviews(prev => [...prev, reader.result as string]);
-                reader.readAsDataURL(file);
-            });
-        }
-    };
-
-    const removeGalleryItem = (index: number) => {
-        setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
-    };
-
     const handleSave = async () => {
         try {
             setSaving(true);
@@ -107,23 +88,9 @@ export default function HistoryForm() {
                 imageUrl = uploadRes.data.url;
             }
 
-            const uploadedGallery = await Promise.all(
-                galleryPreviews.map(async (item) => {
-                    if (item.startsWith('data:')) {
-                        const file = await fetch(item).then(res => res.blob());
-                        const formData = new FormData();
-                        formData.append('file', file, 'gallery-image.jpg');
-                        const res = await axios.post('/api/admin/about/upload', formData);
-                        return res.data.url;
-                    }
-                    return item;
-                })
-            );
-
             await axios.post('/api/admin/about/temple/history', {
                 ...data,
-                image: imageUrl,
-                gallery: uploadedGallery
+                image: imageUrl
             });
 
             setNotification({ type: 'success', message: 'Temple history updated successfully!' });
@@ -154,8 +121,7 @@ export default function HistoryForm() {
             modernTitle: 'Modern Form Title',
             modernContent: 'Modern Form List',
             stats: 'Quick Stats Row',
-            image: 'Main History Image',
-            gallery: 'Gallery Images'
+            image: 'Main History Image'
         },
         marathi: {
             title: 'मुख्य शीर्षक',
@@ -168,8 +134,7 @@ export default function HistoryForm() {
             modernTitle: 'आधुनिक स्वरूप शीर्षक',
             modernContent: 'आधुनिक स्वरूप यादी',
             stats: 'आकडेवारी',
-            image: 'मुख्य चित्र',
-            gallery: 'दालन चित्रे'
+            image: 'मुख्य चित्र'
         }
     };
 
@@ -189,13 +154,6 @@ export default function HistoryForm() {
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button
-                        onClick={() => setData({ ...data, isPublished: !data.isPublished })}
-                        className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${data.isPublished ? 'bg-green-500/10 text-green-600 border border-green-500/20' : 'bg-gray-100 text-gray-500 border border-gray-200'
-                            }`}
-                    >
-                        {data.isPublished ? 'Published' : 'Draft'}
-                    </button>
                     <button
                         onClick={handleSave}
                         disabled={saving}
@@ -251,27 +209,6 @@ export default function HistoryForm() {
                                     <input type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
                                 </label>
                             )}
-                        </div>
-                    </div>
-
-                    <div className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-gray-100">
-                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1 mb-4 block">{currentLabels.gallery}</label>
-                        <div className="grid grid-cols-2 gap-3">
-                            {galleryPreviews.map((src, idx) => (
-                                <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden group">
-                                    <img src={src} className="w-full h-full object-cover" />
-                                    <button
-                                        onClick={() => removeGalleryItem(idx)}
-                                        className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-all"
-                                    >
-                                        <X className="w-3 h-3" />
-                                    </button>
-                                </div>
-                            ))}
-                            <label className="aspect-square rounded-2xl border-2 border-dashed border-gray-100 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-all">
-                                <Plus className="w-5 h-5 text-gray-300" />
-                                <input type="file" className="hidden" multiple onChange={handleGalleryChange} accept="image/*" />
-                            </label>
                         </div>
                     </div>
                 </div>
