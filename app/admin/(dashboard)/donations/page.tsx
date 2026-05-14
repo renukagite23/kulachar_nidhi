@@ -394,8 +394,8 @@ export default function AdminDonationsPage() {
               </button>
             </div>
 
-            <div className="p-8 overflow-y-auto bg-muted/5 flex flex-col items-center gap-8">
-              <div className="shadow-2xl rounded-3xl overflow-hidden border border-border bg-white transform scale-[0.85] md:scale-100 origin-top">
+            <div className="p-8 bg-muted/5 flex flex-col items-center gap-6 overflow-hidden">
+              <div className="w-full max-w-[850px] max-h-[500px] overflow-y-auto shadow-2xl rounded-3xl border border-border bg-white custom-scrollbar p-1">
                 <Receipt donation={{
                   ...selectedDonation,
                   donationDate: selectedDonation.donationDate || selectedDonation.createdAt
