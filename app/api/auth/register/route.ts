@@ -49,7 +49,9 @@ export async function POST(req: Request) {
     try {
       await Notification.create({
         title: 'New Devotee Registered',
+        titleMr: 'नवीन भक्ताची नोंदणी झाली',
         message: `${user.name} (${user.email}) has joined the Kulachar Nidhi community.`,
+        messageMr: `${user.name} (${user.email}) कुळाचार निधी समुदायात सामील झाले आहेत.`,
         type: 'general',
       });
     } catch (notifError) {

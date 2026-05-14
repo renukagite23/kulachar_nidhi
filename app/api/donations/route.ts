@@ -37,7 +37,9 @@ export async function POST(req: Request) {
     try {
       await Notification.create({
         title: 'New Donation Received',
+        titleMr: 'नवीन देणगी प्राप्त झाली',
         message: `${donation.donorName} donated ₹${donation.amount} for ${donation.purpose}.`,
+        messageMr: `${donation.donorName} यांनी ${donation.purpose} साठी ₹${donation.amount} दान केले.`,
         type: 'donation',
       });
     } catch (notifError) {

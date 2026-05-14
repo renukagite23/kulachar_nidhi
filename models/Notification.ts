@@ -3,7 +3,9 @@ import mongoose from 'mongoose';
 const NotificationSchema = new mongoose.Schema(
     {
         title: String,
+        titleMr: String,
         message: String,
+        messageMr: String,
         type: {
             type: String,
             enum: ['donation', 'event', 'general'],
