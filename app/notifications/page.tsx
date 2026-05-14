@@ -71,7 +71,6 @@ export default function UserNotificationsPage() {
 
                 <section className="py-20 bg-[#FFFDF9] relative min-h-[60vh]">
                     <div className="max-w-7xl mx-auto px-4 relative z-10">
-
                         <div className="text-center mb-16">
                             <div className="flex justify-center items-center gap-2 mb-4">
                                 <Sparkles className="w-4 h-4 text-primary" />
