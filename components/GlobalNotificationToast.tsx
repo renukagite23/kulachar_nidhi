@@ -43,7 +43,11 @@ export default function GlobalNotificationToast() {
                 // Filter for notifications NOT in the seen list
                 const unseen = data.filter((n: any) => !seenIds.includes(n._id));
                 
+<<<<<<< HEAD
                 setNotifications(unseen.slice(0, 1)); 
+=======
+                setNotifications(unseen.slice(0, 3)); 
+>>>>>>> 8f319bf (Added global notification toast and updated language context)
             } else {
                 setNotifications([]);
             }
