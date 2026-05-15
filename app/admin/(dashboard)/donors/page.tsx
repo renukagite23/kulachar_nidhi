@@ -544,7 +544,7 @@ export default function DonorsPage() {
                                 </div>
                                 <h2 className="text-xl font-bold text-secondary mb-2">Delete Donor?</h2>
                                 <p className="text-sm text-muted-foreground mb-6">
-                                    Are you sure you want to delete <span className="font-bold text-secondary">{donorToDelete?.name}</span>?<br/>
+                                    Are you sure you want to delete <span className="font-bold text-secondary">{donorToDelete?.name}</span>?<br />
                                     This will also delete <span className="font-bold text-red-600">{donorToDelete?.history?.length} donation records</span>. This action cannot be undone.
                                 </p>
 
