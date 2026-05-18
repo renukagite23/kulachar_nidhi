@@ -16,34 +16,46 @@ export default function ContactPage({
 }) {
   const { t, lang } = useLanguage();
   const [mounted, setMounted] = React.useState(false);
+  const [settings, setSettings] = React.useState<any>(null);
 
   React.useEffect(() => {
     setMounted(true);
+    fetch('/api/contact/settings')
+      .then(res => {
+        if (res.ok) return res.json();
+        throw new Error();
+      })
+      .then(data => setSettings(data))
+      .catch(() => {});
   }, []);
 
   const contactInfo = [
     {
       icon: MapPin,
       title: t('contact.address'),
-      details: t('hero.title_1') + ' ' + t('hero.title_2') + ', Ekvira Devi-Jaitapur-Mulher, Taluka Baglan, District Nashik, Maharashtra - 423301',
+      details: settings
+        ? (lang === 'en' ? settings.address : settings.addressMr)
+        : (t('hero.title_1') + ' ' + t('hero.title_2') + ', Ekvira Devi-Jaitapur-Mulher, Taluka Baglan, District Nashik, Maharashtra - 423301'),
       action: t('contact.actions.map')
     },
     {
       icon: Mail,
       title: t('contact.email'),
-      details: 'info@kuldaivattrust.org\nsupport@kuldaivattrust.org',
+      details: settings ? settings.email : 'info@kuldaivattrust.org\nsupport@kuldaivattrust.org',
       action: t('contact.actions.email')
     },
     {
       icon: Clock,
       title: t('contact.hours'),
-      details: lang === 'en' ? 'Monday to Sunday:\n10:00 AM to 6:00 PM' : 'सोमवार ते रविवार:\nसकाळी १०:०० ते सायंकाळी ६:००',
+      details: settings
+        ? (lang === 'en' ? settings.workingHours : settings.workingHoursMr)
+        : (lang === 'en' ? 'Monday to Sunday:\n10:00 AM to 6:00 PM' : 'सोमवार ते रविवार:\nसकाळी १०:०० ते सायंकाळी ६:००'),
       action: t('contact.actions.hours')
     },
     {
       icon: Phone,
       title: t('contact.phone'),
-      details: '०२२-२३५१ ४७३२\n०२२-२३५१ २२३३',
+      details: settings ? settings.phone : '०२२-२३५१ ४७३२\n०२२-२३५१ २२३३',
       action: t('contact.actions.call')
     }
   ];
@@ -273,7 +285,7 @@ export default function ContactPage({
             {/* FULL WIDTH MAP SECTION */}
             <section className="relative h-[600px] w-full bg-muted overflow-hidden border-t border-border">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119346.98938985093!2d73.93239425028592!3d20.8077304!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bde5ca91223aaab%3A0x2cdf1657f77d4179!2sEkvira%20Devi-Jaitapur-Mulher!5e0!3m2!1sen!2sin!4v1778580926526!5m2!1sen!2sin"
+                src={settings?.mapEmbedUrl || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d119346.98938985093!2d73.93239425028592!3d20.8077304!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bde5ca91223aaab%3A0x2cdf1657f77d4179!2sEkvira%20Devi-Jaitapur-Mulher!5e0!3m2!1sen!2sin!4v1778580926526!5m2!1sen!2sin"}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -294,8 +306,10 @@ export default function ContactPage({
                     <MapPin className="w-3 h-3" /> Visit Us
                   </div>
                   <h4 className="text-lg font-black text-secondary mb-2">Shri Ekvira Devi Temple</h4>
-                  <p className="text-[10px] text-muted-foreground font-bold leading-relaxed mb-4 italic">
-                    Jaitapur, Taluka Baglan, <br />District Nashik - 423301
+                  <p className="text-[10px] text-muted-foreground font-bold leading-relaxed mb-4 italic whitespace-pre-line">
+                    {settings
+                      ? (lang === 'en' ? settings.address : settings.addressMr)
+                      : "Jaitapur, Taluka Baglan, \nDistrict Nashik - 423301"}
                   </p>
                   <a
                     href="https://www.google.com/maps/dir//Ekvira+Devi-Jaitapur-Mulher/@20.8077304,73.9323943,12z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3bde5ca91223aaab:0x2cdf1657f77d4179!2m2!1d74.0583333!2d20.5666667?entry=ttu"

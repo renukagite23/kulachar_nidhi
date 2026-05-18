@@ -30,9 +30,19 @@ export async function POST(req: Request) {
     let referredBy = null;
     if (referralCode) {
       const collector = await User.findOne({ referralCode, role: 'collector' });
-      if (collector) {
-        referredBy = collector._id;
+      if (!collector) {
+        return NextResponse.json(
+          { message: 'Invalid referral code.' },
+          { status: 400 }
+        );
       }
+      if (collector.approvalStatus !== 'approved') {
+        return NextResponse.json(
+          { message: 'The collector associated with this referral code is not approved by the admin yet.' },
+          { status: 400 }
+        );
+      }
+      referredBy = collector._id;
     }
 
     const user = await User.create({

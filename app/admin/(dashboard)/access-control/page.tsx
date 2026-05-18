@@ -716,7 +716,14 @@ export default function AccessControlPage() {
                       <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest ml-1">Access Status</label>
                       <select
                         value={editForm.approvalStatus}
-                        onChange={(e) => setEditForm({ ...editForm, approvalStatus: e.target.value })}
+                        onChange={(e) => {
+                          const newStatus = e.target.value as 'approved' | 'pending' | 'rejected';
+                          setEditForm({
+                            ...editForm,
+                            approvalStatus: newStatus,
+                            isActive: newStatus === 'approved' ? true : (newStatus === 'rejected' ? false : editForm.isActive)
+                          });
+                        }}
                         className="w-full h-12 px-4 bg-muted/30 border border-border rounded-2xl text-xs font-black text-secondary focus:bg-white focus:ring-4 focus:ring-primary/10 transition-all cursor-pointer outline-none"
                       >
                         <option value="approved">Approved</option>
