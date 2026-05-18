@@ -1,17 +1,26 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
+import { updateUser } from '@/redux/slices/authSlice';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { User, Mail, Phone, Shield, IndianRupee, Heart, MapPin, Calendar, Edit3 } from 'lucide-react';
+import { User, Mail, Phone, Shield, IndianRupee, Heart, MapPin, Calendar, Edit3, X, Check, Loader2, Lock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import axios from 'axios';
 
 export default function ProfilePage() {
-  const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { user, isAuthenticated, token } = useSelector((state: RootState) => state.auth);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({ name: '', phone: '', email: '', location: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     setMounted(true);
@@ -23,7 +32,61 @@ export default function ProfilePage() {
     }
   }, [isAuthenticated, router, mounted]);
 
+  useEffect(() => {
+    if (user) {
+      setEditData({
+        name: user.name || '',
+        phone: user.phone || '',
+        email: user.email || '',
+        location: user.location || 'Mumbai, MH'
+      });
+    }
+  }, [user]);
+
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+
+      const response = await axios.put('/api/user/profile', {
+        name: editData.name,
+        phone: editData.phone,
+        email: editData.email,
+        location: editData.location
+      }, config);
+
+      if (response.data.success) {
+        dispatch(updateUser({
+          name: editData.name,
+          phone: editData.phone,
+          email: editData.email,
+          location: editData.location
+        }));
+        setIsEditing(false);
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to update profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!mounted || !user) return null;
+
+  const formattedJoinedDate = user.createdAt
+    ? new Date(user.createdAt).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+    : new Date().toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FFFDF9]">
@@ -39,22 +102,29 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
-          <div className="text-center md:text-left">
-            <h1 className="text-4xl font-black text-secondary">{user.name}</h1>
+          <div className="text-center md:text-left flex-1 min-w-0">
+            <h1 className="text-4xl font-black text-secondary truncate">{user.name}</h1>
             <p className="text-accent font-bold uppercase tracking-[0.2em] text-[10px] mt-1">Devotee of Kuldaivat Trust</p>
           </div>
-          <button className="md:ml-auto spiritual-button-outline !px-6 text-xs uppercase tracking-widest font-black">
-            Edit Profile
-          </button>
+          <div className="md:ml-auto flex gap-3 shrink-0">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="spiritual-button-outline !px-6 text-xs uppercase tracking-widest font-black"
+            >
+              Edit Profile
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Account Overview */}
           <div className="md:col-span-2 space-y-6">
             <div className="spiritual-card p-8">
-              <h2 className="text-xl font-black text-secondary mb-6 border-b border-border pb-4">Personal Information</h2>
+              <div className="flex items-center justify-between mb-6 border-b border-border pb-4">
+                <h2 className="text-xl font-black text-secondary">Personal Information</h2>
+              </div>
               <div className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
                   <div>
                     <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-wider mb-2">Email Identity</label>
                     <div className="flex items-center gap-3 text-secondary font-bold">
@@ -64,18 +134,17 @@ export default function ProfilePage() {
                       {user.email}
                     </div>
                   </div>
+
                   <div>
                     <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-wider mb-2">Contact Number</label>
                     <div className="flex items-center gap-3 text-secondary font-bold">
-                      <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                         <Phone className="w-4 h-4 text-primary" />
                       </div>
-                      {user.phone || 'Not Provided'}
+                      <span className="truncate">{user.phone || 'Not Provided'}</span>
                     </div>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-wider mb-2">Role Access</label>
                     <div className="flex items-center gap-3 text-secondary font-bold">
@@ -85,31 +154,17 @@ export default function ProfilePage() {
                       <span className="capitalize">{user.role}</span>
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-wider mb-2">Location</label>
+
+                  <div className="sm:col-span-2">
+                    <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-wider mb-2">Joined Date</label>
                     <div className="flex items-center gap-3 text-secondary font-bold">
                       <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-                        <MapPin className="w-4 h-4 text-primary" />
+                        <Calendar className="w-4 h-4 text-primary" />
                       </div>
-                      Mumbai, MH
+                      {formattedJoinedDate}
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="spiritual-card p-8 bg-secondary text-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-8 opacity-10">
-                <Heart className="w-32 h-32" />
-              </div>
-              <div className="relative z-10">
-                <h2 className="text-xl font-black mb-4">Member Status</h2>
-                <div className="flex items-center gap-3 text-accent font-bold uppercase tracking-wider text-sm mb-6">
-                  <Calendar className="w-4 h-4" /> Joined {new Date().getFullYear()}
-                </div>
-                <p className="text-white/70 text-sm leading-relaxed max-w-md italic">
-                  "Your contribution ensures that our traditions and spiritual services continue to flourish for generations."
-                </p>
               </div>
             </div>
           </div>
@@ -157,6 +212,176 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Edit Profile Modal */}
+        <AnimatePresence>
+          {isEditing && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                onClick={() => setIsEditing(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="relative w-full max-w-2xl bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-border z-10"
+              >
+                <div className="bg-secondary px-8 py-5 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-secondary to-secondary/80 z-0" />
+                  <div className="relative z-10 flex items-center justify-between">
+                    <h2 className="text-lg font-black text-white uppercase tracking-widest flex items-center gap-3">
+                      <Edit3 className="w-5 h-5 text-primary" /> Edit Profile
+                    </h2>
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="p-2 hover:bg-white/10 rounded-full transition-colors text-white"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-6 sm:p-8 space-y-6 bg-gradient-to-b from-muted/20 to-white">
+                  {error && (
+                    <div className="bg-red-50 text-red-500 text-xs font-bold p-3 rounded-xl border border-red-100 flex items-center gap-2">
+                      <X className="w-4 h-4 shrink-0" /> {error}
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Full Name */}
+                    <div>
+                      <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">Full Name</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <User className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        <input
+                          type="text"
+                          value={editData.name}
+                          onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                          className="w-full bg-white border border-border rounded-xl pl-10 pr-3 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-bold text-secondary text-sm shadow-sm"
+                          placeholder="Enter your full name"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Email Address */}
+                    <div>
+                      <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">Email Address</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Mail className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        <input
+                          type="email"
+                          value={editData.email}
+                          onChange={(e) => setEditData({ ...editData, email: e.target.value })}
+                          className="w-full bg-white border border-border rounded-xl pl-10 pr-3 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-bold text-secondary text-sm shadow-sm"
+                          placeholder="Enter your email address"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Phone Number */}
+                    <div>
+                      <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">Phone Number</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Phone className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        <input
+                          type="text"
+                          value={editData.phone}
+                          onChange={(e) => setEditData({ ...editData, phone: e.target.value.replace(/\D/g, '') })}
+                          className="w-full bg-white border border-border rounded-xl pl-10 pr-3 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-bold text-secondary text-sm shadow-sm"
+                          placeholder="Enter your phone number"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Location */}
+                    <div>
+                      <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5">Location</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <MapPin className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        <input
+                          type="text"
+                          value={editData.location}
+                          onChange={(e) => setEditData({ ...editData, location: e.target.value })}
+                          className="w-full bg-white border border-border rounded-xl pl-10 pr-3 py-2.5 outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-bold text-secondary text-sm shadow-sm"
+                          placeholder="E.g. Mumbai, MH"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Role Access (Read-Only) */}
+                    <div>
+                      <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5 flex items-center gap-1">
+                        Role Access <Lock className="w-2.5 h-2.5 text-muted-foreground" />
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Shield className="w-4 h-4 text-muted-foreground/60" />
+                        </div>
+                        <input
+                          type="text"
+                          value={user.role}
+                          disabled
+                          readOnly
+                          className="w-full bg-muted/40 border border-border rounded-xl pl-10 pr-3 py-2.5 outline-none font-bold text-muted-foreground text-sm cursor-not-allowed select-none capitalize"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Joined Date (Read-Only) */}
+                    <div>
+                      <label className="block text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1.5 flex items-center gap-1">
+                        Joined Date <Lock className="w-2.5 h-2.5 text-muted-foreground" />
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Calendar className="w-4 h-4 text-muted-foreground/60" />
+                        </div>
+                        <input
+                          type="text"
+                          value={formattedJoinedDate}
+                          disabled
+                          readOnly
+                          className="w-full bg-muted/40 border border-border rounded-xl pl-10 pr-3 py-2.5 outline-none font-bold text-muted-foreground text-sm cursor-not-allowed select-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-5 flex gap-4 border-t border-border mt-6">
+                    <button
+                      onClick={() => setIsEditing(false)}
+                      className="flex-1 px-5 py-3 bg-muted text-secondary font-black text-xs uppercase tracking-widest rounded-xl hover:bg-muted/80 transition-all shadow-sm"
+                      disabled={loading}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleSave}
+                      disabled={loading}
+                      className="flex-1 spiritual-button !px-5 !py-3 text-xs uppercase tracking-widest font-black flex items-center justify-center gap-2 shadow-xl shadow-primary/20"
+                    >
+                      {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                      Save Profile
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </main>
 
       <Footer />

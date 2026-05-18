@@ -39,6 +39,10 @@ const UserSchema = new mongoose.Schema({
     canDeleteDonations: { type: Boolean, default: false },
   },
   phone: String,
+  location: {
+    type: String,
+    default: 'Mumbai, MH'
+  },
   totalDonations: {
     type: Number,
     default: 0,

@@ -6,7 +6,9 @@ interface User {
   email: string;
   role: string;
   phone?: string;
+  location?: string;
   totalDonations?: number;
+  createdAt?: string;
 }
 
 interface AuthState {
