@@ -45,14 +45,6 @@ export default function ContactPage({
       action: t('contact.actions.email')
     },
     {
-      icon: Clock,
-      title: t('contact.hours'),
-      details: settings
-        ? (lang === 'en' ? settings.workingHours : settings.workingHoursMr)
-        : (lang === 'en' ? 'Monday to Sunday:\n10:00 AM to 6:00 PM' : 'सोमवार ते रविवार:\nसकाळी १०:०० ते सायंकाळी ६:००'),
-      action: t('contact.actions.hours')
-    },
-    {
       icon: Phone,
       title: t('contact.phone'),
       details: settings ? settings.phone : '०२२-२३५१ ४७३२\n०२२-२३५१ २२३३',

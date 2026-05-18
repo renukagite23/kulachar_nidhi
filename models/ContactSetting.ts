@@ -5,8 +5,6 @@ export interface IContactSetting extends Document {
   addressMr: string;
   email: string;
   phone: string;
-  workingHours: string;
-  workingHoursMr: string;
   mapEmbedUrl?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -18,8 +16,6 @@ const ContactSettingSchema: Schema = new Schema(
     addressMr: { type: String, required: true },
     email: { type: String, required: true },
     phone: { type: String, required: true },
-    workingHours: { type: String, required: true },
-    workingHoursMr: { type: String, required: true },
     mapEmbedUrl: { type: String },
   },
   { timestamps: true }

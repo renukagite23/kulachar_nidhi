@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
-    Search, Filter, Mail, Calendar as CalendarIcon, Trash2, Eye, X, CheckCircle2, AlertCircle, MessageSquare, Clock, Phone, Reply, Download, ChevronDown
+    Search, Filter, Mail, Calendar as CalendarIcon, Trash2, Eye, X, CheckCircle2, AlertCircle, MessageSquare, Clock, Phone, Reply, Download, ChevronDown, Globe
 } from 'lucide-react';
 import { format } from 'date-fns';
 import * as XLSX from 'xlsx';
@@ -31,13 +31,12 @@ const Toast = ({ message, type, onClose }: { message: string, type: 'success' | 
 const ContactSettingsForm = ({ showToast }: { showToast: (msg: string, type: 'success' | 'error') => void }) => {
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [activeLangTab, setActiveLangTab] = useState<'english' | 'marathi'>('english');
     const [settings, setSettings] = useState({
         address: '',
         addressMr: '',
         email: '',
         phone: '',
-        workingHours: '',
-        workingHoursMr: '',
         mapEmbedUrl: '',
     });
 
@@ -53,8 +52,6 @@ const ContactSettingsForm = ({ showToast }: { showToast: (msg: string, type: 'su
                         addressMr: data.addressMr || '',
                         email: data.email || '',
                         phone: data.phone || '',
-                        workingHours: data.workingHours || '',
-                        workingHoursMr: data.workingHoursMr || '',
                         mapEmbedUrl: data.mapEmbedUrl || '',
                     });
                 } else {
@@ -105,100 +102,101 @@ const ContactSettingsForm = ({ showToast }: { showToast: (msg: string, type: 'su
                 <p className="text-xs text-muted-foreground">Set contact information displayed on the public Contact Us page.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* English Address */}
+            {/* Language Switcher Tabs */}
+            <div className="flex border-b border-gray-100">
+                {(['english', 'marathi'] as const).map((tab) => (
+                    <button
+                        type="button"
+                        key={tab}
+                        onClick={() => setActiveLangTab(tab)}
+                        className={`flex-1 flex items-center justify-center gap-2 py-5 text-[10px] font-black uppercase tracking-widest transition-all ${activeLangTab === tab
+                            ? 'text-primary bg-primary/5 border-b-2 border-primary'
+                            : 'text-muted-foreground hover:bg-gray-50'
+                            }`}
+                    >
+                        <Globe className={`w-3.5 h-3.5 ${activeLangTab === tab ? 'text-primary' : 'text-muted-foreground'}`} />
+                        {tab === 'english' ? 'ENGLISH INFORMATION' : 'मराठी माहिती'}
+                    </button>
+                ))}
+            </div>
+
+            {/* Language Specific Fields Tab */}
+            {activeLangTab === 'english' ? (
+                <div className="space-y-6 animate-in fade-in-50 duration-200">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Address (English) *</label>
+                        <textarea
+                            required
+                            rows={4}
+                            value={settings.address}
+                            onChange={(e) => setSettings({ ...settings, address: e.target.value })}
+                            className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold resize-none transition-all shadow-inner"
+                            placeholder="Enter English Address"
+                        />
+                    </div>
+                </div>
+            ) : (
+                <div className="space-y-6 animate-in fade-in-50 duration-200">
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Address (Marathi) *</label>
+                        <textarea
+                            required
+                            rows={4}
+                            value={settings.addressMr}
+                            onChange={(e) => setSettings({ ...settings, addressMr: e.target.value })}
+                            className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold resize-none transition-all shadow-inner"
+                            placeholder="मराठीत पत्ता प्रविष्ट करा"
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* General Settings Section */}
+            <div className="pt-6 border-t border-gray-100 space-y-8 animate-in fade-in-50 duration-200">
+                <div>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-secondary ml-1 mb-2">General Settings</h4>
+                    <p className="text-[10px] text-muted-foreground">These details are shared across both language versions of the Contact page.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Email Address */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email Address(es) *</label>
+                        <input
+                            type="text"
+                            required
+                            value={settings.email}
+                            onChange={(e) => setSettings({ ...settings, email: e.target.value })}
+                            className="w-full h-12 px-6 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold transition-all shadow-inner"
+                            placeholder="Enter email addresses (comma or newline separated)"
+                        />
+                    </div>
+
+                    {/* Phone Numbers */}
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Phone Number(s) *</label>
+                        <input
+                            type="text"
+                            required
+                            value={settings.phone}
+                            onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
+                            className="w-full h-12 px-6 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold transition-all shadow-inner"
+                            placeholder="Enter phone numbers (comma or newline separated)"
+                        />
+                    </div>
+                </div>
+
+                {/* Google Map Embed Url */}
                 <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Address (English) *</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Google Maps Embed URL</label>
                     <textarea
-                        required
                         rows={3}
-                        value={settings.address}
-                        onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-                        className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold resize-none transition-all shadow-inner"
-                        placeholder="Enter English Address"
+                        value={settings.mapEmbedUrl}
+                        onChange={(e) => setSettings({ ...settings, mapEmbedUrl: e.target.value })}
+                        className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-[11px] font-mono resize-none transition-all shadow-inner"
+                        placeholder="Paste src value from Google Maps <iframe> code"
                     />
                 </div>
-
-                {/* Marathi Address */}
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Address (Marathi) *</label>
-                    <textarea
-                        required
-                        rows={3}
-                        value={settings.addressMr}
-                        onChange={(e) => setSettings({ ...settings, addressMr: e.target.value })}
-                        className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold resize-none transition-all shadow-inner"
-                        placeholder="मराठीत पत्ता प्रविष्ट करा"
-                    />
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Email Address */}
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Email Address(es) *</label>
-                    <input
-                        type="text"
-                        required
-                        value={settings.email}
-                        onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-                        className="w-full h-12 px-6 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold transition-all shadow-inner"
-                        placeholder="Enter email addresses (comma or newline separated)"
-                    />
-                </div>
-
-                {/* Phone Numbers */}
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Phone Number(s) *</label>
-                    <input
-                        type="text"
-                        required
-                        value={settings.phone}
-                        onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-                        className="w-full h-12 px-6 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold transition-all shadow-inner"
-                        placeholder="Enter phone numbers (comma or newline separated)"
-                    />
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* English Working Hours */}
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Working Hours (English) *</label>
-                    <textarea
-                        required
-                        rows={2}
-                        value={settings.workingHours}
-                        onChange={(e) => setSettings({ ...settings, workingHours: e.target.value })}
-                        className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold resize-none transition-all shadow-inner"
-                        placeholder="e.g. Monday to Sunday:\n10:00 AM to 6:00 PM"
-                    />
-                </div>
-
-                {/* Marathi Working Hours */}
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Working Hours (Marathi) *</label>
-                    <textarea
-                        required
-                        rows={2}
-                        value={settings.workingHoursMr}
-                        onChange={(e) => setSettings({ ...settings, workingHoursMr: e.target.value })}
-                        className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-bold resize-none transition-all shadow-inner"
-                        placeholder="उदा. सोमवार ते रविवार:\nसकाळी १०:०० ते सायंकाळी ६:००"
-                    />
-                </div>
-            </div>
-
-            {/* Google Map Embed Url */}
-            <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Google Maps Embed URL</label>
-                <textarea
-                    rows={2}
-                    value={settings.mapEmbedUrl}
-                    onChange={(e) => setSettings({ ...settings, mapEmbedUrl: e.target.value })}
-                    className="w-full p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-[11px] font-mono resize-none transition-all shadow-inner"
-                    placeholder="Paste src value from Google Maps <iframe> code"
-                />
             </div>
 
             <div className="pt-4 border-t border-border flex justify-end">
