@@ -19,14 +19,21 @@ import {
   Calendar,
   GalleryHorizontal,
   Video as VideoIcon,
-  MessageCircle
+  MessageCircle,
+  X
 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminLogout } from '@/redux/slices/adminAuthSlice';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
 
-export default function AdminSidebar() {
+export default function AdminSidebar({
+  isMobileOpen = false,
+  setIsMobileOpen
+}: {
+  isMobileOpen?: boolean;
+  setIsMobileOpen?: (val: boolean) => void;
+}) {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const pathname = usePathname();
   const dispatch = useDispatch();
@@ -125,21 +132,42 @@ export default function AdminSidebar() {
   };
 
   return (
-    <div
-      className={`h-screen flex flex-col bg-secondary text-white transition-all duration-300 relative border-r border-white/5 ${isCollapsed ? 'w-20' : 'w-72'
-        }`}
-    >
+    <>
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden backdrop-blur-sm"
+          onClick={() => setIsMobileOpen?.(false)}
+        />
+      )}
+      
+      <div
+        className={`fixed md:relative inset-y-0 left-0 z-50 h-screen flex flex-col bg-secondary text-white transition-transform duration-300 border-r border-white/5 
+          ${isCollapsed ? 'md:w-20' : 'w-72'} 
+          w-72
+          ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
+      >
       {/* Logo Section */}
-      <div className="p-6 flex items-center gap-3 border-b border-white/5">
-        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
-          <img src="/devi.png" alt="Logo" className="w-6 h-6 object-contain brightness-0 invert" />
-        </div>
-        {!isCollapsed && (
-          <div className="overflow-hidden whitespace-nowrap">
-            <h1 className="font-black text-lg tracking-tight uppercase">Trust Admin</h1>
-            <p className="text-[10px] text-accent font-black uppercase tracking-widest">Portal Terminal</p>
+      <div className="p-6 flex items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
+            <img src="/devi.png" alt="Logo" className="w-6 h-6 object-contain brightness-0 invert" />
           </div>
-        )}
+          {!isCollapsed && (
+            <div className="overflow-hidden whitespace-nowrap">
+              <h1 className="font-black text-lg tracking-tight uppercase">Trust Admin</h1>
+              <p className="text-[10px] text-accent font-black uppercase tracking-widest">Portal Terminal</p>
+            </div>
+          )}
+        </div>
+        {/* Mobile Close Button */}
+        <button 
+          onClick={() => setIsMobileOpen?.(false)}
+          className="md:hidden p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Profile Section Removed as requested */}
@@ -179,6 +207,7 @@ export default function AdminSidebar() {
                         <Link
                           key={sub.href}
                           href={sub.href}
+                          onClick={() => setIsMobileOpen?.(false)}
                           className={`flex items-center gap-4 px-4 py-2.5 rounded-lg transition-all ${isSubActive
                             ? 'bg-primary text-white shadow-lg shadow-primary/10'
                             : 'text-white/40 hover:text-white hover:bg-white/5'
@@ -199,6 +228,7 @@ export default function AdminSidebar() {
             <Link
               key={item.href || item.title}
               href={item.href || '#'}
+              onClick={() => setIsMobileOpen?.(false)}
               className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all group ${isActive
                 ? 'bg-primary text-white shadow-xl shadow-primary/20'
                 : 'text-white/60 hover:bg-white/5 hover:text-white'
@@ -227,13 +257,14 @@ export default function AdminSidebar() {
         </button>
       </div>
 
-      {/* Collapse Toggle */}
+      {/* Collapse Toggle (Desktop Only) */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-24 w-6 h-6 bg-primary rounded-full flex items-center justify-center border-2 border-secondary shadow-lg hover:scale-110 transition-transform z-50 text-white"
+        className="hidden md:flex absolute -right-3 top-24 w-6 h-6 bg-primary rounded-full items-center justify-center border-2 border-secondary shadow-lg hover:scale-110 transition-transform z-50 text-white"
       >
         {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>
     </div>
+    </>
   );
 }

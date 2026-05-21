@@ -15,6 +15,7 @@ export default function AdminDashboardLayout({
   const { admin, isAdminAuthenticated } = useSelector((state: RootState) => state.adminAuth);
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -36,10 +37,10 @@ export default function AdminDashboardLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-white">
-      <AdminSidebar />
-      <div className="flex-grow flex flex-col overflow-hidden bg-[#FFFDF9]">
-        <AdminNavbar />
+    <div className="flex h-screen overflow-hidden bg-white relative w-full">
+      <AdminSidebar isMobileOpen={isMobileMenuOpen} setIsMobileOpen={setIsMobileMenuOpen} />
+      <div className="flex-grow flex flex-col overflow-hidden bg-[#FFFDF9] w-full min-w-0">
+        <AdminNavbar onMenuClick={() => setIsMobileMenuOpen(true)} />
         <div className="flex-grow overflow-y-auto">
           {children}
         </div>

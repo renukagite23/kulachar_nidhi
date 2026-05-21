@@ -43,7 +43,7 @@ export default function Home() {
           <div className="absolute top-0 left-0 w-60 h-60 bg-orange-200/20 blur-3xl rounded-full"></div>
           <div className="absolute bottom-0 right-0 w-60 h-60 bg-yellow-100/30 blur-3xl rounded-full"></div>
 
-          <div className="max-w-7xl mx-auto px-56 lg:px-6 relative z-10">
+          <div className="max-w-7xl mx-auto px-6 lg:px-24 relative z-10">
 
             {/* MAIN CARD */}
             <div className="relative bg-white rounded-[28px] shadow-[0_15px_45px_rgba(0,0,0,0.08)] overflow-hidden border border-orange-100">

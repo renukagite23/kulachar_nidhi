@@ -5,7 +5,8 @@ import {
   SearchIcon,
   Settings,
   LogOut,
-  User
+  User,
+  Menu
 } from 'lucide-react';
 import NotificationBell from '../NotificationBell';
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,7 +14,7 @@ import { RootState } from '@/redux/store';
 import { adminLogout } from '@/redux/slices/adminAuthSlice';
 import { usePathname, useRouter } from 'next/navigation';
 
-export default function AdminNavbar() {
+export default function AdminNavbar({ onMenuClick }: { onMenuClick?: () => void }) {
   const { admin } = useSelector((state: RootState) => state.adminAuth);
   const dispatch = useDispatch();
   const pathname = usePathname();
@@ -54,8 +55,14 @@ export default function AdminNavbar() {
         
         {/* Left */}
         <div className="flex items-center gap-2 text-sm font-bold">
-          <span className="text-muted-foreground">Admin</span>
-          <span className="text-border">/</span>
+          <button 
+            onClick={onMenuClick}
+            className="md:hidden p-2 -ml-2 mr-2 text-secondary hover:bg-muted rounded-xl transition-colors"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          <span className="text-muted-foreground hidden sm:block">Admin</span>
+          <span className="text-border hidden sm:block">/</span>
           <span className="text-secondary">{currentPage}</span>
         </div>
 
