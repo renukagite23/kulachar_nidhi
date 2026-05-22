@@ -14,17 +14,27 @@ export default function AartiSchedule() {
   ];
 
   return (
-    <section
-      className="relative w-full min-h-[550px] bg-cover bg-left flex items-center"
-      style={{
-        backgroundImage: "url('/images/aarti_background.png')" // 🔁 your generated image
-      }}
-    >
-      {/* Dark Overlay for readability */}
+    <section className="relative w-full bg-[#1c0d02] md:bg-transparent flex flex-col md:block">
+
+      {/* Mobile Image */}
+      <div className="w-full aspect-[4/3] min-h-[300px] max-h-[50vh] md:hidden relative">
+        <img
+          src="/images/aarti_background.png"
+          alt="Aarti Background"
+          className="w-full h-full object-cover object-left-top"
+        />
+        {/* Mobile Gradient */}
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#1c0d02] via-[#1c0d02]/80 to-transparent" />
+      </div>
+
+      {/* Desktop Background */}
+      <div
+        className="hidden md:block absolute inset-0 bg-cover bg-left z-0"
+        style={{ backgroundImage: "url('/images/aarti_background.png')" }}
+      />
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 flex justify-end">
-
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pb-16 pt-4 md:py-0 md:min-h-[550px] md:flex md:items-center md:justify-end">
         <div className="w-full md:w-[45%]">
 
           {/* Header */}

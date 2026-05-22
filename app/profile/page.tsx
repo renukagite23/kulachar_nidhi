@@ -45,6 +45,26 @@ export default function ProfilePage() {
   }, [isAuthenticated, router, mounted]);
 
   useEffect(() => {
+    const fetchLatestProfile = async () => {
+      if (!token) return;
+      try {
+        const res = await axios.get('/api/user/profile', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.data) {
+          dispatch(updateUser(res.data));
+        }
+      } catch (err) {
+        console.error('Failed to fetch latest profile', err);
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchLatestProfile();
+    }
+  }, [isAuthenticated, token, dispatch]);
+
+  useEffect(() => {
     if (user) {
       setEditData({
         name: user.name || '',
@@ -349,8 +369,9 @@ export default function ProfilePage() {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-[2rem] shadow-2xl border border-border z-[10000]">
-                <div className="bg-secondary px-8 py-5 relative overflow-hidden">
+                className="relative w-full max-w-2xl max-h-[90vh] flex flex-col bg-white rounded-[2rem] shadow-2xl border border-border z-[10000] overflow-hidden"
+              >
+                <div className="bg-secondary px-8 py-5 relative shrink-0">
                   <div className="absolute inset-0 bg-gradient-to-r from-secondary to-secondary/80 z-0" />
                   <div className="relative z-10 flex items-center justify-between">
                     <h2 className="text-lg font-black text-white uppercase tracking-widest flex items-center gap-3">
@@ -365,7 +386,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <div className="p-6 sm:p-8 space-y-6 bg-gradient-to-b from-muted/20 to-white overflow-y-auto">
+                <div className="p-6 sm:p-8 space-y-6 bg-gradient-to-b from-muted/20 to-white overflow-y-auto flex-1">
                   {error && (
                     <div className="bg-red-50 text-red-500 text-xs font-bold p-3 rounded-xl border border-red-100 flex items-center gap-2">
                       <X className="w-4 h-4 shrink-0" /> {error}
@@ -512,98 +533,98 @@ export default function ProfilePage() {
                         />
                       </div>
                     </div>
+                  </div>
 
-                    {/* Family Members Section */}
-                    <div className="sm:col-span-2 pt-4 border-t border-border mt-2">
-                      <div className="flex items-center justify-between mb-4">
-                        <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1">
-                          Family Members <Users className="w-3 h-3 ml-1" />
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => setEditData(prev => ({ ...prev, familyMembers: [...prev.familyMembers, { name: '', mobile: '', email: '', dob: '' }] }))}
-                          className="flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/80 transition-colors"
-                        >
-                          <Plus className="w-3 h-3" /> Add Member
-                        </button>
-                      </div>
+                  {/* Family Members Section */}
+                  <div className="pt-4 border-t border-border mt-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <label className="text-[10px] font-black text-muted-foreground uppercase tracking-widest flex items-center gap-1">
+                        Family Members <Users className="w-3 h-3 ml-1" />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setEditData(prev => ({ ...prev, familyMembers: [...prev.familyMembers, { name: '', mobile: '', email: '', dob: '' }] }))}
+                        className="flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/80 transition-colors"
+                      >
+                        <Plus className="w-3 h-3" /> Add Member
+                      </button>
+                    </div>
 
-                      <div className="space-y-4">
-                        {editData.familyMembers.map((member, index) => (
-                          <div key={index} className="bg-muted/20 p-4 rounded-2xl border border-border/50 relative">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newMembers = [...editData.familyMembers];
-                                newMembers.splice(index, 1);
-                                setEditData(prev => ({ ...prev, familyMembers: newMembers }));
-                              }}
-                              className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-8">
-                              <div>
-                                <input
-                                  type="text"
-                                  value={member.name}
-                                  onChange={(e) => {
-                                    const newMembers = [...editData.familyMembers];
-                                    newMembers[index].name = e.target.value;
-                                    setEditData(prev => ({ ...prev, familyMembers: newMembers }));
-                                  }}
-                                  className="w-full bg-white border border-border rounded-lg px-3 py-2 outline-none focus:border-primary text-xs font-bold"
-                                  placeholder="Name (Required)"
-                                  required
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="text"
-                                  value={member.mobile}
-                                  onChange={(e) => {
-                                    const newMembers = [...editData.familyMembers];
-                                    newMembers[index].mobile = e.target.value.replace(/\D/g, '');
-                                    setEditData(prev => ({ ...prev, familyMembers: newMembers }));
-                                  }}
-                                  className="w-full bg-white border border-border rounded-lg px-3 py-2 outline-none focus:border-primary text-xs font-bold"
-                                  placeholder="Mobile Number"
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="email"
-                                  value={member.email}
-                                  onChange={(e) => {
-                                    const newMembers = [...editData.familyMembers];
-                                    newMembers[index].email = e.target.value;
-                                    setEditData(prev => ({ ...prev, familyMembers: newMembers }));
-                                  }}
-                                  className="w-full bg-white border border-border rounded-lg px-3 py-2 outline-none focus:border-primary text-xs font-bold"
-                                  placeholder="Email Address"
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="date"
-                                  value={member.dob}
-                                  onChange={(e) => {
-                                    const newMembers = [...editData.familyMembers];
-                                    newMembers[index].dob = e.target.value;
-                                    setEditData(prev => ({ ...prev, familyMembers: newMembers }));
-                                  }}
-                                  className="w-full bg-white border border-border rounded-lg px-3 py-2 outline-none focus:border-primary text-xs font-bold text-muted-foreground"
-                                />
-                              </div>
+                    <div className="space-y-4">
+                      {editData.familyMembers.map((member, index) => (
+                        <div key={index} className="bg-muted/20 p-4 rounded-2xl border border-border/50 relative">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const newMembers = [...editData.familyMembers];
+                              newMembers.splice(index, 1);
+                              setEditData(prev => ({ ...prev, familyMembers: newMembers }));
+                            }}
+                            className="absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors z-10"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pr-8 relative">
+                            <div>
+                              <input
+                                type="text"
+                                value={member.name}
+                                onChange={(e) => {
+                                  const newMembers = [...editData.familyMembers];
+                                  newMembers[index] = { ...newMembers[index], name: e.target.value };
+                                  setEditData(prev => ({ ...prev, familyMembers: newMembers }));
+                                }}
+                                className="w-full bg-white border border-border rounded-lg px-3 py-2 outline-none focus:border-primary text-xs font-bold"
+                                placeholder="Name (Required)"
+                                required
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="text"
+                                value={member.mobile}
+                                onChange={(e) => {
+                                  const newMembers = [...editData.familyMembers];
+                                  newMembers[index] = { ...newMembers[index], mobile: e.target.value.replace(/\D/g, '') };
+                                  setEditData(prev => ({ ...prev, familyMembers: newMembers }));
+                                }}
+                                className="w-full bg-white border border-border rounded-lg px-3 py-2 outline-none focus:border-primary text-xs font-bold"
+                                placeholder="Mobile Number"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="email"
+                                value={member.email}
+                                onChange={(e) => {
+                                  const newMembers = [...editData.familyMembers];
+                                  newMembers[index] = { ...newMembers[index], email: e.target.value };
+                                  setEditData(prev => ({ ...prev, familyMembers: newMembers }));
+                                }}
+                                className="w-full bg-white border border-border rounded-lg px-3 py-2 outline-none focus:border-primary text-xs font-bold"
+                                placeholder="Email Address"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                type="date"
+                                value={member.dob}
+                                onChange={(e) => {
+                                  const newMembers = [...editData.familyMembers];
+                                  newMembers[index] = { ...newMembers[index], dob: e.target.value };
+                                  setEditData(prev => ({ ...prev, familyMembers: newMembers }));
+                                }}
+                                className="w-full bg-white border border-border rounded-lg px-3 py-2 outline-none focus:border-primary text-xs font-bold text-muted-foreground"
+                              />
                             </div>
                           </div>
-                        ))}
-                        {editData.familyMembers.length === 0 && (
-                          <div className="text-center py-4 bg-muted/20 border border-dashed border-border rounded-xl">
-                            <p className="text-xs text-muted-foreground font-medium">No family members added yet.</p>
-                          </div>
-                        )}
-                      </div>
+                        </div>
+                      ))}
+                      {editData.familyMembers.length === 0 && (
+                        <div className="text-center py-4 bg-muted/20 border border-dashed border-border rounded-xl">
+                          <p className="text-xs text-muted-foreground font-medium">No family members added yet.</p>
+                        </div>
+                      )}
                     </div>
                   </div>
 

@@ -17,18 +17,18 @@ export default function Hero() {
   ];
 
   return (
-    <div className="relative h-[65vh] min-h-[450px] flex flex-col justify-center overflow-hidden bg-background">
+    <div className="relative md:h-[65vh] min-h-[450px] flex flex-col md:justify-center overflow-hidden bg-background">
 
       {/* Image Section */}
-      <div className="absolute inset-0 z-0 md:left-auto md:right-0 md:w-[60%] lg:w-[50%] h-full bg-white">
+      <div className="relative h-[40vh] min-h-[250px] w-full md:absolute md:inset-0 z-0 md:left-auto md:right-0 md:w-[60%] lg:w-[50%] md:h-full bg-transparent md:bg-white pt-6 md:pt-0 shrink-0">
         <img
           src="/devi.png"
           alt="Ekavira Devi"
-          className="w-full h-full object-contain md:object-cover object-center md:object-[80%_center] opacity-40 md:opacity-100"
+          className="w-full h-full object-contain object-bottom md:object-cover md:object-center md:object-[80%_center] opacity-100"
         />
 
         {/* Mobile Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-transparent md:hidden" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-background to-transparent md:hidden" />
 
         {/* Desktop Left Fade */}
         <div className="absolute inset-y-0 left-0 w-full md:w-[40%] bg-gradient-to-r from-background via-background/70 to-transparent hidden md:block" />
@@ -38,34 +38,35 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8 w-full pt-6 pb-48 md:py-0 text-center md:text-left flex flex-col items-center md:items-start shrink-0">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-2xl"
+          className="max-w-2xl flex flex-col items-center md:items-start"
         >
           {/* Mantra */}
-          <div className="flex items-center gap-2 mb-3">
+          <div className="flex items-center justify-center md:justify-start gap-2 mb-3 w-full">
             <div className="h-px w-6 bg-primary" />
-            <span className="text-primary font-bold tracking-[0.2em] text-[9px] uppercase">
+            <span className="text-primary font-bold tracking-[0.2em] text-[10px] md:text-[9px] uppercase">
               {t('hero.mantra')}
             </span>
+            <div className="h-px w-6 bg-primary md:hidden" />
           </div>
 
           {/* Heading */}
-          <h1 className="text-3xl md:text-5xl font-black text-secondary tracking-tight leading-[1.1] mb-3">
+          <h1 className="text-[2rem] leading-[1.2] md:text-5xl font-black text-secondary tracking-tight md:leading-[1.1] mb-3 text-center md:text-left">
             {t('hero.title_1')} <br />
             <span className="text-primary">{t('hero.title_2')}</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-secondary/70 text-sm md:text-base font-medium mb-6 leading-relaxed max-w-lg">
+          <p className="text-secondary/80 text-sm md:text-base font-medium mb-6 leading-relaxed max-w-[280px] md:max-w-lg mx-auto md:mx-0 text-center md:text-left">
             {t('hero.subtitle')}
           </p>
 
           {/* Buttons */}
-          <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 w-full sm:w-auto mt-2">
             <Link
               href="/donation"
               className="spiritual-button !px-6 !py-3 text-sm md:text-base w-full sm:w-auto shadow-lg shadow-primary/20 flex items-center justify-center"
