@@ -337,7 +337,7 @@ export default function ProfilePage() {
         {/* Edit Profile Modal */}
         <AnimatePresence>
           {isEditing && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -349,8 +349,7 @@ export default function ProfilePage() {
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="relative w-full max-w-2xl bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-border z-10"
-              >
+                className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-[2rem] shadow-2xl border border-border z-[10000]">
                 <div className="bg-secondary px-8 py-5 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-secondary to-secondary/80 z-0" />
                   <div className="relative z-10 flex items-center justify-between">
@@ -366,7 +365,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <div className="p-6 sm:p-8 space-y-6 bg-gradient-to-b from-muted/20 to-white">
+                <div className="p-6 sm:p-8 space-y-6 bg-gradient-to-b from-muted/20 to-white overflow-y-auto">
                   {error && (
                     <div className="bg-red-50 text-red-500 text-xs font-bold p-3 rounded-xl border border-red-100 flex items-center gap-2">
                       <X className="w-4 h-4 shrink-0" /> {error}
@@ -641,7 +640,7 @@ const NotificationsTab = () => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { t, lang } = useLanguage();
-  
+
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
