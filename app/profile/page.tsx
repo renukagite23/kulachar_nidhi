@@ -10,12 +10,14 @@ import Footer from '@/components/Footer';
 import { User, Mail, Phone, Shield, IndianRupee, Heart, MapPin, Calendar, Edit3, X, Check, Loader2, Lock, Cake, Home, Users, Plus, Trash2, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import { useLanguage } from '@/lib/LanguageContext';
 
 export default function ProfilePage() {
   const { user, isAuthenticated, token } = useSelector((state: RootState) => state.auth);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const { t, lang } = useLanguage();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({ name: '', phone: '', email: '', dob: '', cityOrVillage: '', pincode: '', familyMembers: [] as any[] });
@@ -150,13 +152,13 @@ export default function ProfilePage() {
               onClick={() => { setActiveTab('profile'); window.history.pushState({}, '', '/profile'); }}
               className={`flex items-center gap-3 px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all w-full text-left ${activeTab === 'profile' ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-white text-muted-foreground hover:bg-muted border border-border'}`}
             >
-              <User className="w-5 h-5 shrink-0" /> Profile
+              <User className="w-5 h-5 shrink-0" /> {t('profile.tabs.profile') || 'Profile'}
             </button>
             <button
               onClick={() => { setActiveTab('notifications'); window.history.pushState({}, '', '/profile?tab=notifications'); }}
               className={`flex items-center gap-3 px-6 py-4 rounded-2xl font-black text-sm uppercase tracking-widest transition-all w-full text-left ${activeTab === 'notifications' ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'bg-white text-muted-foreground hover:bg-muted border border-border'}`}
             >
-              <Bell className="w-5 h-5 shrink-0" /> Notifications
+              <Bell className="w-5 h-5 shrink-0" /> {t('nav.notifications') || 'Notifications'}
             </button>
           </div>
 
@@ -638,7 +640,8 @@ export default function ProfilePage() {
 const NotificationsTab = () => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { t, lang } = useLanguage();
+  
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -670,7 +673,7 @@ const NotificationsTab = () => {
     return (
       <div className="spiritual-card p-12 flex flex-col items-center justify-center min-h-[300px]">
         <Loader2 className="w-8 h-8 text-primary animate-spin mb-4" />
-        <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Loading notifications...</p>
+        <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">{t('profile.notifications.loading')}</p>
       </div>
     );
   }
@@ -681,8 +684,8 @@ const NotificationsTab = () => {
         <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mb-6">
           <Bell className="w-10 h-10 text-muted-foreground/30" />
         </div>
-        <h3 className="text-xl font-black text-secondary">No Notifications</h3>
-        <p className="text-sm font-bold text-muted-foreground mt-2">You're all caught up!</p>
+        <h3 className="text-xl font-black text-secondary">{t('profile.notifications.no_notifications')}</h3>
+        <p className="text-sm font-bold text-muted-foreground mt-2">{t('profile.notifications.caught_up')}</p>
       </div>
     );
   }
@@ -700,18 +703,18 @@ const NotificationsTab = () => {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2.5 py-1 rounded-full">
-                  {notif.type}
+                  {t(`profile.notifications.type.${notif.type}`) || notif.type}
                 </span>
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
                   <Calendar className="w-3 h-3" />
-                  {new Date(notif.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  {new Date(notif.createdAt).toLocaleDateString(lang === 'en' ? 'en-US' : 'mr-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
                 </span>
               </div>
               <h3 className="text-lg font-black text-secondary mb-1.5">
-                {notif.title}
+                {lang === 'mr' && notif.titleMr ? notif.titleMr : notif.title}
               </h3>
               <p className="text-sm font-bold text-muted-foreground leading-relaxed">
-                {notif.message}
+                {lang === 'mr' && notif.messageMr ? notif.messageMr : notif.message}
               </p>
             </div>
           </div>
