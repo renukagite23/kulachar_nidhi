@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Donation from '@/models/Donation';
 import Notification from '@/models/Notification';
+import User from '@/models/User';
 
 // This endpoint should be triggered by a Cron Job (e.g., Vercel Cron) daily at midnight.
 export async function GET(req: Request) {
@@ -101,9 +102,60 @@ export async function GET(req: Request) {
       }
     }
 
+    // --- Family Member Birthdays Logic ---
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    const tomorrowMonth = tomorrow.getMonth() + 1;
+    const tomorrowDay = tomorrow.getDate();
+
+    const usersWithFamily = await User.find({
+      familyMembers: { $exists: true, $not: { $size: 0 } }
+    });
+
+    let birthdayCount = 0;
+    for (const user of usersWithFamily) {
+      for (const member of user.familyMembers) {
+        if (!member.dob) continue;
+
+        const dobDate = new Date(member.dob);
+        if (isNaN(dobDate.getTime())) continue;
+
+        // Compare month and day
+        if (dobDate.getMonth() + 1 === tomorrowMonth && dobDate.getDate() === tomorrowDay) {
+          const title = "Birthday Reminder 🎉";
+          const titleMr = "वाढदिवस स्मरण 🎉";
+          const message = `Tomorrow is ${member.name}'s birthday. Celebrate this special occasion by offering blessings and making a donation.`;
+          const messageMr = `उद्या ${member.name}चा वाढदिवस आहे. या शुभ दिवशी देणगी देऊन आशीर्वाद द्या.`;
+
+          const startOfDay = new Date();
+          startOfDay.setHours(0, 0, 0, 0);
+
+          const existing = await Notification.findOne({
+            userId: user._id,
+            type: 'REMINDER',
+            message: message, // Specific to the family member
+            createdAt: { $gte: startOfDay }
+          });
+
+          if (!existing) {
+            await Notification.create({
+              userId: user._id,
+              role: 'user',
+              title,
+              titleMr,
+              message,
+              messageMr,
+              type: 'REMINDER',
+            });
+            birthdayCount++;
+          }
+        }
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      message: `Processed ${upcomingOccasions.length} occasions, created ${createdCount} reminders.`
+      message: `Processed ${upcomingOccasions.length} occasions and ${usersWithFamily.length} users for birthdays. Created ${createdCount} occasion reminders and ${birthdayCount} birthday reminders.`
     });
 
   } catch (error: any) {
