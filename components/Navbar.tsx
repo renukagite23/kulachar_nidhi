@@ -235,18 +235,18 @@ export default function Navbar() {
                               </div>
                               {user?.role === 'admin' && (
                                 <Link href="/admin/dashboard" className="flex items-center gap-3 px-4 py-2.5 text-sm text-secondary hover:bg-muted font-bold transition-colors">
-                                  <LayoutDashboard className="w-4 h-4 text-primary" /> Admin Dashboard
+                                  <LayoutDashboard className="w-4 h-4 text-primary" /> {t('profile.admin_dashboard')}
                                 </Link>
                               )}
                               <Link href="/profile" className="flex items-center gap-3 px-4 py-2.5 text-sm text-secondary hover:bg-muted font-bold transition-colors">
-                                <User className="w-4 h-4 text-primary" /> My Profile
+                                <User className="w-4 h-4 text-primary" /> {t('profile.my_profile')}
                               </Link>
                               <Link href="/donations" className="flex items-center gap-3 px-4 py-2.5 text-sm text-secondary hover:bg-muted font-bold transition-colors">
-                                <History className="w-4 h-4 text-primary" /> Donation History
+                                <History className="w-4 h-4 text-primary" /> {t('profile.donation_history')}
                               </Link>
                               <div className="border-t border-border/50 mt-1 pt-1">
                                 <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-bold transition-colors">
-                                  <LogOut className="w-4 h-4" /> Logout
+                                  <LogOut className="w-4 h-4" /> {t('profile.logout')}
                                 </button>
                               </div>
                             </motion.div>
