@@ -1,4 +1,4 @@
-
+{
   "nav": {
     "home": "Home",
     "about_temple": "About Temple",
@@ -465,4 +465,5 @@
       "REMINDER": "REMINDER"
     }
   }
+}
 }
