@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useLanguage } from '@/lib/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IndianRupee, User, Phone, MapPin, CheckCircle2, QrCode, Download, Printer, Heart, Mail, CreditCard, Info, Trash2, ArrowLeft, ShieldCheck, Sparkles, ChevronDown } from 'lucide-react';
@@ -18,7 +19,16 @@ interface Country {
 }
 
 export default function DonationForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DonationFormContent />
+    </Suspense>
+  );
+}
+
+function DonationFormContent() {
   const { t, lang: language, setLang: setLanguage } = useLanguage();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'form' | 'scanner' | 'processing' | 'success'>('form');
   const [lastDonation, setLastDonation] = useState<any>(null);
@@ -39,6 +49,13 @@ export default function DonationForm() {
     address: '',
     occasionDate: '',
   });
+
+  useEffect(() => {
+    const amount = searchParams.get('amount');
+    if (amount) {
+      setFormData(prev => ({ ...prev, amount }));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (user) {

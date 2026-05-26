@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import WelcomeSection from '@/components/WelcomeSection';
@@ -12,9 +13,22 @@ import FestivalSpotLight from '@/components/FestivalSpotLight';
 import { useLanguage } from '@/lib/LanguageContext';
 import RenovationCampaign from '@/components/RenovationCampaign';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import QuickDonationModal from '@/components/QuickDonationModal';
 
 export default function Home() {
   const { t, lang } = useLanguage();
+  const router = useRouter();
+  const [selectedAmount, setSelectedAmount] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAmountClick = (amountStr: string) => {
+    // Extract number from "₹101" -> "101"
+    const amount = amountStr.replace('₹', '');
+    setSelectedAmount(amount);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
@@ -81,6 +95,7 @@ export default function Home() {
                     {["₹101", "₹501", "₹1100", "₹2100"].map((amount) => (
                       <button
                         key={amount}
+                        onClick={() => handleAmountClick(amount)}
                         className="px-4 py-2 rounded-lg border border-orange-200 text-orange-600 text-sm font-medium hover:bg-orange-500 hover:text-white transition-all duration-300"
                       >
                         {amount}
@@ -232,6 +247,11 @@ export default function Home() {
       </main>
 
       <Footer />
+      <QuickDonationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        amount={selectedAmount} 
+      />
     </div>
   );
 }
