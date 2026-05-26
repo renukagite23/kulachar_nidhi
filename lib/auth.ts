@@ -13,16 +13,22 @@ export async function getDataFromToken() {
     if (!token) {
       const { cookies } = await import('next/headers');
       const cookieStore = await cookies();
-      token = cookieStore.get('admin_token')?.value || cookieStore.get('token')?.value || '';
+      const adminToken = cookieStore.get('admin_token')?.value;
+      const userToken = cookieStore.get('token')?.value;
+      
+      console.log('AUTH DEBUG: admin_token present:', !!adminToken);
+      console.log('AUTH DEBUG: token present:', !!userToken);
+      
+      token = adminToken || userToken || '';
     }
 
     if (!token) {
-      console.log('AUTH DEBUG: No token found in headers or cookies');
+      console.log('AUTH DEBUG: No token found in headers or cookies at:', new Date().toISOString());
       return null;
     }
 
     const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_key');
-    console.log('AUTH SUCCESS: Token verified for role:', decodedToken?.role);
+    console.log('AUTH SUCCESS: Token verified. User ID:', decodedToken?.id, 'Role:', decodedToken?.role);
     return decodedToken;
   } catch (error: any) {
     if (error.name === 'TokenExpiredError') {

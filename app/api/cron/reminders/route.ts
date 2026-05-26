@@ -4,12 +4,15 @@ import Donation from '@/models/Donation';
 import Notification from '@/models/Notification';
 import User from '@/models/User';
 
-// This endpoint should be triggered by a Cron Job (e.g., Vercel Cron) daily at midnight.
+// This endpoint should be triggered by a Cron Job every day at Midnight.
+// Schedule: 0 0 * * *
 export async function GET(req: Request) {
   try {
+    console.log("Birthday cron API triggered at:", new Date().toISOString());
     // Optionally secure this endpoint with a cron secret key
     const authHeader = req.headers.get('authorization');
     if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      console.warn("Unauthorized cron attempt");
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
@@ -91,6 +94,7 @@ export async function GET(req: Request) {
       });
 
       if (!existing) {
+        console.log(`Creating occasion reminder for user: ${userId}, type: ${occasionType}`);
         await Notification.create({
           userId: userId,
           role: 'user',
@@ -101,6 +105,8 @@ export async function GET(req: Request) {
           type: 'REMINDER',
         });
         createdCount++;
+      } else {
+        console.log(`Occasion reminder already exists for user: ${userId}, type: ${occasionType}`);
       }
     }
 
@@ -142,6 +148,7 @@ export async function GET(req: Request) {
           });
 
           if (!existing) {
+            console.log(`Creating birthday notification for user: ${user._id}, member: ${member.name}`);
             await Notification.create({
               userId: user._id,
               role: 'user',
@@ -152,11 +159,14 @@ export async function GET(req: Request) {
               type: 'REMINDER',
             });
             birthdayCount++;
-            console.log("Birthday notification created for:", member.name);
+          } else {
+            console.log(`Birthday notification already exists for user: ${user._id}, member: ${member.name}`);
           }
         }
       }
     }
+
+    console.log(`Cron job completed. Created ${createdCount} occasion reminders and ${birthdayCount} birthday reminders.`);
 
     return NextResponse.json({
       success: true,
