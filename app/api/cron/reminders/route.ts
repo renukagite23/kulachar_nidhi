@@ -15,6 +15,8 @@ export async function GET(req: Request) {
 
     await dbConnect();
 
+    console.log("Birthday cron API triggered");
+
     const today = new Date();
 
     // Calculate the date 7 days from now
@@ -122,6 +124,8 @@ export async function GET(req: Request) {
 
         // Compare month and day
         if (dobDate.getMonth() + 1 === tomorrowMonth && dobDate.getDate() === tomorrowDay) {
+          console.log("Birthday matched for:", member.name);
+
           const title = "Birthday Reminder 🎉";
           const titleMr = "वाढदिवस स्मरण 🎉";
           const message = `Tomorrow is ${member.name}'s birthday. Celebrate this special occasion by offering blessings and making a donation.`;
@@ -148,6 +152,7 @@ export async function GET(req: Request) {
               type: 'REMINDER',
             });
             birthdayCount++;
+            console.log("Birthday notification created for:", member.name);
           }
         }
       }

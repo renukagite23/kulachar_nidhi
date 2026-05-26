@@ -25,7 +25,11 @@ export async function getDataFromToken() {
     console.log('AUTH SUCCESS: Token verified for role:', decodedToken?.role);
     return decodedToken;
   } catch (error: any) {
-    console.error('AUTH ERROR: Token verification failed:', error.message);
+    if (error.name === 'TokenExpiredError') {
+      console.log('AUTH INFO: Token expired');
+    } else {
+      console.error('AUTH ERROR: Token verification failed:', error.message);
+    }
     return null;
   }
 }
