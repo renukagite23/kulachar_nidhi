@@ -185,7 +185,7 @@ export default function TrusteeManagement() {
                 </div>
                 <button
                     onClick={handleAddNew}
-                    className="flex items-center gap-2 px-6 py-3 bg-secondary text-white rounded-2xl text-sm font-black shadow-lg shadow-secondary/20 hover:bg-black transition-all"
+                    className="flex items-center justify-center gap-2 px-6 py-3 w-fit bg-secondary text-white rounded-2xl text-sm font-black shadow-lg shadow-secondary/20 hover:bg-black transition-all"
                 >
                     <Plus className="w-4 h-4" /> Add New Trustee
                 </button>

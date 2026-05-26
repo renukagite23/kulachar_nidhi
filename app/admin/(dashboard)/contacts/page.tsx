@@ -628,9 +628,9 @@ export default function ContactsAdminPage() {
             )}
 
             {selectedContact && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-                    <div className="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col my-8 border border-border">
-                        <div className="flex justify-between items-center px-8 py-6 border-b shrink-0 bg-muted/10">
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-border">
+                        <div className="flex justify-between items-center px-6 md:px-8 py-6 border-b shrink-0 bg-muted/10">
                             <div>
                                 <h2 className="text-xl font-black text-secondary">Message Details</h2>
                                 <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-0.5">Contact Enquiry</p>
@@ -643,7 +643,7 @@ export default function ContactsAdminPage() {
                             </button>
                         </div>
 
-                        <div className="p-8 space-y-6">
+                        <div className="p-6 md:p-8 space-y-6 overflow-y-auto">
                             <div className="flex items-center gap-4">
                                 <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white text-2xl font-bold shrink-0">
                                     {selectedContact.name?.charAt(0).toUpperCase()}

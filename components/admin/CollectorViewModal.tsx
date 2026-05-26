@@ -144,8 +144,8 @@ export default function CollectorViewModal({
                   <span className="text-[10px] bg-muted px-2 py-1 rounded font-bold text-muted-foreground">{collector?.referredUsers?.length || 0} Registrations</span>
                 </div>
 
-                <div className="border border-border rounded-2xl overflow-hidden">
-                  <table className="w-full text-left">
+                <div className="border border-border rounded-2xl overflow-x-auto">
+                  <table className="w-full text-left min-w-[600px]">
                     <thead className="bg-muted/50 border-b border-border">
                       <tr>
                         <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Devotee</th>
