@@ -112,7 +112,7 @@ export default function AartiSchedule() {
               </div>
 
               {/* Grid */}
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-2 md:grid-cols-1 gap-2.5 md:gap-3">
 
                 {schedule.map((item, index) => (
                   <motion.div
@@ -137,7 +137,7 @@ export default function AartiSchedule() {
                       "
                     >
 
-                      <div className="flex flex-col justify-between h-full">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between h-full">
 
                         {/* Text */}
                         <div>
@@ -178,6 +178,7 @@ export default function AartiSchedule() {
                             sm:text-sm
                             md:text-lg
                             mt-3
+                            md:mt-0
                           "
                         >
                           {item.time}
