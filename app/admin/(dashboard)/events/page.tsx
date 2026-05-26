@@ -202,7 +202,7 @@ export default function AdminEventsPage() {
         <div className="p-6 md:p-10 bg-[#f8f6f4] min-h-screen">
 
             {/* HEADER */}
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                 <div>
                     <p className="text-xs font-bold text-orange-600 uppercase">
                         Temple Events
@@ -215,7 +215,7 @@ export default function AdminEventsPage() {
 
                 <button
                     onClick={() => setShowModal(true)}
-                    className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-xl shadow hover:bg-orange-700 transition"
+                    className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-xl shadow hover:bg-orange-700 transition w-fit"
                 >
                     <Plus className="w-4 h-4" />
                     Create Event
@@ -223,9 +223,9 @@ export default function AdminEventsPage() {
             </div>
 
             {/* TABLE */}
-            <div className="bg-white rounded-3xl shadow-sm overflow-hidden border border-orange-100">
+            <div className="bg-white rounded-3xl shadow-sm overflow-x-auto border border-orange-100">
 
-                <table className="w-full text-left">
+                <table className="w-full text-left min-w-[800px]">
 
                     {/* TABLE HEADER */}
                     <thead className="bg-orange-50 text-xs uppercase text-gray-600">
@@ -370,7 +370,7 @@ export default function AdminEventsPage() {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white rounded-3xl p-6 w-full max-w-md"
+                            className="bg-white rounded-3xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
                         >
 
                             <div className="flex justify-between items-center mb-5">
@@ -532,7 +532,7 @@ export default function AdminEventsPage() {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white rounded-3xl overflow-hidden w-full max-w-lg"
+                            className="bg-white rounded-3xl overflow-hidden w-full max-w-lg max-h-[90vh] flex flex-col"
                         >
 
                             <img
@@ -541,10 +541,10 @@ export default function AdminEventsPage() {
                                     '/festival-placeholder.jpg'
                                 }
                                 alt={selectedEvent.title_en}
-                                className="w-full h-64 object-cover"
+                                className="w-full h-48 md:h-64 object-cover shrink-0"
                             />
 
-                            <div className="p-6">
+                            <div className="p-6 overflow-y-auto">
 
                                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
                                     {selectedEvent.title_en}
@@ -584,7 +584,7 @@ export default function AdminEventsPage() {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-white rounded-3xl p-6 w-full max-w-md"
+                            className="bg-white rounded-3xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
                         >
 
                             <h2 className="text-xl font-bold mb-5 text-gray-800">
