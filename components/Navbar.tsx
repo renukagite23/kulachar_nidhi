@@ -51,7 +51,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="w-full relative z-[100]">
+    <header className="w-full relative z-[100]" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
       {/* Top Bar - Desktop Only */}
       <div className="hidden lg:block bg-secondary text-white/70 py-1.5 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center text-[11px] font-medium tracking-tight">
@@ -72,13 +72,17 @@ export default function Navbar() {
           <div className="flex justify-between h-14 md:h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <Link href="/" className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center p-2 shadow-lg shadow-primary/10">
+              <Link href="/" className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center p-2 shadow-lg shadow-primary/10 flex-shrink-0">
                   <img src="/devi.png" alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-base md:text-lg font-black text-secondary leading-tight">{t('nav.logo_title')}</span>
-                  <span className="text-[10px] text-accent font-black uppercase tracking-[0.2em]">{t('nav.logo_subtitle')}</span>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-base md:text-lg font-black text-secondary leading-tight break-words">
+                    {t('nav.logo_title')}
+                  </span>
+                  <span className="text-[10px] text-accent font-black uppercase tracking-[0.2em] break-words">
+                    {t('nav.logo_subtitle')}
+                  </span>
                 </div>
               </Link>
             </div>

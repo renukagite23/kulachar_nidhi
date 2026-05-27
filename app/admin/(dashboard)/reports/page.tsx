@@ -347,9 +347,9 @@ export default function ReportsPage() {
                                 <input type="text" placeholder="Search donor name, receipt number, or mobile..." className="w-full bg-gray-50 border-none rounded-2xl py-3 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                             </div>
                             <div className="flex items-center gap-3">
-                                <input type="date" className="bg-gray-50 border-none rounded-2xl py-3 px-4 text-xs font-bold text-secondary focus:ring-2 focus:ring-primary/20" onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))} />
-                                <span className="text-muted font-bold text-xs uppercase">to</span>
-                                <input type="date" className="bg-gray-50 border-none rounded-2xl py-3 px-4 text-xs font-bold text-secondary focus:ring-2 focus:ring-primary/20" onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))} />
+                                <input type="text" placeholder="dd/mm/yyyy" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => { if (!e.target.value) e.target.type = 'text'; }} className="bg-gray-50 border-none rounded-2xl py-3 px-4 text-xs font-bold text-secondary focus:ring-2 focus:ring-primary/20" onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))} />
+                                <span className="font-bold text-xs uppercase">to</span>
+                                <input type="text" placeholder="dd/mm/yyyy" onFocus={(e) => e.target.type = 'date'} onBlur={(e) => { if (!e.target.value) e.target.type = 'text'; }} className="bg-gray-50 border-none rounded-2xl py-3 px-4 text-xs font-bold text-secondary focus:ring-2 focus:ring-primary/20" onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))} />
                                 <button onClick={() => fetchDonations()} className="p-3 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-all text-secondary"><RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /></button>
                             </div>
                         </div>

@@ -148,13 +148,22 @@ export default function GalleryPage() {
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 z-[100] flex items-center justify-center bg-secondary/95 backdrop-blur-md p-4 md:p-10"
                         onClick={() => setSelectedImage(null)}
+                        onPointerDown={() => setSelectedImage(null)}
                     >
                         <motion.button
+                            type="button"
                             initial={{ opacity: 0, scale: 0.5 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.5 }}
                             className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
-                            onClick={() => setSelectedImage(null)}
+                            onPointerDown={(e) => {
+                                e.stopPropagation();
+                                setSelectedImage(null);
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedImage(null);
+                            }}
                         >
                             <X className="w-6 h-6" />
                         </motion.button>

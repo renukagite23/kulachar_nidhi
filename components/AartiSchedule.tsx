@@ -125,19 +125,21 @@ export default function AartiSchedule() {
 
                     <div
                       className="
-                        bg-white/95
-                        backdrop-blur-md
-                        rounded-xl
-                        md:rounded-2xl
-                        p-2.5
-                        md:p-5
-                        border border-orange-100
-                        shadow-xl
-                        h-full
-                      "
+    bg-white/95
+    backdrop-blur-md
+    rounded-xl
+    md:rounded-2xl
+    p-2.5
+    md:p-5
+    border border-orange-100
+    shadow-xl
+    h-[115px]
+    sm:h-[120px]
+    md:h-auto
+    flex
+  "
                     >
-
-                      <div className="flex flex-col md:flex-row md:items-center justify-between h-full">
+                      <div className="flex flex-col justify-between w-full h-full">
 
                         {/* Text */}
                         <div>
@@ -146,7 +148,7 @@ export default function AartiSchedule() {
                             className="
                               text-gray-800
                               font-bold
-                              text-[11px]
+                              text-[12px]
                               sm:text-sm
                               md:text-xl
                               leading-tight
@@ -159,7 +161,7 @@ export default function AartiSchedule() {
                             className="
                               text-gray-500
                               text-[9px]
-                              sm:text-[10px]
+                              sm:text-[11px]
                               md:text-sm
                               mt-1
                             "
