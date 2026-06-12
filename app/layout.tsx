@@ -20,6 +20,11 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Shri Kulaswamini Ekavira Devi Mandir Trust",
   description: "Official portal for Shri Kulaswamini Ekavira Devi Mandir Trust, Jaitapur",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/icon-192.png",
+  },
 };
 export default function RootLayout({ children }: any) {
   return (
