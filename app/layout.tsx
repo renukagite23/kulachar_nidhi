@@ -4,6 +4,7 @@ import "./globals.css";
 import { LanguageProvider } from "@/lib/LanguageContext";
 import ReduxProvider from "@/redux/provider";
 import AuthInterceptor from "@/components/AuthInterceptor";
+import FCMProvider from '@/components/FCMProvider';
 
 
 const inter = Inter({
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: any) {
       <body className="min-h-full flex flex-col">
         <ReduxProvider>
           <AuthInterceptor />
+          <FCMProvider />
           <LanguageProvider>
             {children}
           </LanguageProvider>

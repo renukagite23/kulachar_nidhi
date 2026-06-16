@@ -4,6 +4,8 @@ import Notification from '@/models/Notification';
 import { getDataFromToken } from '@/lib/auth';
 import { hasAdminAccess } from '@/lib/adminAuth';
 import mongoose from 'mongoose';
+import User from '@/models/User';
+import { getSafeMessaging } from '@/lib/firebase-admin';
 
 // GET notifications
 export async function GET(req: Request) {
@@ -18,7 +20,7 @@ export async function GET(req: Request) {
         if (decoded) {
             const userId = decoded.id;
             console.log('AUTH SUCCESS: Fetching notifications for user ID:', userId);
-            
+
             if (hasAdminAccess(decoded) && isAdminPanel) {
                 // Admin dashboard fetching notifications
                 query = { role: 'admin' };
@@ -31,7 +33,7 @@ export async function GET(req: Request) {
                 } catch (e) {
                     console.error('AUTH ERROR: Invalid user ID format:', userId);
                 }
-                
+
                 query = {
                     $or: [
                         { userId: userObjId },
@@ -68,6 +70,38 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     const notif = await Notification.create(body);
+
+    if (body.role === 'user') {
+        try {
+            // Fetch all users with a valid FCM token
+            const users = await User.find({ fcmToken: { $exists: true, $ne: null } }).select('fcmToken');
+            const tokens = users.map(u => u.fcmToken).filter(Boolean);
+
+            if (tokens.length > 0) {
+                const payload = {
+                    notification: {
+                        title: body.title_en || body.title || 'Kulachar Nidhi',
+                        body: body.desc_en || body.message || 'New announcement received',
+                    },
+                    data: {
+                        type: body.type || 'general',
+                        notificationId: notif._id.toString()
+                    },
+                    tokens: tokens
+                };
+
+                const msg = getSafeMessaging();
+                if (msg) {
+                    const response = await msg.sendEachForMulticast(payload);
+                    console.log(`[Admin Broadcast] Successfully sent ${response.successCount} messages; Failed ${response.failureCount}`);
+                }
+            } else {
+                console.log('[Admin Broadcast] No FCM tokens found to send push notification.');
+            }
+        } catch (pushError) {
+            console.error('[Admin Broadcast] Failed to send push notifications:', pushError);
+        }
+    }
 
     return NextResponse.json(notif);
 }

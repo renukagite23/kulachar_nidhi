@@ -38,4 +38,6 @@
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required for Android 13+ to ask for notification permission -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 </manifest>

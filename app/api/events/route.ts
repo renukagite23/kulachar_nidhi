@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import mongoose from 'mongoose';
 import Notification from '@/models/Notification';
+import User from '@/models/User';
+import { getSafeMessaging } from '@/lib/firebase-admin';
 
 const EventSchema = new mongoose.Schema(
   {
@@ -61,6 +63,39 @@ export async function POST(req: Request) {
         messageMr: `नवीन मंदिर कार्यक्रम "${newEvent.title_mr}" ${newEvent.date} साठी जाहीर करण्यात आला आहे.`,
         type: 'event',
       });
+
+      // Send Firebase Push Notification
+      try {
+        // Fetch all users with a valid FCM token
+        const users = await User.find({ fcmToken: { $exists: true, $ne: null } }).select('fcmToken');
+        const tokens = users.map(u => u.fcmToken).filter(Boolean);
+
+        if (tokens.length > 0) {
+          const payload = {
+            notification: {
+              title: 'Kulachar Nidhi - New Temple Event',
+              body: `A new temple event "${newEvent.title_en}" has been announced for ${newEvent.date}.`,
+            },
+            data: {
+              type: 'event',
+              eventId: newEvent._id.toString()
+            },
+            tokens: tokens
+          };
+
+          const msg = getSafeMessaging();
+          if (msg) {
+            const response = await msg.sendEachForMulticast(payload);
+            console.log(`Successfully sent ${response.successCount} messages; Failed ${response.failureCount}`);
+          } else {
+            console.error('Firebase has not initialized correctly, skipped sending notifications.');
+          }
+        } else {
+          console.log('No FCM tokens found to send push notification.');
+        }
+      } catch (pushError) {
+        console.error('Failed to send push notifications:', pushError);
+      }
     } catch (notifError) {
       console.error('Failed to create event notification:', notifError);
     }

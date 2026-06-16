@@ -65,6 +65,10 @@ const UserSchema = new mongoose.Schema({
     email: String,
     dob: String,
   }],
+  fcmToken: {
+    type: String,
+    default: null,
+  },
 }, { timestamps: true });
 
 delete mongoose.models.User;
