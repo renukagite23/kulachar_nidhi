@@ -33,11 +33,10 @@ export default function FCMProvider() {
                     // On success, this will fire the 'registration' event below
                     await PushNotifications.register();
 
-                    // 3. Listen for the registration token to be assigned by Firebase
+                    // 4. Send token to your backend
                     PushNotifications.addListener('registration', async (capacitorToken) => {
                         console.log('Firebase Token obtained natively:', capacitorToken.value);
 
-                        // 4. Send token to your backend
                         try {
                             const res = await fetch('/api/user/fcm-token', {
                                 method: 'POST',
@@ -54,6 +53,19 @@ export default function FCMProvider() {
                         }
                     });
 
+                    // 5. Handle Foreground Notifications (App is OPEN)
+                    PushNotifications.addListener('pushNotificationReceived', (notification) => {
+                        console.log('Push received while app in foreground:', notification);
+                        // Optional: Show an in-app alert or custom UI since Android won't show it in tray
+                        // alert(`${notification.title}\n\n${notification.body}`);
+                    });
+
+                    // 6. Handle notification click (User taps the notification in tray)
+                    PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+                        console.log('Push action performed:', notification);
+                        // You can navigate to a specific page here based on notification.data
+                    });
+
                     // Utility listener for any registration errors natively
                     PushNotifications.addListener('registrationError', (error: any) => {
                         console.error('Error on native registration: ' + JSON.stringify(error));
@@ -68,6 +80,13 @@ export default function FCMProvider() {
         };
 
         setupNotifications();
+
+        // Cleanup listeners on unmount
+        return () => {
+            if (Capacitor.isNativePlatform()) {
+                PushNotifications.removeAllListeners();
+            }
+        };
     }, [isAuthenticated, token]);
 
     return null; // This component doesn't render anything in the UI
