@@ -14,6 +14,9 @@ export default function FCMProvider() {
         const setupNotifications = async () => {
             if (!isAuthenticated || typeof window === 'undefined') return;
 
+            // Wait 2 seconds to ensure Capacitor bridge and device are stable
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
             // Only attempt native push setup if we are on a native device (Android/iOS)
             if (Capacitor.isNativePlatform()) {
                 try {
@@ -25,9 +28,11 @@ export default function FCMProvider() {
                     }
 
                     if (permStatus.receive !== 'granted') {
-                        console.log('User denied native push notification permissions');
+                        console.warn('User denied native push notification permissions. Current status:', permStatus.receive);
                         return;
                     }
+
+                    console.log('Push Permissions granted. Registering...');
 
                     // 2. Register for Push Notifications
                     // On success, this will fire the 'registration' event below
@@ -35,7 +40,7 @@ export default function FCMProvider() {
 
                     // 4. Send token to your backend
                     PushNotifications.addListener('registration', async (capacitorToken) => {
-                        console.log('Firebase Token obtained natively:', capacitorToken.value);
+                        console.log('FCM Token obtained natively:', capacitorToken.value);
 
                         try {
                             const res = await fetch('/api/user/fcm-token', {
@@ -47,7 +52,12 @@ export default function FCMProvider() {
                                 body: JSON.stringify({ token: capacitorToken.value }),
                             });
 
-                            if (res.ok) console.log('FCM Token registered successfully to backend MongoDB');
+                            if (res.ok) {
+                                console.log('FCM Token registered successfully to backend MongoDB');
+                            } else {
+                                const errData = await res.json();
+                                console.error('Backend rejected FCM token:', errData);
+                            }
                         } catch (err) {
                             console.error('Failed to post native token to backend', err);
                         }
@@ -55,15 +65,15 @@ export default function FCMProvider() {
 
                     // 5. Handle Foreground Notifications (App is OPEN)
                     PushNotifications.addListener('pushNotificationReceived', (notification) => {
-                        console.log('Push received while app in foreground:', notification);
-                        // Optional: Show an in-app alert or custom UI since Android won't show it in tray
-                        // alert(`${notification.title}\n\n${notification.body}`);
+                        console.log('Push received while app in foreground:', JSON.stringify(notification, null, 2));
+                        // Since we added presentationOptions: ["badge", "sound", "alert"] in capacitor.config.ts,
+                        // the OS should show the notification even in foreground on most Android versions.
                     });
 
                     // 6. Handle notification click (User taps the notification in tray)
                     PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-                        console.log('Push action performed:', notification);
-                        // You can navigate to a specific page here based on notification.data
+                        console.log('Push action performed:', JSON.stringify(notification, null, 2));
+                        // You can navigate to a specific page here based on notification.notification.data
                     });
 
                     // Utility listener for any registration errors natively
@@ -75,7 +85,7 @@ export default function FCMProvider() {
                     console.error('Error setting up Native Push:', error);
                 }
             } else {
-                console.log('Web environment detected, skipping native PushNotifications setup.');
+                console.log('Web environment detected or platform is not native. Capacitor isNative:', Capacitor.isNativePlatform());
             }
         };
 

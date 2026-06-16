@@ -8,6 +8,11 @@ const config: CapacitorConfig = {
     url: 'https://my-kulachar-nidhi.vercel.app',
     cleartext: false,
   },
+  plugins: {
+    PushNotifications: {
+      presentationOptions: ["badge", "sound", "alert"],
+    },
+  },
 };
 
 export default config;
